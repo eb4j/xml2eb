@@ -5,103 +5,117 @@ plugins {
     id "com.jfrog.bintray" version "1.6"
 }
 
-apply plugin: 'java'
-apply plugin: 'jacoco'
-// apply plugin: 'checkstyle'
-apply plugin: 'findbugs'
-apply plugin: 'co.riiid.gradle'
-apply plugin: 'com.jfrog.bintray'
-apply plugin: 'maven'
+apply plugin: 'wrapper'
 
-sourceCompatibility = jdkVersion
-targetCompatibility = jdkVersion
-[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-[compileJava, compileTestJava]*.options*.bootClasspath = "$JDK_HOME/jre/lib/rt.jar"
+// common settings
+subprojects {
+  apply plugin: 'java'
+  apply plugin: 'jacoco'
+  // apply plugin: 'checkstyle'
+  apply plugin: 'findbugs'
+  apply plugin: 'co.riiid.gradle'
+  apply plugin: 'com.jfrog.bintray'
+  apply plugin: 'maven'
 
-// checkstyle {
-//  config = resources.text.fromFile("${rootProject.projectDir}/config/checkstyle/checkstyle.xml")
-//  ignoreFailures = true
-//  toolVersion = '6.16.1'
-// }
+  sourceCompatibility = jdkVersion
+  targetCompatibility = jdkVersion
+  [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+  [compileJava, compileTestJava]*.options*.bootClasspath = "$JDK_HOME/jre/lib/rt.jar"
 
-findbugs {
-  ignoreFailures = true
-}
+  // checkstyle {
+  //  config = resources.text.fromFile("${rootProject.projectDir}/config/checkstyle/checkstyle.xml")
+  //  ignoreFailures = true
+  //  toolVersion = '6.16.1'
+  // }
 
-// Force prevent checkstyle/findbugs on Test.
-// task checkstyleTest(overwrite: true) << {}
-task findbugsTest(overwrite: true) << {}
-tasks.withType(FindBugs) {
-  reports {
-    xml.enabled = false
-    html.enabled = true
+  findbugs {
+    ignoreFailures = true
   }
-}
 
-repositories {
-  jcenter()
-}
-
-dependencies {
-  testCompile 'org.testng:testng:6.9.10'
-}
-
-test {
-  useTestNG()
-}
-
-javadoc {
-  options.locale = 'en_US'
-}
-
-task sourceJar(type: Jar) {
-    from sourceSets.main.allSource
-    classifier = 'sources'
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-artifacts {
-  if (! project.name in ['webbook']) {
-    archives jar
-    archives sourceJar
-    archives javadocJar
-  }
-}
-apply plugin: 'application'
-mainClassName = 'io.github.eb4j.xml2eb.Xml2Eb'
-applicationName = 'xml2eb'
-
-startScripts{
-  defaultJvmOpts = ['-Xmx2048M']
-}
-
-version = projectVersion
-group = projectGroup
-
-bintray {
-    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
-    key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
-    configurations = ['archives']
-    pkg {
-        repo = 'maven'
-        name = 'xml2eb'
-        licenses = ['LGPL-2.1']
-        vcsUrl = projectUrl
-        labels = ['java','EPWING', 'ebook', 'xml']
-        publicDownloadNumbers = true
+  // Force prevent checkstyle/findbugs on Test.
+  // task checkstyleTest(overwrite: true) << {}
+  task findbugsTest(overwrite: true) << {}
+  tasks.withType(FindBugs) {
+    reports {
+      xml.enabled = false
+      html.enabled = true
     }
+  }
+
+  repositories {
+    jcenter()
+  }
+
+  dependencies {
+    testCompile 'org.testng:testng:6.9.10'
+  }
+
+  test {
+    useTestNG()
+  }
+
+  javadoc {
+    options.locale = 'en_US'
+  }
+
+  task sourceJar(type: Jar) {
+      from sourceSets.main.allSource
+      classifier = 'sources'
+  }
+
+  task javadocJar(type: Jar, dependsOn: javadoc) {
+      classifier = 'javadoc'
+      from javadoc.destinationDir
+  }
+
+  artifacts {
+    if (! project.name in ['webbook']) {
+      archives jar
+      archives sourceJar
+      archives javadocJar
+    }
+  }
 }
 
-dependencies {
-  compile project(':eb4j-core'),
-          'commons-io:commons-io:1.4',
-          'org.slf4j:slf4j-log4j12:1.5.10'
-}
+project(':xml2eb') {
+  apply plugin: 'application'
+  mainClassName = 'io.github.eb4j.xml2eb.Xml2Eb'
+  applicationName = 'xml2eb'
 
-task githubRelease(overwrite: true) << {}
+  startScripts{
+    defaultJvmOpts = ['-Xmx2048M']
+  }
+
+  version = projectVersion
+  group = projectGroup
+
+  bintray {
+      user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
+      key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
+      configurations = ['archives']
+      pkg {
+          repo = 'maven'
+          name = 'xml2eb'
+          licenses = ['LGPL-2.1']
+          vcsUrl = projectUrl
+          labels = ['java','EPWING', 'ebook', 'xml']
+          publicDownloadNumbers = true
+      }
+  }
+
+  distTar {
+    compression = Compression.GZIP
+  }
+
+  dependencies {
+    compile files("${rootProject.projectDir}/libs/eb4j-core-0.1.99.dev.jar"),
+            'commons-io:commons-io:1.4',
+            'commons-lang:commons-lang:2.4',
+            'org.slf4j:slf4j-log4j12:1.5.10'
+  }
+
+  task githubRelease(overwrite: true) << {}
+}
 
 project(':conv-wdic') {
   apply plugin: 'application'
@@ -125,9 +139,11 @@ project(':conv-wdic') {
 
   dependencies {
     compile project(':xml2eb'),
+            files("${rootProject.projectDir}/libs/eb4j-core-0.1.99.dev.jar"),
             'commons-io:commons-io:1.4',
             'commons-cli:commons-cli:1.2',
-            'commons-collections:commons-collections:3.2.2'
+            'commons-collections:commons-collections:3.2.2',
+            'commons-lang:commons-lang:2.4'
   }
   version = projectVersion
   group = projectGroup
@@ -143,10 +159,6 @@ project(':conv-wdic') {
           labels = ['java','EPWING', 'ebook']
           publicDownloadNumbers = true
       }
-  }
-
-  distTar {
-    compression = Compression.GZIP
   }
 
   distributions {
@@ -183,6 +195,7 @@ project(':conv-zipcode') {
 
   dependencies {
     compile project(':xml2eb'),
+            files('${rootProject.projectDir}/libs/eb4j-core-0.1.99.dev.jar'),
             'commons-io:commons-io:1.4',
             'commons-cli:commons-cli:1.2',
             'commons-collections:commons-collections:3.2.2'
@@ -203,10 +216,6 @@ project(':conv-zipcode') {
       }
   }
 
-  distTar {
-    compression = Compression.GZIP
-  }
-
   distributions {
       main {
           baseName = 'conv-zipcode'
@@ -222,3 +231,11 @@ project(':conv-zipcode') {
   }
   task githubRelease(overwrite: true) << {}
 }
+
+task bintrayUpload(overwrite: true) << {}
+
+if (gradle.startParameter.taskNames.contains('bintrayUpload')  ||
+    gradle.startParameter.taskNames.contains('githubRelease')) {
+  apply from: 'build.publish.gradle'
+}
+
