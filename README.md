@@ -1,7 +1,6 @@
 # xml2eb
 EPWING/Ebook converter library and utilities.
 
-[_![Download](https://api.bintray.com/packages/miurahr/maven/xml2eb/images/download.svg) ](https://bintray.com/miurahr/maven/xml2eb/_latestVersion)
 
 ## Build
 
@@ -33,8 +32,10 @@ This project depends on an eb4j library.
 ## Copyrights and License
 
 xml2eb, a converter library for EPWING/Ebook.
-    Copyright(C) 2003-2010 Hisaya FUKUMOTO
-    Copyright(C) 2016 Hiroshi Miura
+
+Copyright(C) 2003-2010 Hisaya FUKUMOTO
+
+Copyright(C) 2016 Hiroshi Miura
 
 This library is free software; you can redistribute it and/or modify it under
 the terms of the GNU Lesser General Public License as published by the Free
