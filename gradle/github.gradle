@@ -1,20 +1,3 @@
-apply plugin: 'signing'
-
-boolean validProperty(propertyName) {
-  try { project.property(propertyName) != null }
-  catch (MissingPropertyException) { false }
-}
-assert validProperty('signing.keyId'),             'properties for signing must be provided'
-assert validProperty('signing.secretKeyRingFile'), 'properties for signing must be provided'
-
-String askPassword(prompt) {
-  "${System.console().readPassword(prompt)}"
-}
-ext.'signing.password' = askPassword("Enter password for PGP key ${property('signing.keyId')}: ")
-
-signing {
-  sign configurations.archives
-}
 
 github {
     owner = projectOwner
@@ -34,4 +17,9 @@ github {
             'conv-zipcode/build/distributions/conv-zipcode-' + projectVersion + 'tgz',
             'conv-zipcode/build/distributions/conv-zipcode-' + projectVersion + 'zip',
     ]
+}
+
+subprojects {
+    // disable githubRelease task in each project. Works only on root project.
+    task githubRelease(overwrite: true) << {}
 }
