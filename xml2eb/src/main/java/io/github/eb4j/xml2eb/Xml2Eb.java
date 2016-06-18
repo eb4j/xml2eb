@@ -294,6 +294,7 @@ public class Xml2Eb {
                         info.setExtFont(CatalogInfo.FONT_48_NARROW, name);
                         break;
                     default:
+                        name = "";
                         break;
                 }
                 File file = new File(fontdir, name);
@@ -329,6 +330,7 @@ public class Xml2Eb {
                         info.setExtFont(CatalogInfo.FONT_48_WIDE, name);
                         break;
                     default:
+                        name = "";
                         break;
                 }
                 File file = new File(fontdir, name);
@@ -888,7 +890,8 @@ public class Xml2Eb {
                 int size = buf.length;
                 int off = 0;
                 if ("wav".equals(format[i])) {
-                    if (size > 4 && "RIFF".equals(new String(buf, 0, 4))) {
+                    byte[] expected = new byte[] {'R','I','F','F'};
+                    if (size > 4 && Arrays.equals(expected, Arrays.copyOfRange(buf, 0, 4))) {
                         off = 12;
                         size -= off;
                     }

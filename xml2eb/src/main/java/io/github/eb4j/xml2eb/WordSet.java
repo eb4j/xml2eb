@@ -16,8 +16,10 @@ import io.github.eb4j.xml2eb.util.UnicodeUtil;
  * 検索語セット。
  *
  * @author Hisaya FUKUMOTO
+ * @author Hiroshi Miura
  */
 public class WordSet extends TreeSet<Word> {
+    private static final long serialVersionUID = 20160001L;
 
     public static final int DIRECTION_WORD = 0;
     public static final int DIRECTION_ENDWORD = 1;

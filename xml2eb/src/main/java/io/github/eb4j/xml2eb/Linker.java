@@ -212,10 +212,12 @@ public class Linker {
             dir = new File(".");
         }
         File[] files = dir.listFiles();
-        int n = files.length;
-        for (int i=0; i<n; i++) {
-            if (files[i].getName().startsWith(name)) {
-                list.add(files[i]);
+        if (files != null) {
+            int n = files.length;
+            for (int i = 0; i < n; i++) {
+                if (files[i].getName().startsWith(name)) {
+                    list.add(files[i]);
+                }
             }
         }
         return list.toArray(new File[list.size()]);
