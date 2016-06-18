@@ -1,14 +1,12 @@
 package io.github.eb4j.xml2eb.converter.wdic;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -20,10 +18,10 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.CharUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.github.eb4j.util.HexUtil;
 import io.github.eb4j.xml2eb.util.FontUtil;
 import io.github.eb4j.xml2eb.util.UnicodeUtil;
 
@@ -79,7 +77,12 @@ public class WdicUtil {
                         _logger.info("load font: " + font.getName()
                                      + " (family:" + font.getFamily(Locale.ENGLISH) + ")");
                         fontMap.put(font.getFamily(Locale.ENGLISH), font);
-                    } catch (Exception e) {
+                    } catch (FontFormatException ffe) {
+                        _logger.info(ffe.getMessage());
+                        _logger.info("Can not load font: " + files[i].getAbsolutePath());
+                    } catch (IOException ioex) {
+                        _logger.info(ioex.getMessage());
+                        _logger.info("Can not load font: " + files[i].getAbsolutePath());
                     }
                 }
             }
@@ -501,7 +504,7 @@ public class WdicUtil {
                 img = FontUtil.smallCharToImage(codePoint, 8, 16, font);
             } else {
                 // 表示できない文字は'?'を描画
-                String code = "U+" + HexUtil.toHexString(codePoint, 6);
+                String code = "U+" + toHexString(codePoint);
                 if (unicodeBlock == null) {
                     _logger.warn("unavailable display font: [" + code + "]"
                                  + " UNKNOWN_UNICODE_BLOCK");
@@ -614,7 +617,7 @@ public class WdicUtil {
             }
         }
 
-        String code = "U+" + HexUtil.toHexString(codePoint, 6);
+        String code = "U+" + toHexString(codePoint);
         if (unicodeBlock == null) {
             _logger.info("undefined font: [" + code + "]"
                          + " UNKNOWN_UNICODE_BLOCK");
@@ -638,6 +641,12 @@ public class WdicUtil {
             }
         }
         return LOGICAL_FONTS[0];
+    }
+
+    private static String toHexString(int x) {
+        ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES);
+        buffer.putInt(x);
+        return Hex.encodeHexString(buffer.array());
     }
 }
 

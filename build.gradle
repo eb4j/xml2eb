@@ -127,10 +127,11 @@ project(':conv-wdic') {
     dependencies {
         compile project(':xml2eb'),
             files("$rootDir/libs/eb4j-core-1.99.0.jar"),
-            'commons-io:commons-io:1.4',
-            'commons-cli:commons-cli:1.2',
-            'commons-collections:commons-collections:3.2.2',
-            'commons-lang:commons-lang:2.4'
+                'commons-io:commons-io:1.4',
+                'commons-cli:commons-cli:1.2',
+                'commons-collections:commons-collections:3.2.2',
+                'commons-lang:commons-lang:2.4',
+                'commons-codec:commons-codec:1.10'
     }
 
     version = projectVersion
