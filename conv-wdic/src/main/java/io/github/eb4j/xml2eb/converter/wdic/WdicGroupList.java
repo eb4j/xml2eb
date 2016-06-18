@@ -161,7 +161,8 @@ public class WdicGroupList {
                                 _name = val;
                             } else if ("EDITION".equals(name)) {
                                 _edition = val;
-                            } else if ("CONTACT".equals(name)) {
+                            //} else if ("CONTACT".equals(name)) {
+                                // FIXME
                             }
                         }
                         break;

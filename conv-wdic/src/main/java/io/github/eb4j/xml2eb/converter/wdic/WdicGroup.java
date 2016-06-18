@@ -232,8 +232,9 @@ public class WdicGroup {
                                 } else {
                                     _name = val;
                                 }
-                            } else if ("CONTENT".equals(name)) {
-                            } else if ("CONTACT".equals(name)) {
+                            //} else if ("CONTENT".equals(name)) {
+                            //} else if ("CONTACT".equals(name)) {
+                                // FIXME
                             }
                         }
                         break;
