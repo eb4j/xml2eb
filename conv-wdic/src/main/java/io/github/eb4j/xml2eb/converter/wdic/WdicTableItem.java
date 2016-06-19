@@ -15,7 +15,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.github.eb4j.util.HexUtil;
 import io.github.eb4j.xml2eb.util.WaitImageObserver;
 
 /**
@@ -749,7 +748,7 @@ public class WdicTableItem {
                 n = plainFont.canDisplayUpTo(request);
                 if (n != 0) {
                     Character.UnicodeBlock unicodeBlock = Character.UnicodeBlock.of(codePoint);
-                    String code = "U+" + HexUtil.toHexString(codePoint, 6);
+                    String code = "U+" + WdicUtil.toHexString(codePoint);
                     String style = "PLAIN";
                     if (font.isBold()) {
                         if (font.isItalic()) {
@@ -799,7 +798,7 @@ public class WdicTableItem {
                     drawStr = String.valueOf(Character.toChars(codePoint));
                 } else {
                     // 表示できない文字は'?'を描画
-                    String code = "U+" + HexUtil.toHexString(codePoint, 6);
+                    String code = "U+" + WdicUtil.toHexString(codePoint);
                     if (unicodeBlock == null) {
                         _logger.warn("unavailable display font: [" + code + "]"
                                      + " UNKNOWN_UNICODE_BLOCK");
