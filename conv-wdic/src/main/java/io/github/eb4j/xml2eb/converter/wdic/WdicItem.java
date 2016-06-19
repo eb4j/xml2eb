@@ -24,9 +24,9 @@ public class WdicItem implements Comparable<WdicItem> {
     /** 読み */
     private List<String> _yomi = null;
     /** 表記 */
-    private Map<String,String> _spell = null;
+    private Map<String, String> _spell = null;
     /** 発音 */
-    private Map<String,String> _pron = null;
+    private Map<String, String> _pron = null;
     /** 品詞 */
     private List<String> _speech = null;
     /** 本文 */
@@ -42,17 +42,17 @@ public class WdicItem implements Comparable<WdicItem> {
      * @param head 見出し
      * @param idx インデックス番号
      */
-    public WdicItem(Wdic wdic, String head, int idx) {
+    public WdicItem(final Wdic wdic, final String head, final int idx) {
         super();
         _wdic = wdic;
         _head = WdicUtil.unescape(head);
         _idx = idx;
-        _yomi = new ArrayList<String>();
-        _spell = new LinkedHashMap<String,String>();
-        _pron = new LinkedHashMap<String,String>();
-        _speech = new ArrayList<String>();
-        _body = new ArrayList<String>();
-        _dir = new ArrayList<String>();
+        _yomi = new ArrayList<>();
+        _spell = new LinkedHashMap<>();
+        _pron = new LinkedHashMap<>();
+        _speech = new ArrayList<>();
+        _body = new ArrayList<>();
+        _dir = new ArrayList<>();
     }
 
 
@@ -89,7 +89,7 @@ public class WdicItem implements Comparable<WdicItem> {
      * @return 読み
      */
     public List<String> getYomi() {
-        return new ArrayList<String>(_yomi);
+        return new ArrayList<>(_yomi);
     }
 
     /**
@@ -97,7 +97,7 @@ public class WdicItem implements Comparable<WdicItem> {
      *
      * @param yomi 読み
      */
-    public void addYomi(String yomi) {
+    public void addYomi(final String yomi) {
         if (StringUtils.isNotBlank(yomi)) {
             _yomi.add(yomi);
         }
@@ -108,8 +108,8 @@ public class WdicItem implements Comparable<WdicItem> {
      *
      * @return 表記
      */
-    public Map<String,String> getSpell() {
-        return new LinkedHashMap<String,String>(_spell);
+    public Map<String, String> getSpell() {
+        return new LinkedHashMap<>(_spell);
     }
 
     /**
@@ -118,7 +118,7 @@ public class WdicItem implements Comparable<WdicItem> {
      * @param lang 言語
      * @param spell 表記
      */
-    public void addSpell(String lang, String spell) {
+    public void addSpell(final String lang, final String spell) {
         if (StringUtils.isNotBlank(spell)) {
             _spell.put(lang, spell);
         }
@@ -129,8 +129,8 @@ public class WdicItem implements Comparable<WdicItem> {
      *
      * @return 発音
      */
-    public Map<String,String> getPronounce() {
-        return new LinkedHashMap<String,String>(_pron);
+    public Map<String, String> getPronounce() {
+        return new LinkedHashMap<>(_pron);
     }
 
     /**
@@ -139,7 +139,7 @@ public class WdicItem implements Comparable<WdicItem> {
      * @param lang 言語
      * @param pronounce 発音
      */
-    public void addPronounce(String lang, String pronounce) {
+    public void addPronounce(final String lang, final String pronounce) {
         if (StringUtils.isNotBlank(pronounce)) {
             _pron.put(lang, pronounce);
         }
@@ -151,7 +151,7 @@ public class WdicItem implements Comparable<WdicItem> {
      * @return 品詞
      */
     public List<String> getSpeech() {
-        return new ArrayList<String>(_speech);
+        return new ArrayList<>(_speech);
     }
 
     /**
@@ -159,7 +159,7 @@ public class WdicItem implements Comparable<WdicItem> {
      *
      * @param speech 品詞
      */
-    public void addSpeech(String speech) {
+    public void addSpeech(final String speech) {
         if (StringUtils.isNotBlank(speech)) {
             String[] pos = speech.split(",");
             int n = pos.length;
@@ -175,7 +175,7 @@ public class WdicItem implements Comparable<WdicItem> {
      * @return 本文
      */
     public List<String> getBody() {
-        return new ArrayList<String>(_body);
+        return new ArrayList<>(_body);
     }
 
     /**
@@ -183,7 +183,7 @@ public class WdicItem implements Comparable<WdicItem> {
      *
      * @param body 本文
      */
-    public void addBody(String body) {
+    public void addBody(final String body) {
         if (StringUtils.isNotBlank(body)) {
             _body.add(body);
         }
@@ -195,7 +195,7 @@ public class WdicItem implements Comparable<WdicItem> {
      * @return 分類
      */
     public List<String> getDir() {
-        return new ArrayList<String>(_dir);
+        return new ArrayList<>(_dir);
     }
 
     /**
@@ -203,7 +203,7 @@ public class WdicItem implements Comparable<WdicItem> {
      *
      * @param dir 分類
      */
-    public void addDir(String dir) {
+    public void addDir(final String dir) {
         if (StringUtils.isNotBlank(dir)) {
             _dir.add(dir);
         }
@@ -258,7 +258,7 @@ public class WdicItem implements Comparable<WdicItem> {
      * @return 等しい場合はtrue、そうでない場合はfalse
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj instanceof WdicItem) {
             WdicItem item = (WdicItem)obj;
             String gid1 = _wdic.getGroupId();
@@ -282,7 +282,7 @@ public class WdicItem implements Comparable<WdicItem> {
      *         等しい場合はゼロ、大きい場合は正の整数
      */
     @Override
-    public int compareTo(WdicItem item) {
+    public int compareTo(final WdicItem item) {
         String str1 = _head;
         String str2 = item.getHead();
         try {

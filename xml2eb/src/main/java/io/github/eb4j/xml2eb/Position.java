@@ -23,7 +23,7 @@ public class Position {
      * @param file ファイル
      * @param pos 位置
      */
-    public Position(File file, long pos) {
+    public Position(final File file, final long pos) {
         super();
         _file = file;
         _pos = pos;
@@ -54,7 +54,7 @@ public class Position {
      * @param offset オフセットブロック数
      * @return 位置
      */
-    public long getPosition(long offset) {
+    public long getPosition(final long offset) {
         return _pos + ((offset - 1) * 2048);
     }
 

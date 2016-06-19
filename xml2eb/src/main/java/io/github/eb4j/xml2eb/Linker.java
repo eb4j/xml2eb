@@ -49,7 +49,7 @@ public class Linker {
     /** 参照情報 */
     private Reference _ref = null;
     /** ファイルマップ */
-    private Map<File,RandomAccessFile> _fileMap = null;
+    private Map<File, RandomAccessFile> _fileMap = null;
 
 
     /**
@@ -57,13 +57,13 @@ public class Linker {
      *
      * @param file 出力ファイル
      */
-    public Linker(File file) {
+    public Linker(final File file) {
         super();
         _logger = LoggerFactory.getLogger(getClass());
         _outfile = file;
         _infile = new File[9];
         _startBlock = new long[9];
-        _fileMap = new HashMap<File,RandomAccessFile>();
+        _fileMap = new HashMap<File, RandomAccessFile>();
     }
 
 
@@ -72,7 +72,7 @@ public class Linker {
      *
      * @param file 見出しファイル
      */
-    public void setHeadFile(File file) {
+    public void setHeadFile(final File file) {
         _infile[HEAD] = file;
     }
 
@@ -81,7 +81,7 @@ public class Linker {
      *
      * @param file 本文ファイル
      */
-    public void setBodyFile(File file) {
+    public void setBodyFile(final File file) {
         _infile[BODY] = file;
     }
 
@@ -90,7 +90,7 @@ public class Linker {
      *
      * @param file 著作権ファイル
      */
-    public void setCopyrightFile(File file) {
+    public void setCopyrightFile(final File file) {
         _infile[COPYRIGHT] = file;
     }
 
@@ -99,7 +99,7 @@ public class Linker {
      *
      * @param file メニューファイル
      */
-    public void setMenuFile(File file) {
+    public void setMenuFile(final File file) {
         _infile[MENU] = file;
     }
 
@@ -108,7 +108,7 @@ public class Linker {
      *
      * @param file インデックスベースファイル
      */
-    public void setWordFile(File file) {
+    public void setWordFile(final File file) {
         _infile[WORD] = file;
     }
 
@@ -117,7 +117,7 @@ public class Linker {
      *
      * @param file インデックスベースファイル
      */
-    public void setEndwordFile(File file) {
+    public void setEndwordFile(final File file) {
         _infile[ENDWORD] = file;
     }
 
@@ -126,7 +126,7 @@ public class Linker {
      *
      * @param file インデックスベースファイル
      */
-    public void setKeywordFile(File file) {
+    public void setKeywordFile(final File file) {
         _infile[KEYWORD] = file;
     }
 
@@ -135,7 +135,7 @@ public class Linker {
      *
      * @param file 画像ファイル
      */
-    public void setGraphicFile(File file) {
+    public void setGraphicFile(final File file) {
         _infile[GRAPHIC] = file;
     }
 
@@ -144,7 +144,7 @@ public class Linker {
      *
      * @param file 音声ファイル
      */
-    public void setSoundFile(File file) {
+    public void setSoundFile(final File file) {
         _infile[SOUND] = file;
     }
 
@@ -153,7 +153,7 @@ public class Linker {
      *
      * @param ref 参照情報
      */
-    public void setReference(Reference ref) {
+    public void setReference(final Reference ref) {
         _ref = ref;
     }
 
@@ -163,7 +163,7 @@ public class Linker {
      * @param pos ファイル位置
      * @return 結合後のファイル位置
      */
-    private long _getPosition(Position pos) {
+    private long _getPosition(final Position pos) {
         File file = pos.getFile();
         int len = _infile.length;
         for (int i=0; i<len; i++) {
@@ -181,7 +181,7 @@ public class Linker {
      * @param file ファイル
      * @return インデックスファイルの場合はtrue、そうでない場合はfalse
      */
-    private boolean _isIndex(File file) {
+    private boolean _isIndex(final File file) {
         String name = file.getName();
         int len = _infile.length;
         for (int i=0; i<len; i++) {
@@ -204,7 +204,7 @@ public class Linker {
      * @param file ベースファイル
      * @return ファイルリスト
      */
-    private File[] _getFileList(File file) {
+    private File[] _getFileList(final File file) {
         ArrayList<File> list = new ArrayList<File>();
         String name = file.getName();
         File dir = file.getParentFile();
@@ -402,8 +402,8 @@ public class Linker {
      * @param param パラメータ
      * @return この書籍構成要素のブロック数
      */
-    private long _setControlEntry(byte[] b, int off, File file,
-                                  int id, long start, long param) {
+    private long _setControlEntry(final byte[] b, final int off, final File file,
+                                  final int id, final long start, final long param) {
         File[] files = {file};
         return _setControlEntry(b, off, files, id, start, param);
     }
@@ -419,28 +419,29 @@ public class Linker {
      * @param param パラメータ
      * @return この書籍構成要素のブロック数
      */
-    private long _setControlEntry(byte[] b, int off, File[] file,
-                                  int id, long start, long param) {
+    private long _setControlEntry(final byte[] b, final int off, final File[] file,
+                                  final int id, final long start, final long param) {
         long size = 0;
+        int offset = off;
         int n = file.length;
         for (int i=0; i<n; i++) {
             long len = file[i].length();
             size += ((len + 2047) / 2048);
         }
-        b[off++] = (byte)id;
-        b[off++] = (byte)0x00;
-        b[off++] = (byte)((start >>> 24) & 0xff);
-        b[off++] = (byte)((start >>> 16) & 0xff);
-        b[off++] = (byte)((start >>> 8) & 0xff);
-        b[off++] = (byte)(start & 0xff);
-        b[off++] = (byte)((size >>> 24) & 0xff);
-        b[off++] = (byte)((size >>> 16) & 0xff);
-        b[off++] = (byte)((size >>> 8) & 0xff);
-        b[off++] = (byte)(param & 0xff);
-        b[off++] = (byte)((param >>> 24) & 0xff);
-        b[off++] = (byte)((param >>> 16) & 0xff);
-        b[off++] = (byte)((param >>> 8) & 0xff);
-        b[off++] = (byte)(param & 0xff);
+        b[offset++] = (byte)id;
+        b[offset++] = (byte)0x00;
+        b[offset++] = (byte)((start >>> 24) & 0xff);
+        b[offset++] = (byte)((start >>> 16) & 0xff);
+        b[offset++] = (byte)((start >>> 8) & 0xff);
+        b[offset++] = (byte)(start & 0xff);
+        b[offset++] = (byte)((size >>> 24) & 0xff);
+        b[offset++] = (byte)((size >>> 16) & 0xff);
+        b[offset++] = (byte)((size >>> 8) & 0xff);
+        b[offset++] = (byte)(param & 0xff);
+        b[offset++] = (byte)((param >>> 24) & 0xff);
+        b[offset++] = (byte)((param >>> 16) & 0xff);
+        b[offset++] = (byte)((param >>> 8) & 0xff);
+        b[offset++] = (byte)(param & 0xff);
         return size;
     }
 
@@ -449,11 +450,11 @@ public class Linker {
      *
      */
     private void _fixBodyReference() {
-        Map<Position,String> map = _ref.getBodyRef();
+        Map<Position, String> map = _ref.getBodyRef();
         _logger.info("resolve body reference: " + map.size());
-        Iterator<Map.Entry<Position,String>> it = map.entrySet().iterator();
+        Iterator<Map.Entry<Position, String>> it = map.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<Position,String> entry = it.next();
+            Map.Entry<Position, String> entry = it.next();
             Position pos = entry.getKey();
             String tag = entry.getValue();
             if (_ref.hasBodyTag(tag)) {
@@ -470,11 +471,11 @@ public class Linker {
      *
      */
     private void _fixHeadReference() {
-        Map<Position,String> map = _ref.getHeadRef();
+        Map<Position, String> map = _ref.getHeadRef();
         _logger.info("resolve head reference: " + map.size());
-        Iterator<Map.Entry<Position,String>> it = map.entrySet().iterator();
+        Iterator<Map.Entry<Position, String>> it = map.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<Position,String> entry = it.next();
+            Map.Entry<Position, String> entry = it.next();
             Position pos = entry.getKey();
             String tag = entry.getValue();
             if (_ref.hasHeadTag(tag)) {
@@ -491,11 +492,11 @@ public class Linker {
      *
      */
     private void _fixIndexReference() {
-        Map<Position,String> map = _ref.getIndexRef();
+        Map<Position, String> map = _ref.getIndexRef();
         _logger.info("resolve index reference: " + map.size());
-        Iterator<Map.Entry<Position,String>> it = map.entrySet().iterator();
+        Iterator<Map.Entry<Position, String>> it = map.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<Position,String> entry = it.next();
+            Map.Entry<Position, String> entry = it.next();
             Position pos = entry.getKey();
             String tag = entry.getValue();
             _fixPosition(pos, tag);
@@ -507,11 +508,11 @@ public class Linker {
      *
      */
     private void _fixGraphicReference() {
-        Map<Position,String> map = _ref.getGraphicRef();
+        Map<Position, String> map = _ref.getGraphicRef();
         _logger.info("resolve graphic reference: " + map.size());
-        Iterator<Map.Entry<Position,String>> it = map.entrySet().iterator();
+        Iterator<Map.Entry<Position, String>> it = map.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<Position,String> entry = it.next();
+            Map.Entry<Position, String> entry = it.next();
             Position pos = entry.getKey();
             String tag = entry.getValue();
             if (_ref.hasGraphicTag(tag)) {
@@ -528,11 +529,11 @@ public class Linker {
      *
      */
     private void _fixSoundReference() {
-        Map<Position,String> map = _ref.getSoundRef();
+        Map<Position, String> map = _ref.getSoundRef();
         _logger.info("resolve sound reference:" + map.size());
-        Iterator<Map.Entry<Position,String>> it = map.entrySet().iterator();
+        Iterator<Map.Entry<Position, String>> it = map.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<Position,String> entry = it.next();
+            Map.Entry<Position, String> entry = it.next();
             Position pos = entry.getKey();
             String tag = entry.getValue();
             if (_ref.hasSoundTag(tag)) {
@@ -550,7 +551,7 @@ public class Linker {
      * @param pos ファイル位置
      * @param target 参照先
      */
-    private void _fixPosition(Position pos, long target) {
+    private void _fixPosition(final Position pos, final long target) {
         File file = pos.getFile();
         byte[] b = new byte[6];
         long block = target / 2048 + 1;
@@ -585,7 +586,7 @@ public class Linker {
      * @param start 参照先開始位置
      * @param end 参照先終了位置
      */
-    private void _fixPosition(Position pos, long start, long end) {
+    private void _fixPosition(final Position pos, final long start, final long end) {
         byte[] b = new byte[12];
         long block = start / 2048 + 1;
         int off = (int)(start % 2048);
@@ -627,7 +628,7 @@ public class Linker {
      * @param pos ファイル位置
      * @param tag インデックスタグ
      */
-    private void _fixPosition(Position pos, String tag) {
+    private void _fixPosition(final Position pos, final String tag) {
         File file = pos.getFile();
         File dir = file.getParentFile();
         if (dir == null) {
@@ -710,7 +711,7 @@ public class Linker {
      * @param out 出力ストリーム
      * @param file ファイル
      */
-    private void _link(OutputStream out, File file) {
+    private void _link(final OutputStream out, final File file) {
         if (!file.exists()) {
             File[] files = _getFileList(file);
             Arrays.sort(files);
@@ -746,7 +747,7 @@ public class Linker {
      * @param val 値
      * @return BCD値
      */
-    private long _toBCD4(long val) {
+    private long _toBCD4(final long val) {
         long bcd = 0;
         bcd += (val % 10);
         bcd += (((val / 10) % 10) << 4);
@@ -765,7 +766,7 @@ public class Linker {
      * @param val 値
      * @return BCD値
      */
-    private int _toBCD2(int val) {
+    private int _toBCD2(final int val) {
         int bcd = 0;
         bcd += (val % 10);
         bcd += (((val / 10) % 10) << 4);

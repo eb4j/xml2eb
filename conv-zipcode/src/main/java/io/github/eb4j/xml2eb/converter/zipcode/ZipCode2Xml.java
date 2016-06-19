@@ -57,11 +57,11 @@ public class ZipCode2Xml {
     /** 事業所個別郵便番号 */
     private ZipCodeJigyosyo _jigyosyo = null;
     /** 外字マップ */
-    private Map<String,String> _gaijiMap = null;
+    private Map<String, String> _gaijiMap = null;
     /** 全国一括郵便番号用外字マップ */
-    private Map<String,String> _kenGaijiMap = null;
+    private Map<String, String> _kenGaijiMap = null;
     /** 事業所個別郵便番号用外字マップ */
-    private Map<String,String> _jigyosyoGaijiMap = null;
+    private Map<String, String> _jigyosyoGaijiMap = null;
 
 
     /**
@@ -69,7 +69,7 @@ public class ZipCode2Xml {
      *
      * @param args コマンドライン引数
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(final String[] args) throws Exception {
         if (args.length == 0) {
             System.out.println("java " + _PROGRAM + " [zipcode-directory]");
         } else {
@@ -83,7 +83,7 @@ public class ZipCode2Xml {
      *
      * @param path ベースパス
      */
-    public ZipCode2Xml(String path) {
+    public ZipCode2Xml(final String path) {
         this(new File(path));
     }
 
@@ -92,7 +92,7 @@ public class ZipCode2Xml {
      *
      * @param dir ベースディレクトリ
      */
-    public ZipCode2Xml(File dir) {
+    public ZipCode2Xml(final File dir) {
         super();
         _logger = LoggerFactory.getLogger(getClass());
         _basedir = dir;
@@ -110,8 +110,8 @@ public class ZipCode2Xml {
         _ken = new ZipCodeKen(file);
         file = new File(_basedir, "JIGYOSYO.CSV");
         _jigyosyo = new ZipCodeJigyosyo(file);
-        _kenGaijiMap = new TreeMap<String,String>();
-        _jigyosyoGaijiMap = new TreeMap<String,String>();
+        _kenGaijiMap = new TreeMap<>();
+        _jigyosyoGaijiMap = new TreeMap<>();
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -153,11 +153,11 @@ public class ZipCode2Xml {
      *
      * @param content コンテントノード
      */
-    private void _makeKenItemNode(Element content) {
-        Map<String,List<ZipCodeKen.Item>> map = _ken.getZipcodeMap();
-        Iterator<Map.Entry<String,List<ZipCodeKen.Item>>> it = map.entrySet().iterator();
+    private void _makeKenItemNode(final Element content) {
+        Map<String, List<ZipCodeKen.Item>> map = _ken.getZipcodeMap();
+        Iterator<Map.Entry<String, List<ZipCodeKen.Item>>> it = map.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<String,List<ZipCodeKen.Item>> entry = it.next();
+            Map.Entry<String, List<ZipCodeKen.Item>> entry = it.next();
             String zipcode = entry.getKey();
             List<ZipCodeKen.Item> itemList = entry.getValue();
 
@@ -219,11 +219,11 @@ public class ZipCode2Xml {
      *
      * @param content コンテントノード
      */
-    private void _makeJigyosyoItemNode(Element content) {
-        Map<String,List<ZipCodeJigyosyo.Item>> map = _jigyosyo.getZipcodeMap();
-        Iterator<Map.Entry<String,List<ZipCodeJigyosyo.Item>>> it = map.entrySet().iterator();
+    private void _makeJigyosyoItemNode(final Element content) {
+        Map<String, List<ZipCodeJigyosyo.Item>> map = _jigyosyo.getZipcodeMap();
+        Iterator<Map.Entry<String, List<ZipCodeJigyosyo.Item>>> it = map.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<String,List<ZipCodeJigyosyo.Item>> entry = it.next();
+            Map.Entry<String, List<ZipCodeJigyosyo.Item>> entry = it.next();
             String zipcode = entry.getKey();
             List<ZipCodeJigyosyo.Item> itemList = entry.getValue();
 
@@ -279,16 +279,16 @@ public class ZipCode2Xml {
      *
      * @param content コンテントノード
      */
-    private void _makeKenMenuNode(Element content) {
+    private void _makeKenMenuNode(final Element content) {
         Element menu = _appendElement(content, "menu");
         Element layerElem = _appendLayer(menu, "INDEX:top");
-        Map<String,Map<String,List<ZipCodeKen.Item>>> map = _ken.getAddressMap();
-        Iterator<Map.Entry<String,Map<String,List<ZipCodeKen.Item>>>> it = map.entrySet().iterator();
+        Map<String, Map<String, List<ZipCodeKen.Item>>> map = _ken.getAddressMap();
+        Iterator<Map.Entry<String, Map<String, List<ZipCodeKen.Item>>>> it = map.entrySet().iterator();
         while (it.hasNext()) {
             // 都道府県別
-            Map.Entry<String,Map<String,List<ZipCodeKen.Item>>> entry = it.next();
+            Map.Entry<String, Map<String, List<ZipCodeKen.Item>>> entry = it.next();
             String key = entry.getKey();
-            Map<String,List<ZipCodeKen.Item>> map1 = entry.getValue();
+            Map<String, List<ZipCodeKen.Item>> map1 = entry.getValue();
 
             _appendRawText(layerElem, "\u21d2 ");
             Element refElem = _appendIdReference(layerElem, "INDEX:" + key);
@@ -301,10 +301,10 @@ public class ZipCode2Xml {
             _appendRawText(layerElem1, " > " + key);
             _appendNewLine(layerElem1);
 
-            Iterator<Map.Entry<String,List<ZipCodeKen.Item>>> it1 = map1.entrySet().iterator();
+            Iterator<Map.Entry<String, List<ZipCodeKen.Item>>> it1 = map1.entrySet().iterator();
             while (it1.hasNext()) {
                 // 市区町村別
-                Map.Entry<String,List<ZipCodeKen.Item>> entry1 = it1.next();
+                Map.Entry<String, List<ZipCodeKen.Item>> entry1 = it1.next();
                 String key1 = entry1.getKey();
                 List<ZipCodeKen.Item> list = entry1.getValue();
 
@@ -373,16 +373,16 @@ public class ZipCode2Xml {
      *
      * @param content コンテントノード
      */
-    private void _makeJigyosyoMenuNode(Element content) {
+    private void _makeJigyosyoMenuNode(final Element content) {
         Element menu = _appendElement(content, "menu");
         Element layerElem = _appendLayer(menu, "INDEX:top");
-        Map<String,Map<String,List<ZipCodeJigyosyo.Item>>> map = _jigyosyo.getAddressMap();
-        Iterator<Map.Entry<String,Map<String,List<ZipCodeJigyosyo.Item>>>> it = map.entrySet().iterator();
+        Map<String, Map<String, List<ZipCodeJigyosyo.Item>>> map = _jigyosyo.getAddressMap();
+        Iterator<Map.Entry<String, Map<String, List<ZipCodeJigyosyo.Item>>>> it = map.entrySet().iterator();
         while (it.hasNext()) {
             // 都道府県別
-            Map.Entry<String,Map<String,List<ZipCodeJigyosyo.Item>>> entry = it.next();
+            Map.Entry<String, Map<String, List<ZipCodeJigyosyo.Item>>> entry = it.next();
             String key = entry.getKey();
-            Map<String,List<ZipCodeJigyosyo.Item>> map1 = entry.getValue();
+            Map<String, List<ZipCodeJigyosyo.Item>> map1 = entry.getValue();
 
             _appendRawText(layerElem, "\u21d2 ");
             Element refElem = _appendIdReference(layerElem, "INDEX:" + key);
@@ -395,10 +395,10 @@ public class ZipCode2Xml {
             _appendRawText(layerElem1, " > " + key);
             _appendNewLine(layerElem1);
 
-            Iterator<Map.Entry<String,List<ZipCodeJigyosyo.Item>>> it1 = map1.entrySet().iterator();
+            Iterator<Map.Entry<String, List<ZipCodeJigyosyo.Item>>> it1 = map1.entrySet().iterator();
             while (it1.hasNext()) {
                 // 市区町村別
-                Map.Entry<String,List<ZipCodeJigyosyo.Item>> entry1 = it1.next();
+                Map.Entry<String, List<ZipCodeJigyosyo.Item>> entry1 = it1.next();
                 String key1 = entry1.getKey();
                 List<ZipCodeJigyosyo.Item> list = entry1.getValue();
 
@@ -436,7 +436,7 @@ public class ZipCode2Xml {
      *
      * @param content コンテントノード
      */
-    private void _makeKenCopyrightNode(Element content) {
+    private void _makeKenCopyrightNode(final Element content) {
         Element copyright = _appendElement(content, "copyright");
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy年MM月dd日");
         String[] lines = {
@@ -457,7 +457,7 @@ public class ZipCode2Xml {
      *
      * @param content コンテントノード
      */
-    private void _makeJigyosyoCopyrightNode(Element content) {
+    private void _makeJigyosyoCopyrightNode(final Element content) {
         Element copyright = _appendElement(content, "copyright");
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy年MM月dd日");
         String[] lines = {
@@ -478,15 +478,15 @@ public class ZipCode2Xml {
      *
      * @param subbook subbookノード
      */
-    private void _makeFontNode(Element subbook) {
+    private void _makeFontNode(final Element subbook) {
         if (_gaijiMap.isEmpty()) {
             return;
         }
         Element font = _appendElement(subbook, "font");
         File gaiji = new File(_basedir, GAIJI_DIR);
-        Iterator<Map.Entry<String,String>> it = _gaijiMap.entrySet().iterator();
+        Iterator<Map.Entry<String, String>> it = _gaijiMap.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<String,String> entry = it.next();
+            Map.Entry<String, String> entry = it.next();
             String name = entry.getKey();
             String type = entry.getValue();
             File file = new File(gaiji, name + ".xbm");
@@ -509,7 +509,7 @@ public class ZipCode2Xml {
      * @param node テキストを追加するノード
      * @param str 文字列
      */
-    private void _appendRawText(Node node, String str) {
+    private void _appendRawText(final Node node, final String str) {
         if (str != null && str.trim().length() > 0) {
             Text text = node.getOwnerDocument().createTextNode(str);
             node.appendChild(text);
@@ -524,7 +524,7 @@ public class ZipCode2Xml {
      * @param tag 要素のタグ名称
      * @return 追加された要素
      */
-    private Element _appendElement(Node node, String tag) {
+    private Element _appendElement(final Node node, final String tag) {
         Element elem = node.getOwnerDocument().createElement(tag);
         return (Element)node.appendChild(elem);
     }
@@ -535,7 +535,7 @@ public class ZipCode2Xml {
      * @param node 改行を追加するノード
      * @return 追加された改行要素
      */
-    private Element _appendNewLine(Node node) {
+    private Element _appendNewLine(final Node node) {
         return _appendElement(node, "br");
     }
 
@@ -547,7 +547,7 @@ public class ZipCode2Xml {
      * @param id ID属性値
      * @return 追加された項目要素
      */
-    private Element _appendItem(Node node, String id) {
+    private Element _appendItem(final Node node, final String id) {
         Element elem = _appendElement(node, "item");
         elem.setAttribute("id", id);
         return elem;
@@ -560,7 +560,7 @@ public class ZipCode2Xml {
      * @param id ID属性値
      * @return 追加された参照要素
      */
-    private Element _appendIdReference(Node node, String id) {
+    private Element _appendIdReference(final Node node, final String id) {
         Element elem = _appendElement(node, "ref");
         elem.setAttribute("id", id);
         return elem;
@@ -573,7 +573,7 @@ public class ZipCode2Xml {
      * @param id ID属性値
      * @return 追加されたレイヤ要素
      */
-    private Element _appendLayer(Node node, String id) {
+    private Element _appendLayer(final Node node, final String id) {
         Element elem = _appendElement(node, "layer");
         elem.setAttribute("id", id);
         return elem;
@@ -584,7 +584,7 @@ public class ZipCode2Xml {
      *
      * @param node ノード
      */
-    private void _checkCharacter(Node node) {
+    private void _checkCharacter(final Node node) {
         if (node.getNodeType() == Node.TEXT_NODE) {
             Text text = (Text)node;
             String str = text.getNodeValue();

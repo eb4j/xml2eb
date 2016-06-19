@@ -28,7 +28,7 @@ public class IndexLayer extends ArrayList<Index> {
      * @param file ベースファイル
      * @param level 階層レベル
      */
-    public IndexLayer(File file, int level) {
+    public IndexLayer(final File file, final int level) {
         super();
         _level = level;
         File dir = file.getParentFile();
@@ -84,7 +84,7 @@ public class IndexLayer extends ArrayList<Index> {
      *
      * @param len 固定単語長
      */
-    public void setWordLength(int len) {
+    public void setWordLength(final int len) {
         _wordLength = len;
     }
 
@@ -114,7 +114,7 @@ public class IndexLayer extends ArrayList<Index> {
      * @return 追加に成功した場合はtrue、そうでない場合はfalse
      */
     @Override
-    public boolean add(Index index) {
+    public boolean add(final Index index) {
         _blockLength += index.getWord().getWordLength() + 13;
         return super.add(index);
     }

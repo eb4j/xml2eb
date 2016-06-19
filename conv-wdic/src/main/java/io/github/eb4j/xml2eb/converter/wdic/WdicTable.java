@@ -26,7 +26,7 @@ public class WdicTable {
     /** 辞書ID */
     private String _id = null;
     /** テーブルデータリスト */
-    List<String> _list = new ArrayList<String>();
+    List<String> _list = new ArrayList<>();
 
     /** テーブルイメージ */
     private BufferedImage _img = null;
@@ -37,7 +37,7 @@ public class WdicTable {
      *
      * @param item 辞書項目
      */
-    public WdicTable(WdicItem item) {
+    public WdicTable(final WdicItem item) {
         super();
         _logger = LoggerFactory.getLogger(getClass());
         _item = item;
@@ -52,7 +52,7 @@ public class WdicTable {
      *
      * @param line テーブルデータ
      */
-    public void add(String line) {
+    public void add(final String line) {
         _list.add(line);
     }
 
@@ -233,9 +233,9 @@ public class WdicTable {
                                 dx = tw - imgs[k].getWidth();
                                 break;
                             case WdicTableItem.LEFT:
-                            default: {
                                 break;
-                            }
+                            default:
+                                break;
                         }
                         WaitImageObserver obs = new WaitImageObserver();
                         if (!g2.drawImage(imgs[k], x+dx, y+dy, obs)) {

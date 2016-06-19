@@ -14,15 +14,15 @@ import javax.sound.sampled.AudioFormat;
 public class Reference {
 
     /** 外字マップ */
-    private Map<String,Integer> _charMap = null;
+    private Map<String, Integer> _charMap = null;
     /** タグマップ */
-    private Map<String,Position> _tagMap = null;
+    private Map<String, Position> _tagMap = null;
     /** 種別マップ */
-    private Map<String,String> _formatMap = null;
+    private Map<String, String> _formatMap = null;
     /** 音声フォーマットマップ */
-    private Map<String,AudioFormat> _audioFormatMap = null;
+    private Map<String, AudioFormat> _audioFormatMap = null;
     /** 参照リスト */
-    private Map<Position,String> _refMap = null;
+    private Map<Position, String> _refMap = null;
 
 
     /**
@@ -31,11 +31,11 @@ public class Reference {
      */
     public Reference() {
         super();
-        _charMap = new HashMap<String,Integer>();
-        _tagMap = new HashMap<String,Position>();
-        _formatMap = new HashMap<String,String>();
-        _audioFormatMap = new HashMap<String,AudioFormat>();
-        _refMap = new HashMap<Position,String>();
+        _charMap = new HashMap<>();
+        _tagMap = new HashMap<>();
+        _formatMap = new HashMap<>();
+        _audioFormatMap = new HashMap<>();
+        _refMap = new HashMap<>();
     }
 
     /**
@@ -44,7 +44,7 @@ public class Reference {
      * @param name 名称
      * @param code 外字コード
      */
-    public void putNarrowChar(String name, int code) {
+    public void putNarrowChar(final String name, final int code) {
         String key = "narrow:" + name;
         _charMap.put(key, Integer.valueOf(code));
     }
@@ -55,7 +55,7 @@ public class Reference {
      * @param name 名称
      * @return 登録されている場合はtrue、そうでない場合はfalse
      */
-    public boolean hasNarrowChar(String name) {
+    public boolean hasNarrowChar(final String name) {
         String key = "narrow:" + name;
         return _charMap.containsKey(key);
     }
@@ -66,7 +66,7 @@ public class Reference {
      * @param name 名称
      * @return 外字コード
      */
-    public int getNarrowChar(String name) {
+    public int getNarrowChar(final String name) {
         String key = "narrow:" + name;
         Integer code = _charMap.get(key);
         if (code == null) {
@@ -81,7 +81,7 @@ public class Reference {
      * @param name 名称
      * @param code 外字コード
      */
-    public void putWideChar(String name, int code) {
+    public void putWideChar(final String name, final int code) {
         String key = "wide:" + name;
         _charMap.put(key, Integer.valueOf(code));
     }
@@ -92,7 +92,7 @@ public class Reference {
      * @param name 名称
      * @return 登録されている場合はtrue、そうでない場合はfalse
      */
-    public boolean hasWideChar(String name) {
+    public boolean hasWideChar(final String name) {
         String key = "wide:" + name;
         return _charMap.containsKey(key);
     }
@@ -103,7 +103,7 @@ public class Reference {
      * @param name 名称
      * @return 外字コード
      */
-    public int getWideChar(String name) {
+    public int getWideChar(final String name) {
         String key = "wide:" + name;
         Integer code = _charMap.get(key);
         if (code == null) {
@@ -119,7 +119,7 @@ public class Reference {
      * @param file ファイル
      * @param pos 開始位置
      */
-    public void putHeadTag(String name, File file, long pos) {
+    public void putHeadTag(final String name, final File file, final long pos) {
         String key = "head:" + name;
         _tagMap.put(key, new Position(file, pos));
     }
@@ -130,7 +130,7 @@ public class Reference {
      * @param name タグ名称
      * @return 登録されている場合はtrue、そうでない場合はfalse
      */
-    public boolean hasHeadTag(String name) {
+    public boolean hasHeadTag(final String name) {
         String key = "head:" + name;
         return _tagMap.containsKey(key);
     }
@@ -141,7 +141,7 @@ public class Reference {
      * @param name タグ名称
      * @return 開始位置
      */
-    public Position getHeadTag(String name) {
+    public Position getHeadTag(final String name) {
         String key = "head:" + name;
         return _tagMap.get(key);
     }
@@ -153,7 +153,7 @@ public class Reference {
      * @param file ファイル
      * @param pos 開始位置
      */
-    public void putBodyTag(String name, File file, long pos) {
+    public void putBodyTag(final String name, final File file, final long pos) {
         String key = "body:" + name;
         _tagMap.put(key, new Position(file, pos));
     }
@@ -164,7 +164,7 @@ public class Reference {
      * @param name タグ名称
      * @return 登録されている場合はtrue、そうでない場合はfalse
      */
-    public boolean hasBodyTag(String name) {
+    public boolean hasBodyTag(final String name) {
         String key = "body:" + name;
         return _tagMap.containsKey(key);
     }
@@ -175,7 +175,7 @@ public class Reference {
      * @param name タグ名称
      * @return 開始位置
      */
-    public Position getBodyTag(String name) {
+    public Position getBodyTag(final String name) {
         String key = "body:" + name;
         return _tagMap.get(key);
     }
@@ -188,7 +188,8 @@ public class Reference {
      * @param file ファイル
      * @param pos 開始位置
      */
-    public void putGraphicTag(String name, String format, File file, long pos) {
+    public void putGraphicTag(final String name, final String format, final File file,
+                              final long pos) {
         String key = "graphic:" + name;
         _tagMap.put(key, new Position(file, pos));
         _formatMap.put(key, format);
@@ -200,7 +201,7 @@ public class Reference {
      * @param name タグ名称
      * @return 登録されている場合はtrue、そうでない場合はfalse
      */
-    public boolean hasGraphicTag(String name) {
+    public boolean hasGraphicTag(final String name) {
         String key = "graphic:" + name;
         return _tagMap.containsKey(key);
     }
@@ -211,7 +212,7 @@ public class Reference {
      * @param name タグ名称
      * @return 開始位置
      */
-    public Position getGraphicTag(String name) {
+    public Position getGraphicTag(final String name) {
         String key = "graphic:" + name;
         return _tagMap.get(key);
     }
@@ -222,7 +223,7 @@ public class Reference {
      * @param name タグ名称
      * @return 画像フォーマット
      */
-    public String getGraphicFormat(String name) {
+    public String getGraphicFormat(final String name) {
         String key = "graphic:" + name;
         return _formatMap.get(key);
     }
@@ -236,7 +237,8 @@ public class Reference {
      * @param start 開始位置
      * @param end 終了位置
      */
-    public void putSoundTag(String name, String format, File file, long start, long end) {
+    public void putSoundTag(final String name, final String format, final File file,
+                            final long start, final long end) {
         String key = "sound-start:" + name;
         _tagMap.put(key, new Position(file, start));
         key = "sound-end:" + name;
@@ -251,7 +253,7 @@ public class Reference {
      * @param name タグ名称
      * @return 登録されている場合はtrue、そうでない場合はfalse
      */
-    public boolean hasSoundTag(String name) {
+    public boolean hasSoundTag(final String name) {
         String key = "sound-start:" + name;
         return _tagMap.containsKey(key);
     }
@@ -262,7 +264,7 @@ public class Reference {
      * @param name タグ名称
      * @return 位置 {開始位置,終了位置}
      */
-    public Position[] getSoundTag(String name) {
+    public Position[] getSoundTag(final String name) {
         Position[] pos = new Position[2];
         String key = "sound-start:" + name;
         pos[0] = _tagMap.get(key);
@@ -277,7 +279,7 @@ public class Reference {
      * @param name タグ名称
      * @return 音声フォーマット
      */
-    public String getSoundFormat(String name) {
+    public String getSoundFormat(final String name) {
         String key = "sound:" + name;
         return _formatMap.get(key);
     }
@@ -288,7 +290,7 @@ public class Reference {
      * @param name タグ名称
      * @param audioFormat 音声フォーマット
      */
-    public void putAudioFormat(String name, AudioFormat audioFormat) {
+    public void putAudioFormat(final String name, final AudioFormat audioFormat) {
         _audioFormatMap.put(name, audioFormat);
     }
 
@@ -298,7 +300,7 @@ public class Reference {
      * @param name タグ名称
      * @return 音声フォーマット
      */
-    public AudioFormat getAudioFormat(String name) {
+    public AudioFormat getAudioFormat(final String name) {
         return _audioFormatMap.get(name);
     }
 
@@ -309,7 +311,7 @@ public class Reference {
      * @param pos 位置
      * @param name 参照タグ名称
      */
-    public void putHeadRef(File file, long pos, String name) {
+    public void putHeadRef(final File file, final long pos, final String name) {
         String tag = "head:" + name;
         _refMap.put(new Position(file, pos), tag);
     }
@@ -321,7 +323,7 @@ public class Reference {
      * @param pos 位置
      * @param name 参照タグ名称
      */
-    public void putBodyRef(File file, long pos, String name) {
+    public void putBodyRef(final File file, final long pos, final String name) {
         String tag = "body:" + name;
         _refMap.put(new Position(file, pos), tag);
     }
@@ -333,7 +335,7 @@ public class Reference {
      * @param pos 参照位置
      * @param name 参照タグ名称
      */
-    public void putIndexRef(File file, long pos, String name) {
+    public void putIndexRef(final File file, final long pos, final String name) {
         String tag = "index:" + name;
         _refMap.put(new Position(file, pos), tag);
     }
@@ -345,7 +347,7 @@ public class Reference {
      * @param pos 参照位置
      * @param name 参照タグ名称
      */
-    public void putGraphicRef(File file, long pos, String name) {
+    public void putGraphicRef(final File file, final long pos, final String name) {
         String tag = "graphic:" + name;
         _refMap.put(new Position(file, pos), tag);
      }
@@ -357,7 +359,7 @@ public class Reference {
      * @param pos 参照位置
      * @param name 参照タグ名称
      */
-    public void putSoundRef(File file, long pos, String name) {
+    public void putSoundRef(final File file, final long pos, final String name) {
         String tag = "sound:" + name;
         _refMap.put(new Position(file, pos), tag);
     }
@@ -367,7 +369,7 @@ public class Reference {
      *
      * @return 見出し参照位置
      */
-    public Map<Position,String> getHeadRef() {
+    public Map<Position, String> getHeadRef() {
         return _getRef("head:");
     }
 
@@ -376,7 +378,7 @@ public class Reference {
      *
      * @return 本文参照位置
      */
-    public Map<Position,String> getBodyRef() {
+    public Map<Position, String> getBodyRef() {
         return _getRef("body:");
     }
 
@@ -385,7 +387,7 @@ public class Reference {
      *
      * @return インデックス参照位置
      */
-    public Map<Position,String> getIndexRef() {
+    public Map<Position, String> getIndexRef() {
         return _getRef("index:");
     }
 
@@ -394,7 +396,7 @@ public class Reference {
      *
      * @return 画像参照位置
      */
-    public Map<Position,String> getGraphicRef() {
+    public Map<Position, String> getGraphicRef() {
         return _getRef("graphic:");
     }
 
@@ -403,7 +405,7 @@ public class Reference {
      *
      * @return 音声参照位置
      */
-    public Map<Position,String> getSoundRef() {
+    public Map<Position, String> getSoundRef() {
         return _getRef("sound:");
     }
 
@@ -413,12 +415,12 @@ public class Reference {
      * @param prefix タグ名称の接頭辞
      * @return 参照位置マップ
      */
-    private Map<Position,String> _getRef(String prefix) {
+    private Map<Position, String> _getRef(final String prefix) {
         int len = prefix.length();
-        Map<Position,String> map = new HashMap<Position,String>();
-        Iterator<Map.Entry<Position,String>> it = _refMap.entrySet().iterator();
+        Map<Position, String> map = new HashMap<>();
+        Iterator<Map.Entry<Position, String>> it = _refMap.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<Position,String> entry = it.next();
+            Map.Entry<Position, String> entry = it.next();
             String tag = entry.getValue();
             if (tag.startsWith(prefix)) {
                 tag = tag.substring(len);

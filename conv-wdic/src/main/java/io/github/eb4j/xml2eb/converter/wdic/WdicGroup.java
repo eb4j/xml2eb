@@ -47,7 +47,7 @@ public class WdicGroup {
      * @param id 辞書グループID
      * @param file 辞書グループファイル
      */
-    public WdicGroup(WdicGroupList groupList, String id, File file) {
+    public WdicGroup(final WdicGroupList groupList, final String id, final File file) {
         super();
         _logger = LoggerFactory.getLogger(getClass());
         _groupList = groupList;
@@ -59,7 +59,7 @@ public class WdicGroup {
 
     /**
      * 辞書グループリストを返します。
-     *
+     * @return dictionary group list.
      */
     public WdicGroupList getGroupList() {
         return _groupList;
@@ -89,7 +89,7 @@ public class WdicGroup {
      * @param word 単語
      * @return 単語が含まれる辞書
      */
-    public Wdic getWdic(String word) {
+    public Wdic getWdic(final String word) {
         int len = _list.size();
         for (int i=0; i<len; i++) {
             Wdic dic = _list.get(i);
@@ -106,7 +106,7 @@ public class WdicGroup {
      * @param word 単語
      * @return 辞書項目 (指定された単語が存在しない場合はnull)
      */
-    protected WdicItem getWdicItem(String word) {
+    protected WdicItem getWdicItem(final String word) {
         int len = _list.size();
         for (int i=0; i<len; i++) {
             Wdic dic = _list.get(i);
@@ -144,7 +144,7 @@ public class WdicGroup {
      * @param dir 分類
      * @param list 項目リスト
      */
-    protected void getWdicItem(String dir, List<WdicItem> list) {
+    protected void getWdicItem(final String dir, final List<WdicItem> list) {
         int len = _list.size();
         for (int i=0; i<len; i++) {
             Wdic dic = _list.get(i);
@@ -157,7 +157,7 @@ public class WdicGroup {
      *
      * @param map プラグイン一覧
      */
-    protected void getPluginMap(Map<String,Set<WdicItem>> map) {
+    protected void getPluginMap(final Map<String, Set<WdicItem>> map) {
         int len = _list.size();
         for (int i=0; i<len; i++) {
             Wdic dic = _list.get(i);
@@ -180,7 +180,7 @@ public class WdicGroup {
      * @param obj 比較対象オブジェクト
      * @return 等しい場合はtrue、そうでない場合はfalse
      */
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj instanceof WdicGroup) {
             WdicGroup group = (WdicGroup)obj;
             return _groupId.equals(group.getGroupId());

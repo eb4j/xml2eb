@@ -25,10 +25,10 @@ import io.github.eb4j.util.HexUtil;
  *
  * @author Hisaya FUKUMOTO
  */
-public class FontUtil {
+public final class FontUtil {
 
     /** ログ */
-    private static final Logger _logger = LoggerFactory.getLogger(FontUtil.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FontUtil.class);
 
 
     /**
@@ -46,7 +46,7 @@ public class FontUtil {
      * @param codePoint Unicodeコードポイント
      * @return 文字タイプ (narrow/wide)
      */
-    public static String getFontType(int codePoint) {
+    public static String getFontType(final int codePoint) {
         Character.UnicodeBlock unicodeBlock = Character.UnicodeBlock.of(codePoint);
         if (Character.UnicodeBlock.BASIC_LATIN.equals(unicodeBlock)
             || Character.UnicodeBlock.LATIN_1_SUPPLEMENT.equals(unicodeBlock)
@@ -90,9 +90,10 @@ public class FontUtil {
      * @param font フォント
      * @return イメージ
      */
-    public static BufferedImage smallCharToImage(int codePoint, int width, int height, Font font) {
+    public static BufferedImage smallCharToImage(final int codePoint, final int width,
+                                                 final int height, final Font font) {
         int h2 = height * 4 / 5;
-        font = font.deriveFont((float)height);
+        Font derivedFont = font.deriveFont((float)height);
         String code = "U+" + HexUtil.toHexString(codePoint, 6);
         String str = String.valueOf(Character.toChars(codePoint));
         Character.UnicodeBlock unicodeBlock = Character.UnicodeBlock.of(codePoint);
@@ -100,14 +101,14 @@ public class FontUtil {
         BufferedImage img =
             new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = img.createGraphics();
-        FontMetrics fm = g2.getFontMetrics(font);
+        FontMetrics fm = g2.getFontMetrics(derivedFont);
         int w = fm.charWidth(codePoint);
         int h = fm.getAscent() + fm.getDescent();
         if (w > width || h > h2) {
-            int size = font.getSize() - 1;
+            int size = derivedFont.getSize() - 1;
             for (; size>0; size--) {
-                font = font.deriveFont((float)size);
-                fm = g2.getFontMetrics(font);
+                derivedFont = derivedFont.deriveFont((float)size);
+                fm = g2.getFontMetrics(derivedFont);
                 w = fm.charWidth(codePoint);
                 h = fm.getAscent() + fm.getDescent();
                 if (w <= width && h <= h2) {
@@ -118,11 +119,11 @@ public class FontUtil {
         int x = (width - w) / 2;
         int y = (height - h2) + (h2 - h) / 2 + fm.getAscent();
 
-        _logger.debug("display font: [" + code + "]"
+        LOGGER.debug("display font: [" + code + "]"
                       + " block:" + unicodeBlock.toString()
-                      + " font:" + font.getName()
-                      + " size:" + font.getSize());
-        g2.setFont(font);
+                      + " font:" + derivedFont.getName()
+                      + " size:" + derivedFont.getSize());
+        g2.setFont(derivedFont);
         g2.setColor(Color.BLACK);
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
                             RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
@@ -140,8 +141,9 @@ public class FontUtil {
      * @param font フォント
      * @return イメージ
      */
-    public static BufferedImage charToImage(int codePoint, int width, int height, Font font) {
-        font = font.deriveFont((float)height);
+    public static BufferedImage charToImage(final int codePoint, final int width, final int height,
+                                            final Font font) {
+        Font derivedFont = font.deriveFont((float)height);
         String code = "U+" + HexUtil.toHexString(codePoint, 6);
         String str = String.valueOf(Character.toChars(codePoint));
         Character.UnicodeBlock unicodeBlock = Character.UnicodeBlock.of(codePoint);
@@ -149,14 +151,14 @@ public class FontUtil {
         BufferedImage img =
             new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = img.createGraphics();
-        FontMetrics fm = g2.getFontMetrics(font);
+        FontMetrics fm = g2.getFontMetrics(derivedFont);
         int w = fm.charWidth(codePoint);
         int h = fm.getAscent() + fm.getDescent();
         if (w > width || h > height) {
-            int size = font.getSize() - 1;
+            int size = derivedFont.getSize() - 1;
             for (; size>0; size--) {
-                font = font.deriveFont((float)size);
-                fm = g2.getFontMetrics(font);
+                derivedFont = derivedFont.deriveFont((float)size);
+                fm = g2.getFontMetrics(derivedFont);
                 w = fm.charWidth(codePoint);
                 h = fm.getAscent() + fm.getDescent();
                 if (w <= width && h <= height) {
@@ -168,17 +170,17 @@ public class FontUtil {
         int y = height - h + fm.getAscent();
 
         if (unicodeBlock == null) {
-            _logger.debug("display font: [" + code + "]"
+            LOGGER.debug("display font: [" + code + "]"
                           + " block:UNKNOWN_UNICODE_BLOCK"
-                          + " font:" + font.getName()
-                          + " size:" + font.getSize());
+                          + " font:" + derivedFont.getName()
+                          + " size:" + derivedFont.getSize());
         } else {
-            _logger.debug("display font: [" + code + "]"
+            LOGGER.debug("display font: [" + code + "]"
                           + " block:" + unicodeBlock.toString()
-                          + " font:" + font.getName()
-                          + " size:" + font.getSize());
+                          + " font:" + derivedFont.getName()
+                          + " size:" + derivedFont.getSize());
         }
-        g2.setFont(font);
+        g2.setFont(derivedFont);
         g2.setColor(Color.BLACK);
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
                             RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
@@ -195,33 +197,33 @@ public class FontUtil {
      * @param font フォント
      * @return イメージ
      */
-    public static BufferedImage stringToImage(String str, int height, Font font) {
-        font = font.deriveFont((float)height);
+    public static BufferedImage stringToImage(final String str, final int height, final Font font) {
+        Font derivedFont = font.deriveFont((float)height);
         BufferedImage img =
             new BufferedImage(1, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = img.createGraphics();
-        FontMetrics fm = g2.getFontMetrics(font);
+        FontMetrics fm = g2.getFontMetrics(derivedFont);
         int h = fm.getAscent() + fm.getDescent();
         if (h > height) {
-            int size = font.getSize() - 1;
+            int size = derivedFont.getSize() - 1;
             for (; size>0; size--) {
-                font = font.deriveFont((float)size);
-                fm = g2.getFontMetrics(font);
+                derivedFont = derivedFont.deriveFont((float)size);
+                fm = g2.getFontMetrics(derivedFont);
                 h = fm.getAscent() + fm.getDescent();
                 if (h <= height) {
                     break;
                 }
             }
         }
-        if (_logger.isTraceEnabled()) {
-            _logger.trace("string: '" + str + "'");
-            _logger.trace("font: name='" + font.getName() + "'"
-                          + ", size=" + font.getSize()
-                          + ", isPlain=" + font.isPlain()
-                          + ", isBold=" + font.isBold()
-                          + ", isItalic=" + font.isItalic()
-                          + ", isTransformed=" + font.isTransformed());
-            _logger.trace("fontMmetrics: height=" + fm.getHeight()
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("string: '" + str + "'");
+            LOGGER.trace("font: name='" + derivedFont.getName() + "'"
+                          + ", size=" + derivedFont.getSize()
+                          + ", isPlain=" + derivedFont.isPlain()
+                          + ", isBold=" + derivedFont.isBold()
+                          + ", isItalic=" + derivedFont.isItalic()
+                          + ", isTransformed=" + derivedFont.isTransformed());
+            LOGGER.trace("fontMmetrics: height=" + fm.getHeight()
                           + ", ascent=" + fm.getAscent()
                           + ", descent=" + fm.getDescent()
                           + ", leading=" + fm.getLeading()
@@ -235,7 +237,7 @@ public class FontUtil {
         img.flush();
         img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         g2 = img.createGraphics();
-        g2.setFont(font);
+        g2.setFont(derivedFont);
         g2.setColor(Color.BLACK);
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
                             RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
@@ -251,13 +253,13 @@ public class FontUtil {
      * @param width 画像の幅
      * @return ビットマップデータ
      */
-    public static byte[][] split(BufferedImage img, int width) {
-        width = width + (7 - ((width + 7) % 8)); // 8の倍数
+    public static byte[][] split(final BufferedImage img, final int width) {
+        int width8 = width + (7 - ((width + 7) % 8)); // 8の倍数
         int w = img.getWidth();
         int h = img.getHeight();
-        int n = (w + width - 1) / width;
-        int pad = (width * n - w) / 2; // センタリング
-        int size = h * width / 8;
+        int n = (w + width8 - 1) / width8;
+        int pad = (width8 * n - w) / 2; // センタリング
+        int size = h * width8 / 8;
         byte[][] b = new byte[n][size];
         for (int i=0; i<n; i++) {
             Arrays.fill(b[i], (byte)0x00);
@@ -266,10 +268,10 @@ public class FontUtil {
         int x = 0;
         int y = 0;
         while (y < h) {
-            int idx1 = x / width;
-            int idx2 = y * (width / 8) + ((x - width * idx1) / 8);
+            int idx1 = x / width8;
+            int idx2 = y * (width8 / 8) + ((x - width8 * idx1) / 8);
             int bits = 0;
-            for (int i=0; i<8; i++,x++) {
+            for (int i = 0; i < 8; i++, x++) {
                 int rgb = 0;
                 if (x >= pad && x < w) {
                     rgb = img.getRGB(x-pad, y);
@@ -295,7 +297,7 @@ public class FontUtil {
      * @param file 出力ファイル
      * @exception IOException 入出力エラーが発生した場合
      */
-    public static void writeXbm(BufferedImage img, File file) throws IOException {
+    public static void writeXbm(final BufferedImage img, final File file) throws IOException {
         int w = img.getWidth();
         int width = w + (7 - ((w + 7) % 8)); // 8の倍数
         int height = img.getHeight();
@@ -307,7 +309,7 @@ public class FontUtil {
         int idx = 0;
         while (y < height) {
             int bits = 0;
-            for (int i=0; i<8; i++,x++) {
+            for (int i = 0; i < 8; i++, x++) {
                 int rgb = 0;
                 if (x < w) {
                     rgb = img.getRGB(x, y);
@@ -335,7 +337,8 @@ public class FontUtil {
      * @param file 出力ファイル
      * @exception IOException 入出力エラーが発生した場合
      */
-    public static void writeXbm(byte[] b, int width, int height, File file) throws IOException {
+    public static void writeXbm(final byte[] b, final int width, final int height, final File file)
+            throws IOException {
         BufferedWriter bw = null;
         try {
             Charset cs = Charset.forName("ISO-8859-1");

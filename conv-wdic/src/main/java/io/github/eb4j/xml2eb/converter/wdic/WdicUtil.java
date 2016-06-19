@@ -30,17 +30,17 @@ import io.github.eb4j.xml2eb.util.UnicodeUtil;
  *
  * @author Hisaya FUKUMOTO
  */
-public class WdicUtil {
+public final class WdicUtil {
 
     /** ログ */
     private static final Logger _logger = LoggerFactory.getLogger(WdicUtil.class);
     /** 文字参照マップ */
-    private static final Map<String,String> _charMap = new HashMap<String,String>();
+    private static final Map<String, String> _charMap = new HashMap<>();
 
     /** フォントマップ (Unicodeブロック別) */
-    private static final Map<Character.UnicodeBlock,Font[]> _fontBlockMap = new HashMap<Character.UnicodeBlock,Font[]>();
+    private static final Map<Character.UnicodeBlock, Font[]> _fontBlockMap = new HashMap<>();
     /** フォントマップ (Unicodeコードポイント別) */
-    private static final Map<Integer,Font> _fontCodeMap = new HashMap<Integer,Font>();
+    private static final Map<Integer, Font> _fontCodeMap = new HashMap<>();
 
     /** デフォルトフォント */
     private static Font[] DEFAULT_FONTS = null;
@@ -60,7 +60,7 @@ public class WdicUtil {
     private static final int BOTTOM = 2;
 
     static {
-        Map<String,Font> fontMap = new HashMap<String,Font>();
+        Map<String, Font> fontMap = new HashMap<>();
         int len = LOGICAL_FONTS.length;
         for (int i=0; i<len; i++) {
             fontMap.put(LOGICAL_FONTS[i].getFamily(Locale.ENGLISH), LOGICAL_FONTS[i]);
@@ -202,7 +202,7 @@ public class WdicUtil {
      * @param str 文字列
      * @return タブ数
      */
-    public static int getTabCount(String str) {
+    public static int getTabCount(final String str) {
         int tab = 0;
         int len = str.length();
         for (int i=0; i<len; i++) {
@@ -220,7 +220,7 @@ public class WdicUtil {
      * @param str 文字列
      * @return 削除後の文字列
      */
-    public static String deleteTab(String str) {
+    public static String deleteTab(final String str) {
         if (str == null) {
             return "";
         }
@@ -233,18 +233,19 @@ public class WdicUtil {
      * @param str 文字列
      * @return 変換後の文字列
      */
-    public static String sanitize(String str) {
+    public static String sanitize(final String str) {
+        String target = str;
         if (str != null && str.length() > 0) {
             switch (str.charAt(0)) {
                 case '\ufeff': // ZWNBSP
                 case '\u001a': // ^Z
-                    str = str.substring(1);
+                    target = str.substring(1);
                     break;
                 default:
                     break;
             }
         }
-        return UnicodeUtil.sanitizeUnicode(str);
+        return UnicodeUtil.sanitizeUnicode(target);
     }
 
     /**
@@ -255,11 +256,12 @@ public class WdicUtil {
      * @param offset 検索開始位置
      * @return 文字位置
      */
-    public static int indexOf(String str, String searchStr, int offset) {
+    public static int indexOf(final String str, final String searchStr, final int offset) {
         int len = str.length();
-        while (offset < len) {
-            int idx1 = str.indexOf(searchStr, offset);
-            if (idx1 <= offset) {
+        int off = offset;
+        while (off < len) {
+            int idx1 = str.indexOf(searchStr, off);
+            if (idx1 <= off) {
                 return idx1;
             }
             if (str.charAt(idx1-1) != '\\') {
@@ -267,7 +269,7 @@ public class WdicUtil {
             } else {
                 int cnt = 1;
                 int idx2 = idx1 - 2;
-                while (idx2 >= offset) {
+                while (idx2 >= off) {
                     if (str.charAt(idx2) != '\\') {
                         break;
                     }
@@ -279,7 +281,7 @@ public class WdicUtil {
                     return idx1;
                 }
             }
-            offset = idx1 + 1;
+            off = idx1 + 1;
         }
         return -1;
     }
@@ -291,7 +293,7 @@ public class WdicUtil {
      * @param str 文字列
      * @return 展開後の文字列
      */
-    public static String unescape(String str) {
+    public static String unescape(final String str) {
         StringBuilder buf = new StringBuilder();
         int len = str.length();
         for (int i=0; i<len; i++) {
@@ -397,7 +399,7 @@ public class WdicUtil {
      * @param name 参照名称
      * @return 文字
      */
-    public static String getCharacter(String name) {
+    public static String getCharacter(final String name) {
         String ch = _charMap.get(name);
         if (ch != null) {
             return ch;
@@ -412,60 +414,61 @@ public class WdicUtil {
      * @param codePoint カタカナ表音拡張文字
      * @return カタカナ
      */
-    public static int toLargeKatakana(int codePoint) {
-        switch (codePoint) {
+    public static int toLargeKatakana(final int codePoint) {
+        int code = codePoint;
+        switch (code) {
             case '\u31f0': // KU
-                codePoint = '\u30af';
+                code = '\u30af';
                 break;
             case '\u31f1': // SI
-                codePoint = '\u30b7';
+                code = '\u30b7';
                 break;
             case '\u31f2': // SU
-                codePoint = '\u30b9';
+                code = '\u30b9';
                 break;
             case '\u31f3': // TO
-                codePoint = '\u30c8';
+                code = '\u30c8';
                 break;
             case '\u31f4': // NU
-                codePoint = '\u30cc';
+                code = '\u30cc';
                 break;
             case '\u31f5': // HA
-                codePoint = '\u30cf';
+                code = '\u30cf';
                 break;
             case '\u31f6': // HI
-                codePoint = '\u30d2';
+                code = '\u30d2';
                 break;
             case '\u31f7': // HU
-                codePoint = '\u30d5';
+                code = '\u30d5';
                 break;
             case '\u31f8': // HE
-                codePoint = '\u30d8';
+                code = '\u30d8';
                 break;
             case '\u31f9': // HO
-                codePoint = '\u30db';
+                code = '\u30db';
                 break;
             case '\u31fa': // MU
-                codePoint = '\u30e0';
+                code = '\u30e0';
                 break;
             case '\u31fb': // RA
-                codePoint = '\u30e9';
+                code = '\u30e9';
                 break;
             case '\u31fc': // RI
-                codePoint = '\u30ea';
+                code = '\u30ea';
                 break;
             case '\u31fd': // RU
-                codePoint = '\u30eb';
+                code = '\u30eb';
                 break;
             case '\u31fe': // RE
-                codePoint = '\u30ec';
+                code = '\u30ec';
                 break;
             case '\u31ff': // RO
-                codePoint = '\u30ed';
+                code = '\u30ed';
                 break;
             default:
                 break;
         }
-        return codePoint;
+        return code;
     }
 
     /**
@@ -474,7 +477,7 @@ public class WdicUtil {
      * @param str 文字列
      * @return イメージ
      */
-    public static BufferedImage toImage(String str) {
+    public static BufferedImage toImage(final String str) {
         Font font = getFont(str.codePointAt(0));
         return FontUtil.stringToImage(str, 16, font);
     }
@@ -485,26 +488,27 @@ public class WdicUtil {
      * @param codePoint Unicodeコードポイント
      * @return イメージ
      */
-    public static BufferedImage toImage(int codePoint) {
-        String type = FontUtil.getFontType(codePoint);
-        Font font = getFont(codePoint);
+    public static BufferedImage toImage(final int codePoint) {
+        int cp = codePoint;
+        String type = FontUtil.getFontType(cp);
+        Font font = getFont(cp);
         BufferedImage img = null;
-        if (font.canDisplay(codePoint)) {
+        if (font.canDisplay(cp)) {
             if ("narrow".equals(type)) {
-                img = FontUtil.charToImage(codePoint, 8, 16, font);
+                img = FontUtil.charToImage(cp, 8, 16, font);
             } else {
-                img = FontUtil.charToImage(codePoint, 16, 16, font);
+                img = FontUtil.charToImage(cp, 16, 16, font);
             }
         } else {
-            Character.UnicodeBlock unicodeBlock = Character.UnicodeBlock.of(codePoint);
+            Character.UnicodeBlock unicodeBlock = Character.UnicodeBlock.of(cp);
             if (Character.UnicodeBlock.KATAKANA_PHONETIC_EXTENSIONS.equals(unicodeBlock)) {
                 // 通常のカタカナを小さくして描画
-                codePoint = toLargeKatakana(codePoint);
-                font = getFont(codePoint);
-                img = FontUtil.smallCharToImage(codePoint, 8, 16, font);
+                cp = toLargeKatakana(cp);
+                font = getFont(cp);
+                img = FontUtil.smallCharToImage(cp, 8, 16, font);
             } else {
                 // 表示できない文字は'?'を描画
-                String code = "U+" + toHexString(codePoint);
+                String code = "U+" + toHexString(cp);
                 if (unicodeBlock == null) {
                     _logger.warn("unavailable display font: [" + code + "]"
                                  + " UNKNOWN_UNICODE_BLOCK");
@@ -512,12 +516,12 @@ public class WdicUtil {
                     _logger.warn("unavailable display font: [" + code + "]"
                                  + " " + unicodeBlock.toString());
                 }
-                codePoint = '?';
-                font = getFont(codePoint);
+                cp = '?';
+                font = getFont(cp);
                 if ("narrow".equals(type)) {
-                    img = FontUtil.charToImage(codePoint, 8, 16, font);
+                    img = FontUtil.charToImage(cp, 8, 16, font);
                 } else {
-                    img = FontUtil.charToImage(codePoint, 16, 16, font);
+                    img = FontUtil.charToImage(cp, 16, 16, font);
                 }
             }
         }
@@ -530,7 +534,7 @@ public class WdicUtil {
      * @param codePoint Unicodeコードポイント
      * @return イメージ
      */
-    public static BufferedImage toOverLineImage(int codePoint) {
+    public static BufferedImage toOverLineImage(final int codePoint) {
         return toLineImage(codePoint, TOP);
     }
 
@@ -540,7 +544,7 @@ public class WdicUtil {
      * @param codePoint Unicodeコードポイント
      * @return イメージ
      */
-    public static BufferedImage toUnderLineImage(int codePoint) {
+    public static BufferedImage toUnderLineImage(final int codePoint) {
         return toLineImage(codePoint, BOTTOM);
     }
 
@@ -550,7 +554,7 @@ public class WdicUtil {
      * @param codePoint Unicodeコードポイント
      * @return イメージ
      */
-    public static BufferedImage toLineThroughImage(int codePoint) {
+    public static BufferedImage toLineThroughImage(final int codePoint) {
         return toLineImage(codePoint, MIDDLE);
     }
 
@@ -561,7 +565,7 @@ public class WdicUtil {
      * @param pos 線の位置
      * @return イメージ
      */
-    private static BufferedImage toLineImage(int codePoint, int pos) {
+    private static BufferedImage toLineImage(final int codePoint, final int pos) {
         BufferedImage img = toImage(codePoint);
         Graphics2D g2 = img.createGraphics();
         int w = img.getWidth();
@@ -594,7 +598,7 @@ public class WdicUtil {
      * @param codePoint Unicodeコードポイント
      * @return フォント
      */
-    public static Font getFont(int codePoint) {
+    public static Font getFont(final int codePoint) {
         // コード指定フォント
         Font font = _fontCodeMap.get(codePoint);
         if (font != null && font.canDisplay(codePoint)) {
@@ -643,7 +647,7 @@ public class WdicUtil {
         return LOGICAL_FONTS[0];
     }
 
-    private static String toHexString(int x) {
+    protected static String toHexString(final int x) {
         ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES);
         buffer.putInt(x);
         return Hex.encodeHexString(buffer.array());

@@ -29,9 +29,9 @@ public class WdicDirList {
     /** 分類リストファイル */
     private File _file = null;
     /** 分類マップ */
-    private Map<String,String> _map = null;
+    private Map<String, String> _map = null;
     /** エイリアスマップ */
-    private Map<String,String> _alias = null;
+    private Map<String, String> _alias = null;
 
 
     /**
@@ -39,12 +39,12 @@ public class WdicDirList {
      *
      * @param file 分類リストファイル
      */
-    public WdicDirList(File file) {
+    public WdicDirList(final File file) {
         super();
         _logger = LoggerFactory.getLogger(getClass());
         _file = file;
-        _map = new LinkedHashMap<String,String>();
-        _alias = new HashMap<String,String>();
+        _map = new LinkedHashMap<>();
+        _alias = new HashMap<>();
         _load();
     }
 
@@ -54,16 +54,19 @@ public class WdicDirList {
      * @param parent 親分類
      * @return 子分類
      */
-    public List<String> getChildren(String parent) {
+    public List<String> getChildren(final String parent) {
+        String sparent;
         if (!parent.endsWith("/")) {
-            parent += "/";
+            sparent = parent + "/";
+        } else {
+            sparent = parent;
         }
         ArrayList<String> list = new ArrayList<String>();
-        int len = parent.length();
+        int len = sparent.length();
         Iterator<String> it = _map.keySet().iterator();
         while (it.hasNext()) {
             String key = it.next();
-            if (key.startsWith(parent) && !key.equals(parent)) {
+            if (key.startsWith(sparent) && !key.equals(sparent)) {
                 String str = key.substring(len);
                 if (!str.contains("/")) {
                     list.add(key);
@@ -79,7 +82,7 @@ public class WdicDirList {
      * @param dir 分類
      * @return 分類の名称
      */
-    public String getName(String dir) {
+    public String getName(final String dir) {
         return _map.get(dir);
     }
 
@@ -89,7 +92,7 @@ public class WdicDirList {
      * @param dir 分類
      * @return 別名が存在する場合はtrue、そうでない場合はfalse
      */
-    public boolean hasAlias(String dir) {
+    public boolean hasAlias(final String dir) {
         return _alias.containsKey(dir);
     }
 
@@ -99,7 +102,7 @@ public class WdicDirList {
      * @param dir 分類
      * @return 分類の別名
      */
-    public String getAlias(String dir) {
+    public String getAlias(final String dir) {
         return _alias.get(dir);
     }
 

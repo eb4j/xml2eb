@@ -5,7 +5,7 @@ package io.github.eb4j.xml2eb.util;
  *
  * @author Hisaya FUKUMOTO
  */
-public class UnicodeUtil {
+public final class UnicodeUtil {
 
     /**
      * コンストラクタ。
@@ -35,7 +35,7 @@ public class UnicodeUtil {
      * @param str 矯正する文字列
      * @return 矯正後の文字列
      */
-    public static String sanitizeUnicode(String str) {
+    public static String sanitizeUnicode(final String str) {
         if (str == null) {
             return null;
         }

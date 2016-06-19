@@ -37,7 +37,7 @@ public class WdicGroupList {
     /** 辞書の版 */
     private String _edition = null;
     /** グループマップ */
-    private Map<String,WdicGroup> _map = null;
+    private Map<String, WdicGroup> _map = null;
 
 
     /**
@@ -45,7 +45,7 @@ public class WdicGroupList {
      *
      * @param file 辞書グループリストファイル
      */
-    public WdicGroupList(File file) {
+    public WdicGroupList(final File file) {
         super();
         _logger = LoggerFactory.getLogger(getClass());
         _file = file;
@@ -86,7 +86,7 @@ public class WdicGroupList {
      * @param group 辞書グループID
      * @return 辞書グループ
      */
-    public WdicGroup getGroup(String group) {
+    public WdicGroup getGroup(final String group) {
         return _map.get(group);
     }
 
@@ -96,7 +96,7 @@ public class WdicGroupList {
      * @param dir 分類
      * @return 項目リスト
      */
-    public List<WdicItem> getWdicItem(String dir) {
+    public List<WdicItem> getWdicItem(final String dir) {
         List<WdicItem> list = new ArrayList<WdicItem>();
         Iterator<WdicGroup> it = _map.values().iterator();
         while (it.hasNext()) {
@@ -111,8 +111,8 @@ public class WdicGroupList {
      *
      * @return プラグイン一覧
      */
-    public Map<String,Set<WdicItem>> getPluginMap() {
-        Map<String,Set<WdicItem>> pmap = new TreeMap<String,Set<WdicItem>>();
+    public Map<String, Set<WdicItem>> getPluginMap() {
+        Map<String, Set<WdicItem>> pmap = new TreeMap<>();
         Iterator<WdicGroup> it = _map.values().iterator();
         while (it.hasNext()) {
             WdicGroup grp = it.next();
@@ -152,7 +152,7 @@ public class WdicGroupList {
                     continue;
                 }
                 switch (section) {
-                    case 1: {
+                    case 1:
                         Matcher m = attrPattern.matcher(line);
                         if (m.matches()) {
                             String name = m.group(1);
@@ -166,8 +166,7 @@ public class WdicGroupList {
                             }
                         }
                         break;
-                    }
-                    case 2: {
+                    case 2:
                         String[] str = line.split("\\t");
                         if (str.length >= 2) {
                             File dir = _file.getParentFile();
@@ -176,7 +175,6 @@ public class WdicGroupList {
                             _map.put(group.getGroupId(), group);
                         }
                         break;
-                    }
                     default:
                         break;
                 }

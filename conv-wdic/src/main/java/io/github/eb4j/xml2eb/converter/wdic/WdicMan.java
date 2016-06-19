@@ -27,7 +27,8 @@ public class WdicMan {
     private static final String ENCODING = "UTF-8";
 
     /** セクション開始パターン */
-    private static final Pattern SEC_PATTERN = Pattern.compile("^-+\\s\\u25a0\\s(\\S*)\\s\\u25a0\\s-+$");
+    private static final Pattern SEC_PATTERN = Pattern
+            .compile("^-+\\s\\u25a0\\s(\\S*)\\s\\u25a0\\s-+$");
 
     /** ログ */
     private Logger _logger = null;
@@ -36,7 +37,7 @@ public class WdicMan {
     /** 著作権情報 */
     private List<String> _copyList = null;
     /** セクションマップ */
-    private Map<String,List<String>> _map = null;
+    private Map<String, List<String>> _map = null;
 
 
     /**
@@ -44,12 +45,12 @@ public class WdicMan {
      *
      * @param file マニュアルファイル
      */
-    public WdicMan(File file) {
+    public WdicMan(final File file) {
         super();
         _logger = LoggerFactory.getLogger(getClass());
         _file = file;
-        _copyList = new ArrayList<String>();
-        _map = new LinkedHashMap<String,List<String>>();
+        _copyList = new ArrayList<>();
+        _map = new LinkedHashMap<>();
         _load();
     }
 
@@ -78,7 +79,7 @@ public class WdicMan {
      * @param sec セクション
      * @return セクションの内容
      */
-    public String[] getContents(String sec) {
+    public String[] getContents(final String sec) {
         List<String> list = _map.get(sec);
         if (list == null) {
             return new String[0];
@@ -147,7 +148,7 @@ public class WdicMan {
      * @param list コンテンツリスト
      * @return 次のセクション名
      */
-    private String _loadSection(LineIterator it, List<String> list) {
+    private String _loadSection(final LineIterator it, final List<String> list) {
         Pattern footnote = Pattern.compile("^\\(%[0-9]+\\)\\s+.+$");
         Pattern numlist = Pattern.compile("^[0-9]+\\..+$");
 
@@ -195,7 +196,7 @@ public class WdicMan {
      * @param list コンテンツリスト
      * @return 次のセクション名
      */
-    private String _loadFeature(LineIterator it, List<String> list) {
+    private String _loadFeature(final LineIterator it, final List<String> list) {
         StringBuilder buf = new StringBuilder();
         while (it.hasNext()) {
             String line = WdicUtil.sanitize(it.nextLine());
@@ -244,7 +245,7 @@ public class WdicMan {
      * @param list コンテンツリスト
      * @return 次のセクション名
      */
-    private String _loadFormat(LineIterator it, List<String> list) {
+    private String _loadFormat(final LineIterator it, final List<String> list) {
         StringBuilder buf = new StringBuilder();
         while (it.hasNext()) {
             String line = WdicUtil.sanitize(it.nextLine());
@@ -292,7 +293,7 @@ public class WdicMan {
      * @param list コンテンツリスト
      * @return 次のセクション名
      */
-    private String _loadPartOfSpeech(LineIterator it, List<String> list) {
+    private String _loadPartOfSpeech(final LineIterator it, final List<String> list) {
         StringBuilder buf = new StringBuilder();
         String subsec = null;
         while (it.hasNext()) {
@@ -369,7 +370,7 @@ public class WdicMan {
      * @param list コンテンツリスト
      * @return 次のセクション名
      */
-    private String _loadReading(LineIterator it, List<String> list) {
+    private String _loadReading(final LineIterator it, final List<String> list) {
         StringBuilder buf = new StringBuilder();
         while (it.hasNext()) {
             String line = WdicUtil.sanitize(it.nextLine());
@@ -438,7 +439,7 @@ public class WdicMan {
      * @param list コンテンツリスト
      * @return 次のセクション名
      */
-    private String _loadRules(LineIterator it, List<String> list) {
+    private String _loadRules(final LineIterator it, final List<String> list) {
         StringBuilder buf = new StringBuilder();
         while (it.hasNext()) {
             String line = WdicUtil.sanitize(it.nextLine());
@@ -486,7 +487,7 @@ public class WdicMan {
      * @param list コンテンツリスト
      * @return 次のセクション名
      */
-    private String _loadHistory(LineIterator it, List<String> list) {
+    private String _loadHistory(final LineIterator it, final List<String> list) {
         while (it.hasNext()) {
             String line = WdicUtil.sanitize(it.nextLine());
             Matcher m = SEC_PATTERN.matcher(line);
@@ -514,7 +515,7 @@ public class WdicMan {
      * @param list コンテンツリスト
      * @return 次のセクション名
      */
-    private String _loadEnvironment(LineIterator it, List<String> list) {
+    private String _loadEnvironment(final LineIterator it, final List<String> list) {
         StringBuilder buf = new StringBuilder();
         while (it.hasNext()) {
             String line = WdicUtil.sanitize(it.nextLine());
@@ -553,7 +554,7 @@ public class WdicMan {
      * @param list コンテンツリスト
      * @return 次のセクション名
      */
-    private String _loadSupport(LineIterator it, List<String> list) {
+    private String _loadSupport(final LineIterator it, final List<String> list) {
         Pattern numlist = Pattern.compile("^\\([0-9]+\\).+$");
         StringBuilder buf = new StringBuilder();
         while (it.hasNext()) {
@@ -586,7 +587,7 @@ public class WdicMan {
      * @param list コンテンツリスト
      * @return 次のセクション名
      */
-    private String _loadCopyright(LineIterator it, List<String> list) {
+    private String _loadCopyright(final LineIterator it, final List<String> list) {
         Pattern endPattern = Pattern.compile("^-+$");
         Pattern itemPattern = Pattern.compile("^\\s+(\\S+)\\s+(\\S+)$");
 
@@ -624,7 +625,7 @@ public class WdicMan {
      * @param str 文字列
      * @return 文字列の長さ
      */
-    private int _getLength(String str) {
+    private int _getLength(final String str) {
         int len = 0;
         int n = str.length();
         for (int i=0; i<n; i++) {

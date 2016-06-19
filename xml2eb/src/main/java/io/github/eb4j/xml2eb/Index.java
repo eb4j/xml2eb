@@ -19,7 +19,7 @@ public class Index {
      * @param word 検索語
      * @param lowerBlock 下位インデックスのブロック番号
      */
-    public Index(Word word, long lowerBlock) {
+    public Index(final Word word, final long lowerBlock) {
         super();
         _word = word;
         _lowerBlock = lowerBlock;

@@ -44,7 +44,7 @@ public class Wdic {
     /** 項目リスト */
     private List<WdicItem> _itemList = null;
     /** プラグイン一覧 */
-    private Map<String,Set<WdicItem>> _pluginMap = null;
+    private Map<String, Set<WdicItem>> _pluginMap = null;
 
 
     /**
@@ -54,7 +54,7 @@ public class Wdic {
      * @param part 辞書の編
      * @param file 辞書ファイル
      */
-    public Wdic(WdicGroup group, String part, File file) {
+    public Wdic(final WdicGroup group, final String part, final File file) {
         super();
         _logger = LoggerFactory.getLogger(getClass());
         _group = group;
@@ -70,8 +70,8 @@ public class Wdic {
         if (idx > 0) {
             _partId = _partId.substring(0, idx);
         }
-        _itemList = new ArrayList<WdicItem>();
-        _pluginMap = new HashMap<String,Set<WdicItem>>();
+        _itemList = new ArrayList<>();
+        _pluginMap = new HashMap<>();
         _load();
     }
 
@@ -127,7 +127,7 @@ public class Wdic {
      * @param word 単語
      * @return 存在する場合はtrue、そうでない場合はfalse
      */
-    public boolean exists(String word) {
+    public boolean exists(final String word) {
         if (StringUtils.isBlank(word)) {
             return false;
         }
@@ -147,7 +147,7 @@ public class Wdic {
      * @param word 単語
      * @return 辞書項目 (指定された単語が存在しない場合はnull)
      */
-    public WdicItem getWdicItem(String word) {
+    public WdicItem getWdicItem(final String word) {
         if (StringUtils.isBlank(word)) {
             return null;
         }
@@ -167,7 +167,7 @@ public class Wdic {
      * @return 項目リスト
      */
     public List<WdicItem> getWdicItems() {
-        return new ArrayList<WdicItem>(_itemList);
+        return new ArrayList<>(_itemList);
     }
 
     /**
@@ -176,7 +176,7 @@ public class Wdic {
      * @param dir 分類
      * @param list 項目リスト
      */
-    protected void getWdicItem(String dir, List<WdicItem> list) {
+    protected void getWdicItem(final String dir, final List<WdicItem> list) {
         int len = _itemList.size();
         for (int i=0; i<len; i++) {
             WdicItem item = _itemList.get(i);
@@ -192,15 +192,15 @@ public class Wdic {
      *
      * @param map プラグイン一覧
      */
-    protected void getPluginMap(Map<String,Set<WdicItem>> map) {
-        Iterator<Map.Entry<String,Set<WdicItem>>> it = _pluginMap.entrySet().iterator();
+    protected void getPluginMap(final Map<String, Set<WdicItem>> map) {
+        Iterator<Map.Entry<String, Set<WdicItem>>> it = _pluginMap.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<String,Set<WdicItem>> item = it.next();
+            Map.Entry<String, Set<WdicItem>> item = it.next();
             String key = item.getKey();
             Set<WdicItem> set = item.getValue();
             Set<WdicItem> pset = map.get(key);
             if (pset == null) {
-                pset = new TreeSet<WdicItem>();
+                pset = new TreeSet<>();
                 map.put(key, pset);
             }
             pset.addAll(set);

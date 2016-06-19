@@ -61,7 +61,8 @@ public class WaitImageObserver implements ImageObserver {
      * @return イメージ全体がロードされた場合はfalse、そうでない場合はtrue
      */
     @Override
-    public boolean imageUpdate(Image img, int infoflags, int x, int y, int w, int h) {
+    public boolean imageUpdate(final Image img, final int infoflags, final int x, final int y,
+                               final int w, final int h) {
         synchronized (_lock) {
             if ((infoflags & ALLBITS) != 0) {
                 _complated = true;

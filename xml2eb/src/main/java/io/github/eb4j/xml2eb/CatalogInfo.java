@@ -80,7 +80,7 @@ public class CatalogInfo {
      *
      * @param type 書籍の種類
      */
-    public void setType(int type) {
+    public void setType(final int type) {
         _type = type;
     }
 
@@ -98,7 +98,7 @@ public class CatalogInfo {
      *
      * @param title 書籍名称
      */
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         _title = title;
     }
 
@@ -116,7 +116,7 @@ public class CatalogInfo {
      *
      * @param dir 書籍ディレクトリ名
      */
-    public void setDirectory(String dir) {
+    public void setDirectory(final String dir) {
         _dir = dir;
     }
 
@@ -138,7 +138,7 @@ public class CatalogInfo {
      * @param type 外字タイプ
      * @param name 外字ファイル名
      */
-    public void setExtFont(int type, String name) {
+    public void setExtFont(final int type, final String name) {
         _font[type] = name;
     }
 }

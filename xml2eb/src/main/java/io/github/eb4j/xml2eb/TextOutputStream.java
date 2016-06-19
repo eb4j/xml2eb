@@ -57,9 +57,10 @@ public class TextOutputStream extends BlockOutputStream {
     /**
      * コンストラクタ。
      *
+     * @param file Output file.
      * @param out 出力ストリーム
      */
-    public TextOutputStream(File file, OutputStream out) {
+    public TextOutputStream(final File file, final OutputStream out) {
         super(out);
         _logger = LoggerFactory.getLogger(getClass());
         _file = file;
@@ -71,7 +72,7 @@ public class TextOutputStream extends BlockOutputStream {
      *
      * @param ref 参照情報
      */
-    public void setReference(Reference ref) {
+    public void setReference(final Reference ref) {
         _ref = ref;
     }
 
@@ -81,7 +82,7 @@ public class TextOutputStream extends BlockOutputStream {
      * @param mod 制御識別子
      * @return 現在の制御識別子であればtrue、そうでなければfalse
      */
-    private boolean _isModifier(Integer mod) {
+    private boolean _isModifier(final Integer mod) {
         if (_stack.empty()) {
             return false;
         }
@@ -116,7 +117,7 @@ public class TextOutputStream extends BlockOutputStream {
      * @exception IOException 入出力エラーが発生した場合
      */
     @Override
-    public void write(byte[] b, int off, int len) throws IOException {
+    public void write(final byte[] b, final int off, final int len) throws IOException {
         if (_indent > 0) {
             byte[] val = new byte[4];
             val[0] = (byte)0x1f;
@@ -149,7 +150,7 @@ public class TextOutputStream extends BlockOutputStream {
      * @param level インデントレベル
      * @exception IOException 入出力エラーが発生した場合
      */
-    public void setIndent(int level) throws IOException {
+    public void setIndent(final int level) throws IOException {
         if (_isModifier(NARROW)) {
             endNarrow();
         }
@@ -162,7 +163,7 @@ public class TextOutputStream extends BlockOutputStream {
      * @param text テキスト
      * @exception IOException 入出力エラーが発生した場合
      */
-    public void append(String text) throws IOException {
+    public void append(final String text) throws IOException {
         if (StringUtils.isEmpty(text)) {
             return;
         }
@@ -237,7 +238,7 @@ public class TextOutputStream extends BlockOutputStream {
      * @param name 半角外字名
      * @exception IOException 入出力エラーが発生した場合
      */
-    public void appendNarrowChar(String name) throws IOException {
+    public void appendNarrowChar(final String name) throws IOException {
         int code = _ref.getNarrowChar(name);
         if (code < 0) {
             throw new IOException("narrow character name not defined: " + name);
@@ -255,7 +256,7 @@ public class TextOutputStream extends BlockOutputStream {
      * @param name 全角外字名
      * @exception IOException 入出力エラーが発生した場合
      */
-    public void appendWideChar(String name) throws IOException {
+    public void appendWideChar(final String name) throws IOException {
         int code = _ref.getWideChar(name);
         if (code < 0) {
             throw new IOException("wide character name not defined: " + name);
@@ -479,7 +480,7 @@ public class TextOutputStream extends BlockOutputStream {
      * @param type 修飾種別
      * @exception IOException 入出力エラーが発生した場合
      */
-    public void beginDecoration(int type) throws IOException {
+    public void beginDecoration(final int type) throws IOException {
         if (_isModifier(NARROW)) {
             endNarrow();
         }
@@ -569,7 +570,7 @@ public class TextOutputStream extends BlockOutputStream {
      * @param name 参照名称
      * @exception IOException 入出力エラーが発生した場合
      */
-    public void endReference(String name) throws IOException {
+    public void endReference(final String name) throws IOException {
         if (_isModifier(NARROW)) {
             endNarrow();
         }
@@ -592,7 +593,7 @@ public class TextOutputStream extends BlockOutputStream {
      * @param format 画像フォーマット
      * @exception IOException 入出力エラーが発生した場合
      */
-    public void beginInlineColorGraphic(String name, String format) throws IOException {
+    public void beginInlineColorGraphic(final String name, final String format) throws IOException {
         if (_isModifier(NARROW)) {
             endNarrow();
         }
@@ -642,7 +643,7 @@ public class TextOutputStream extends BlockOutputStream {
      * @param format 画像フォーマット
      * @exception IOException 入出力エラーが発生した場合
      */
-    public void beginColorGraphic(String name, String format) throws IOException {
+    public void beginColorGraphic(final String name, final String format) throws IOException {
         if (_isModifier(NARROW)) {
             endNarrow();
         }
@@ -691,7 +692,7 @@ public class TextOutputStream extends BlockOutputStream {
      * @param format 音声フォーマット
      * @exception IOException 入出力エラーが発生した場合
      */
-    public void beginSound(String name, String format) throws IOException {
+    public void beginSound(final String name, final String format) throws IOException {
         if (_isModifier(NARROW)) {
             endNarrow();
         }

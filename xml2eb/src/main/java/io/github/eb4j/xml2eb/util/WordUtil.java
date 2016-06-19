@@ -26,7 +26,7 @@ public class WordUtil {
      * @param word 検索語
      * @return 検索語として有効な場合はtrue、そうでない場合はfalse
      */
-    public static boolean isValidWord(String word) {
+    public static boolean isValidWord(final String word) {
         int len = word.length();
         int cnt = 0;
         for (int i=0; i<len; i++) {
@@ -61,7 +61,7 @@ public class WordUtil {
      * @param codePoint Unicodeコードポイント
      * @return 有効な文字である場合はtrue、そうでない場合はfalse
      */
-    public static boolean isValidChar(int codePoint) {
+    public static boolean isValidChar(final int codePoint) {
         if (Character.isSupplementaryCodePoint(codePoint)) {
             // 補助文字
             return false;

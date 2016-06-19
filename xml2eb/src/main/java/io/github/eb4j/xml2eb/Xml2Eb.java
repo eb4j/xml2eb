@@ -90,7 +90,7 @@ public class Xml2Eb {
      *
      * @param args コマンド行引数
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(final String[] args) throws Exception {
         if (args.length == 0) {
             System.out.println("java " + _PROGRAM + " [xml-file]");
         } else {
@@ -104,7 +104,7 @@ public class Xml2Eb {
      *
      * @param path XMLファイルパス
      */
-    public Xml2Eb(String path) {
+    public Xml2Eb(final String path) {
         this(new File(path));
     }
 
@@ -113,7 +113,7 @@ public class Xml2Eb {
      *
      * @param file XMLファイル
      */
-    public Xml2Eb(File file) {
+    public Xml2Eb(final File file) {
         super();
         _logger = LoggerFactory.getLogger(getClass());
         _xmlfile = file;
@@ -130,7 +130,7 @@ public class Xml2Eb {
      *
      * @param dir 出力ディレクトリ
      */
-    public void setOutDir(File dir) {
+    public void setOutDir(final File dir) {
         _outdir = dir;
     }
 
@@ -179,7 +179,7 @@ public class Xml2Eb {
      * @param subbook subbookノード
      * @return 書籍管理情報
      */
-    private CatalogInfo _convert(Element subbook) {
+    private CatalogInfo _convert(final Element subbook) {
         String type = subbook.getAttribute("type");
         String title = subbook.getAttribute("title");
         String dir = subbook.getAttribute("dir");
@@ -439,7 +439,7 @@ public class Xml2Eb {
      * @param node copyrightノード
      * @param ref 参照情報
      */
-    private void _writeCopyright(File file, Node node, Reference ref) {
+    private void _writeCopyright(final File file, final Node node, final Reference ref) {
         _logger.info("write file: " + file.getPath());
         TextOutputStream stream = null;
         try {
@@ -462,10 +462,10 @@ public class Xml2Eb {
      * 指定されたファイルにメニューデータを書き込みます。
      *
      * @param file メニューファイル
-     * @param node menuノード
+     * @param menu menuノード
      * @param ref 参照情報
      */
-    private void _writeMenu(File file, Element menu, Reference ref) {
+    private void _writeMenu(final File file, final Element menu, final Reference ref) {
         NodeList layerList = menu.getElementsByTagName("layer");
         _logger.info("write file: " + file.getPath());
         TextOutputStream stream = null;
@@ -501,7 +501,7 @@ public class Xml2Eb {
      * @param itemList itemノードリスト
      * @param ref 参照情報
      */
-    private void _writeHead(File file, NodeList itemList, Reference ref) {
+    private void _writeHead(final File file, final NodeList itemList, final Reference ref) {
         _logger.info("write file: " + file.getPath());
         TextOutputStream stream = null;
         try {
@@ -541,7 +541,7 @@ public class Xml2Eb {
      * @param itemList itemノードリスト
      * @param ref 参照情報
      */
-    private void _writeBody(File file, NodeList itemList, Reference ref) {
+    private void _writeBody(final File file, final NodeList itemList, final Reference ref) {
         _logger.info("write file: " + file.getPath());
         TextOutputStream stream = null;
         try {
@@ -583,7 +583,8 @@ public class Xml2Eb {
      * @param ref 参照情報
      * @return 検索語が存在した場合はtrue、そうでない場合はfalse
      */
-    private boolean _writeWordIndex(File file, NodeList itemList, int direction, Reference ref) {
+    private boolean _writeWordIndex(final File file, final NodeList itemList, final int direction,
+                                    final Reference ref) {
         _logger.info("write file: " + file.getPath());
         IndexWriter iw = null;
         boolean avail = false;
@@ -628,7 +629,8 @@ public class Xml2Eb {
      * @param ref 参照情報
      * @return キーワードが存在した場合はtrue、そうでない場合はfalse
      */
-    private boolean _writeKeywordIndex(File file, NodeList itemList, int direction, Reference ref) {
+    private boolean _writeKeywordIndex(final File file, final NodeList itemList,
+                                       final int direction, final Reference ref) {
         _logger.info("write file: " + file.getPath());
         IndexWriter iw = null;
         boolean avail = false;
@@ -673,7 +675,9 @@ public class Xml2Eb {
      * @param ref 参照情報
      * @exception IOException 入出力エラーが発生した場合
      */
-    private void _writeNode(TextOutputStream stream, Node node, int indent, Reference ref) throws IOException {
+    private int _writeNode(final TextOutputStream stream, final Node node, final int indent,
+                            final Reference ref) throws IOException {
+        int ind = indent;
         int ntype = node.getNodeType();
         if (ntype == Node.TEXT_NODE) {
             Text text = (Text)node;
@@ -714,8 +718,8 @@ public class Xml2Eb {
             } else if ("nobr".equals(tag)) {
                 stream.beginNoNewLine();
             } else if ("indent".equals(tag)) {
-                stream.setIndent(indent);
-                indent++;
+                stream.setIndent(ind);
+                ind++;
             } else if ("br".equals(tag)) {
                 stream.newLine();
             } else if ("char".equals(tag)) {
@@ -758,7 +762,7 @@ public class Xml2Eb {
                 NodeList list = node.getChildNodes();
                 int len = list.getLength();
                 for (int i=0; i<len; i++) {
-                    _writeNode(stream, list.item(i), indent, ref);
+                    ind = _writeNode(stream, list.item(i), ind, ref);
                 }
             }
 
@@ -778,8 +782,8 @@ public class Xml2Eb {
             } else if ("nobr".equals(tag)) {
                 stream.endNoNewLine();
             } else if ("indent".equals(tag)) {
-                indent -= 2;
-                stream.setIndent(indent);
+                ind -= 2;
+                stream.setIndent(ind);
             } else if ("ref".equals(tag)) {
                 if (e.hasAttribute("id")) {
                     String id = e.getAttribute("id");
@@ -803,6 +807,7 @@ public class Xml2Eb {
                 }
             }
         }
+        return ind;
     }
 
     /**
@@ -814,7 +819,8 @@ public class Xml2Eb {
      * @param format 画像タイプ
      * @param ref 参照情報
      */
-    private void _writeGraphic(File file, String[] src, String[] key, String[] format, Reference ref) {
+    private void _writeGraphic(final File file, final String[] src, final String[] key,
+                               final String[] format, final Reference ref) {
         _logger.info("write file: " + file.getPath());
         BlockOutputStream stream = null;
         long pos = 0L;
@@ -866,7 +872,8 @@ public class Xml2Eb {
      * @param format 音声タイプ
      * @param ref 参照情報
      */
-    private void _writeSound(File file, String[] src, String[] key, String[] format, Reference ref) {
+    private void _writeSound(final File file, final String[] src, final String[] key,
+                             final String[] format, final Reference ref) {
         _logger.info("write file: " + file.getPath());
         BlockOutputStream stream = null;
         long pos1 = 0L;
@@ -925,7 +932,8 @@ public class Xml2Eb {
      * @param width 横ドット数
      * @param height 縦ドット数
      */
-    private void _writeExtFont(File file, String[] src, int width, int height) {
+    private void _writeExtFont(final File file, final String[] src, final int width,
+                               final int height) {
         _logger.info("write file: " + file.getPath());
         BlockOutputStream stream = null;
         try {
@@ -990,7 +998,7 @@ public class Xml2Eb {
      * @param file 書籍管理ファイル
      * @param info 書籍管理情報
      */
-    private void _writeCatalogs(File file, CatalogInfo[] info) {
+    private void _writeCatalogs(final File file, final CatalogInfo[] info) {
         _logger.info("write file: " + file.getPath());
         BlockOutputStream stream = null;
         try {

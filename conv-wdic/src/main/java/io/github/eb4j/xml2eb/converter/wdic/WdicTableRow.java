@@ -11,7 +11,7 @@ import java.util.List;
 public class WdicTableRow {
 
     /** 要素リスト */
-    List<WdicTableItem> _items = new ArrayList<WdicTableItem>();
+    private List<WdicTableItem> tableItems = new ArrayList<WdicTableItem>();
 
 
     /**
@@ -28,7 +28,7 @@ public class WdicTableRow {
      * @param item 要素
      */
     public void add(WdicTableItem item) {
-        _items.add(item);
+        tableItems.add(item);
     }
 
     /**
@@ -38,7 +38,7 @@ public class WdicTableRow {
      * @param item 要素
      */
     public void add(int index, WdicTableItem item) {
-        _items.add(index, item);
+        tableItems.add(index, item);
     }
 
     /**
@@ -47,7 +47,7 @@ public class WdicTableRow {
      * @return 要素数
      */
     public int size() {
-        return _items.size();
+        return tableItems.size();
     }
 
     /**
@@ -57,7 +57,7 @@ public class WdicTableRow {
      * @return 要素
      */
     public WdicTableItem get(int index) {
-        return _items.get(index);
+        return tableItems.get(index);
     }
 }
 

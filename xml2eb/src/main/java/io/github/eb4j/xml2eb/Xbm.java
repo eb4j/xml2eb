@@ -31,7 +31,7 @@ public class Xbm {
      * @param path XBMファイルパス
      * @exception IOException 入出力エラーが発生した場合
      */
-    public Xbm(String path) throws IOException {
+    public Xbm(final String path) throws IOException {
         this(new File(path));
     }
 
@@ -41,7 +41,7 @@ public class Xbm {
      * @param file XBMファイル
      * @exception IOException 入出力エラーが発生した場合
      */
-    public Xbm(File file) throws IOException {
+    public Xbm(final File file) throws IOException {
         super();
         String str = FileUtils.readFileToString(file, "ISO-8859-1");
         int flag = Pattern.MULTILINE;

@@ -20,7 +20,7 @@ public class InvalidCharacterException extends IOException {
      *
      * @param codePoint 文字
      */
-    public InvalidCharacterException(int codePoint) {
+    public InvalidCharacterException(final int codePoint) {
         super();
         String code = HexUtil.toHexString(codePoint, 6);
         _msg = "invalid character: '"

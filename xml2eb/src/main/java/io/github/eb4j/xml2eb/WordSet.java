@@ -35,7 +35,7 @@ public class WordSet extends TreeSet<Word> {
      *
      * @param direction 単語の解析方向
      */
-    public WordSet(int direction) {
+    public WordSet(final int direction) {
         super();
         _logger = LoggerFactory.getLogger(getClass());
         _direction = direction;
@@ -51,7 +51,7 @@ public class WordSet extends TreeSet<Word> {
      * @exception UnsupportedEncodingException EUC-JPをサポートしていない場合
      * @exception IOException 無効な単語を登録しようとした場合
      */
-    public void add(String word, String tag)
+    public void add(final String word, final String tag)
         throws InvalidCharacterException, UnsupportedEncodingException, IOException {
         if (StringUtils.isBlank(word)) {
             return;

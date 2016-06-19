@@ -38,7 +38,7 @@ public class XmlUtil {
      * @param file 出力ファイル
      * @exception IOException 入出力エラーが発生した場合
      */
-    public static void write(Document doc, File file) throws IOException {
+    public static void write(final Document doc, final File file) throws IOException {
         InputStream stream = null;
         try {
             TransformerFactory factory = TransformerFactory.newInstance();

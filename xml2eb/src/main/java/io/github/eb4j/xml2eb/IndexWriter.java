@@ -40,7 +40,7 @@ public class IndexWriter {
      *
      * @param file ベースファイル
      */
-    public IndexWriter(File file) {
+    public IndexWriter(final File file) {
         super();
         _logger = LoggerFactory.getLogger(getClass());
         _file = file;
@@ -54,7 +54,7 @@ public class IndexWriter {
      *
      * @param ref 参照情報
      */
-    public void setReference(Reference ref) {
+    public void setReference(final Reference ref) {
         _ref = ref;
     }
 
@@ -95,7 +95,7 @@ public class IndexWriter {
      * @param set 検索語セット
      * @exception IOException 入出力エラーが発生した場合
      */
-    public void write(WordSet set) throws IOException {
+    public void write(final WordSet set) throws IOException {
         if (set.isEmpty()) {
             return;
         }
@@ -135,7 +135,7 @@ public class IndexWriter {
      * @param index インデックス
      * @exception IOException 入出力エラーが発生した場合
      */
-    private void _addUpperLayer(int level, Index index) throws IOException {
+    private void _addUpperLayer(final int level, final Index index) throws IOException {
         _logger.trace("level=" + level + ", word=" + index.getWord());
         IndexLayer layer = _layerList.get(level);
         int wordLen = index.getWord().getWordLength();
@@ -183,7 +183,7 @@ public class IndexWriter {
      * @param last 最後のインデックスの場合はtrue、そうでない場合はfalse
      * @exception IOException 入出力エラーが発生した場合
      */
-    private void _writeLeafLayer(boolean last) throws IOException {
+    private void _writeLeafLayer(final boolean last) throws IOException {
         IndexLayer layer = _layerList.get(0);
         if (layer.isEmpty()) {
             return;
@@ -231,7 +231,7 @@ public class IndexWriter {
      * @param level 階層レベル
      * @exception IOException 入出力エラーが発生した場合
      */
-    private void _writeUpperLayer(int level) throws IOException {
+    private void _writeUpperLayer(final int level) throws IOException {
         _writeUpperLayer(level, false);
     }
 
@@ -242,7 +242,7 @@ public class IndexWriter {
      * @param last 最後のインデックスの場合はtrue、そうでない場合はfalse
      * @exception IOException 入出力エラーが発生した場合
      */
-    private void _writeUpperLayer(int level, boolean last) throws IOException {
+    private void _writeUpperLayer(final int level, final boolean last) throws IOException {
         IndexLayer layer = _layerList.get(level);
         if (layer.isEmpty()) {
             return;

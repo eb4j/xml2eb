@@ -39,7 +39,7 @@ public class WdicBib {
      *
      * @param file マニュアルファイル
      */
-    public WdicBib(File file) {
+    public WdicBib(final File file) {
         super();
         _logger = LoggerFactory.getLogger(getClass());
         _file = file;
@@ -88,7 +88,7 @@ public class WdicBib {
      *
      * @param it 行イテレータ
      */
-    private void _loadBibliography(LineIterator it) {
+    private void _loadBibliography(final LineIterator it) {
         StringBuilder buf = new StringBuilder();
         while (it.hasNext()) {
             String line = WdicUtil.sanitize(it.nextLine());

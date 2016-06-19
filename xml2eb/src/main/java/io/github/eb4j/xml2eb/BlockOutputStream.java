@@ -21,7 +21,7 @@ public class BlockOutputStream extends FilterOutputStream {
      *
      * @param out 出力ストリーム
      */
-    public BlockOutputStream(OutputStream out) {
+    public BlockOutputStream(final OutputStream out) {
         super(out);
     }
 
@@ -54,7 +54,7 @@ public class BlockOutputStream extends FilterOutputStream {
      * @exception IOException 入出力エラーが発生した場合
      */
     @Override
-    public void write(byte[] b) throws IOException {
+    public void write(final byte[] b) throws IOException {
         write(b, 0, b.length);
     }
 
@@ -67,7 +67,7 @@ public class BlockOutputStream extends FilterOutputStream {
      * @exception IOException 入出力エラーが発生した場合
      */
     @Override
-    public void write(byte[] b, int off, int len) throws IOException {
+    public void write(final byte[] b, final int off, final int len) throws IOException {
         _size += len;
         out.write(b, off, len);
     }
@@ -79,7 +79,7 @@ public class BlockOutputStream extends FilterOutputStream {
      * @exception IOException 入出力エラーが発生した場合
      */
     @Override
-    public void write(int b) throws IOException {
+    public void write(final int b) throws IOException {
         byte[] val = new byte[1];
         val[0] = (byte)(b & 0xff);
         write(val, 0, val.length);

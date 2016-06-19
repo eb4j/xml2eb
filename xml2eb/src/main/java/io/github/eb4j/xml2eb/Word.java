@@ -21,7 +21,7 @@ public class Word implements Comparable<Word> {
      * @param word 検索語
      * @param tag 参照タグ名称
      */
-    public Word(byte[] word, String tag) {
+    public Word(final byte[] word, final String tag) {
         super();
         int len = word.length;
         _word = new byte[len];
@@ -83,7 +83,7 @@ public class Word implements Comparable<Word> {
      * @return 等しい場合はtrue、そうでない場合はfalse
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj instanceof Word) {
             if (compareTo((Word)obj) == 0) {
                 return true;
@@ -100,7 +100,7 @@ public class Word implements Comparable<Word> {
      *         等しい場合はゼロ、大きい場合は正の整数
      */
     @Override
-    public int compareTo(Word word) {
+    public int compareTo(final Word word) {
         byte[] b = word.getWord();
         int len1 = _word.length;
         int len2 = b.length;

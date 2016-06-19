@@ -44,7 +44,7 @@ public class ZipCodeKen {
      *
      * @param file 全国一括郵便番号ファイル
      */
-    public ZipCodeKen(File file) {
+    public ZipCodeKen(final File file) {
         super();
         _logger = LoggerFactory.getLogger(getClass());
         _file = file;
@@ -76,15 +76,15 @@ public class ZipCodeKen {
      *
      * @return 郵便番号をキーとする項目マップ
      */
-    public Map<String,List<Item>> getZipcodeMap() {
-        Map<String,List<Item>> map = new TreeMap<String,List<Item>>();
+    public Map<String, List<Item>> getZipcodeMap() {
+        Map<String, List<Item>> map = new TreeMap<String,List<Item>>();
         int size = _itemList.size();
         for (int i=0; i<size; i++) {
             Item item = _itemList.get(i);
             String key = item.getZipcode();
             List<Item> list = map.get(key);
             if (list == null) {
-                list = new ArrayList<Item>();
+                list = new ArrayList<>();
                 map.put(key, list);
             }
             list.add(item);
@@ -97,24 +97,24 @@ public class ZipCodeKen {
      *
      * @return 住所をキーとする項目マップ
      */
-    public Map<String,Map<String,List<Item>>> getAddressMap() {
-        Map<String,Map<String,List<Item>>> map =
+    public Map<String, Map<String, List<Item>>> getAddressMap() {
+        Map<String, Map<String, List<Item>>> map =
             new LinkedHashMap<String,Map<String,List<Item>>>();
         int size = _itemList.size();
         for (int i=0; i<size; i++) {
             Item item = _itemList.get(i);
             // 都道府県別
             String key1 = item.getPrefecture();
-            Map<String,List<Item>> map1 = map.get(key1);
+            Map<String, List<Item>> map1 = map.get(key1);
             if (map1 == null) {
-                map1 = new LinkedHashMap<String,List<Item>>();
+                map1 = new LinkedHashMap<>();
                 map.put(key1, map1);
             }
             // 市区町村別
             String key2 = item.getCity();
             List<Item> list = map1.get(key2);
             if (list == null) {
-                list = new ArrayList<Item>();
+                list = new ArrayList<>();
                 map1.put(key2, list);
             }
             list.add(item);
@@ -224,9 +224,9 @@ public class ZipCodeKen {
          * @param city 市区町村名
          * @param town 町域名
          */
-        protected Item(String code, String zipcode,
-                       String kanaPrefecture, String kanaCity, String kanaTown,
-                       String prefecture, String city, String town) {
+        protected Item(final String code, final String zipcode,
+                       final String kanaPrefecture, final String kanaCity, final String kanaTown,
+                       final String prefecture, final String city, final String town) {
             super();
             _code = code;
             _zipcode = zipcode.substring(0, 3) + "-" + zipcode.substring(3);
@@ -249,18 +249,18 @@ public class ZipCodeKen {
                 _exception = true;
                 _town = town;
             } else {
-                kanaTown = ZipCodeUtil.toFullwidth(kanaTown, town);
-                int idx1 = kanaTown.indexOf("\uff08");
+                String kana = ZipCodeUtil.toFullwidth(kanaTown, town);
+                int idx1 = kana.indexOf("\uff08");
                 if (idx1 == -1) {
-                    _kanaTown = kanaTown;
+                    _kanaTown = kana;
                 } else {
-                    _kanaTown = kanaTown.substring(0, idx1);
-                    int idx2 = kanaTown.indexOf("\uff09", idx1+1);
+                    _kanaTown = kana.substring(0, idx1);
+                    int idx2 = kana.indexOf("\uff09", idx1+1);
                     if (idx2 == -1) {
                         _closed = false;
-                        _kanaArea = kanaTown.substring(idx1+1);
+                        _kanaArea = kana.substring(idx1+1);
                     } else {
-                        _kanaArea = kanaTown.substring(idx1+1, idx2);
+                        _kanaArea = kana.substring(idx1+1, idx2);
                     }
                 }
 
@@ -395,14 +395,14 @@ public class ZipCodeKen {
          * @param kanaStr 小字名、丁目、番地等 (カタカナ表記)
          * @param str 小字名、丁目、番地等
          */
-        protected void appendArea(String kanaStr, String str) {
-            kanaStr = ZipCodeUtil.toFullwidth(kanaStr, str);
-            int idx = kanaStr.indexOf("\uff09");
+        protected void appendArea(final String kanaStr, final String str) {
+            String kana = ZipCodeUtil.toFullwidth(kanaStr, str);
+            int idx = kana.indexOf("\uff09");
             if (idx == -1) {
-                _kanaArea += kanaStr;
+                _kanaArea += kana;
             } else {
                 _closed = true;
-                _kanaArea += kanaStr.substring(0, idx);
+                _kanaArea += kana.substring(0, idx);
             }
             idx = str.indexOf("\uff09");
             if (idx == -1) {

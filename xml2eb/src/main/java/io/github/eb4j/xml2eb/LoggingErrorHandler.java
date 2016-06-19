@@ -22,7 +22,7 @@ class LoggingErrorHandler implements ErrorHandler {
      * コンストラクタ。
      *
      */
-    public LoggingErrorHandler() {
+    LoggingErrorHandler() {
         super();
         _logger = LoggerFactory.getLogger(getClass());
     }
@@ -35,7 +35,7 @@ class LoggingErrorHandler implements ErrorHandler {
      * @exception SAXException SAX例外
      */
     @Override
-    public void fatalError(SAXParseException exp) throws SAXException {
+    public void fatalError(final SAXParseException exp) throws SAXException {
         _logger.error("[" + exp.getLineNumber()
                       + ":" + exp.getColumnNumber() + "] "
                       + exp.getMessage());
@@ -49,7 +49,7 @@ class LoggingErrorHandler implements ErrorHandler {
      * @exception SAXException SAX例外
      */
     @Override
-    public void error(SAXParseException exp) throws SAXException {
+    public void error(final SAXParseException exp) throws SAXException {
         _logger.error("[" + exp.getLineNumber()
                       + ":" + exp.getColumnNumber() + "] "
                       + exp.getMessage());
@@ -63,7 +63,7 @@ class LoggingErrorHandler implements ErrorHandler {
      * @exception SAXException SAX例外
      */
     @Override
-    public void warning(SAXParseException exp) throws SAXException {
+    public void warning(final SAXParseException exp) throws SAXException {
         _logger.warn("[" + exp.getLineNumber()
                      + ":" + exp.getColumnNumber() + "] "
                      + exp.getMessage());

@@ -22,10 +22,10 @@ import org.slf4j.LoggerFactory;
  *
  * @author Hisaya FUKUMOTO
  */
-public class BmpUtil {
+public final class BmpUtil {
 
     /** ログ */
-    private static final Logger _logger = LoggerFactory.getLogger(BmpUtil.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BmpUtil.class);
 
 
     /**
@@ -44,9 +44,9 @@ public class BmpUtil {
      * @param file 出力ファイル
      * @exception IOException 入出力エラーが発生した場合
      */
-    public static void write(BufferedImage img, File file) throws IOException {
+    public static void write(final BufferedImage img, final File file) throws IOException {
         if (file.exists() && !file.delete()) {
-            _logger.error("failed to delete file: " + file.getPath());
+            LOGGER.error("failed to delete file: " + file.getPath());
         }
         Iterator<ImageWriter> it = ImageIO.getImageWritersByFormatName("bmp");
         if (!it.hasNext()) {
@@ -100,11 +100,11 @@ public class BmpUtil {
      * @param img 変換元イメージ
      * @return 変換されたイメージ
      */
-    private static BufferedImage _convertImage(BufferedImage img) {
+    private static BufferedImage _convertImage(final BufferedImage img) {
         BufferedImage img2 = null;
         ColorModel cm1 = img.getColorModel();
         int bits = cm1.getPixelSize();
-        _logger.debug("image info: " + cm1.getClass().getSimpleName()
+        LOGGER.debug("image info: " + cm1.getClass().getSimpleName()
                       + ", " + bits + "bits"
                       + ", hasAlpha=" + cm1.hasAlpha());
         Color bg = null;
@@ -112,7 +112,7 @@ public class BmpUtil {
             if (bits == 8) {
                 return null;
             }
-            _logger.info("convert image: " + bits + "bits -> 8bits");
+            LOGGER.info("convert image: " + bits + "bits -> 8bits");
             int size = 0x01 << 8;
             byte[] r = new byte[size];
             byte[] g = new byte[size];
@@ -133,7 +133,7 @@ public class BmpUtil {
             if (bits == 24) {
                 return null;
             }
-            _logger.info("convert image: " + bits + "bits -> 24bits");
+            LOGGER.info("convert image: " + bits + "bits -> 24bits");
             img2 = new BufferedImage(img.getWidth(),
                                      img.getHeight(),
                                      BufferedImage.TYPE_INT_RGB);

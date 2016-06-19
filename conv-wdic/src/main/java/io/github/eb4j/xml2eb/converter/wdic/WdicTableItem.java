@@ -67,7 +67,7 @@ public class WdicTableItem {
      * @param item 辞書項目
      * @param header 見出し要素の場合はtrue、そうでない場合はfalse
      */
-    public WdicTableItem(WdicItem item, boolean header) {
+    public WdicTableItem(final WdicItem item, final boolean header) {
         this(item, header, null);
     }
 
@@ -78,7 +78,7 @@ public class WdicTableItem {
      * @param header 見出し要素の場合はtrue、そうでない場合はfalse
      * @param data データ
      */
-    public WdicTableItem(WdicItem item, boolean header, String data) {
+    public WdicTableItem(final WdicItem item, final boolean header, final String data) {
         super();
         _logger = LoggerFactory.getLogger(getClass());
         _item = item;
@@ -213,7 +213,7 @@ public class WdicTableItem {
      *
      * @param color 背景色
      */
-    public void setBackground(Color color) {
+    public void setBackground(final Color color) {
         _background = color;
     }
 
@@ -231,7 +231,7 @@ public class WdicTableItem {
      *
      * @param bonding 横結合要素の場合はtrue、そうでない場合はfalse
      */
-    public void setHBonding(boolean bonding) {
+    public void setHBonding(final boolean bonding) {
         _hbonding = bonding;
     }
 
@@ -249,7 +249,7 @@ public class WdicTableItem {
      *
      * @param bonding 縦結合要素の場合はtrue、そうでない場合はfalse
      */
-    public void setVBonding(boolean bonding) {
+    public void setVBonding(final boolean bonding) {
         _vbonding = bonding;
     }
 
@@ -391,10 +391,12 @@ public class WdicTableItem {
      * @param y 描画開始y座標
      * @return 描画後x座標
      */
-    private int _drawText(Graphics2D g2, String str, int x, int y) {
+    private int _drawText(final Graphics2D g2, final String str, final int x, final int y) {
+        int xx = x;
+        int yy = y;
         StringBuilder buf = new StringBuilder();
         int len = str.length();
-        for (int i=0; i<len; i++) {
+        for (int i = 0; i < len; i++) {
             char ch = str.charAt(i);
             if (Character.isHighSurrogate(ch)
                 || Character.isLowSurrogate(ch)) {
@@ -405,7 +407,7 @@ public class WdicTableItem {
             if (ch == '\'') {
                 StringBuilder bracket = new StringBuilder("'");
                 int idx1 = i + 1;
-                for (; idx1<len; idx1++) {
+                for (; idx1 < len; idx1++) {
                     if (str.charAt(idx1) != '\'') {
                         break;
                     }
@@ -417,13 +419,13 @@ public class WdicTableItem {
                     if (idx2 != -1) {
                         // 強調
                         if (buf.length() > 0) {
-                            x = _drawRawText(g2, buf.toString(), x, y);
+                            xx = _drawRawText(g2, buf.toString(), xx, yy);
                             buf.delete(0, buf.length());
                         }
                         Font origFont = g2.getFont();
                         Font font = origFont.deriveFont(Font.ITALIC);
                         g2.setFont(font);
-                        x = _drawText(g2, str.substring(idx1, idx2), x, y);
+                        xx = _drawText(g2, str.substring(idx1, idx2), xx, yy);
                         g2.setFont(origFont);
                         i = idx2 + bracket.length() - 1;
                     } else {
@@ -436,17 +438,17 @@ public class WdicTableItem {
             } else if (ch == '[') {
                 if (i+1 < len && str.charAt(i+1) == '[') {
                     int idx1 = i + 1;
-                    int idx2 = WdicUtil.indexOf(str, "]]", idx1+1);
+                    int idx2 = WdicUtil.indexOf(str, "]]", idx1 + 1);
                     if (idx2 != -1) {
                         // リンク
-                        String ref = str.substring(idx1+1, idx2);
+                        String ref = str.substring(idx1 + 1, idx2);
                         String name = null;
                         if (ref.startsWith("<")) {
                             // 表示内容
                             int idx3 = WdicUtil.indexOf(ref, ">", 1);
                             if (idx3 != -1) {
                                 name = ref.substring(1, idx3);
-                                ref = ref.substring(idx3+1);
+                                ref = ref.substring(idx3 + 1);
                             }
                         }
                         String refid = null;
@@ -473,7 +475,7 @@ public class WdicTableItem {
                             String file = null;
                             idx3 = ref.indexOf("/", 2);
                             if (idx3 != -1) {
-                                file = ref.substring(idx3+1);
+                                file = ref.substring(idx3 + 1);
                             } else {
                                 file = ref.substring(2);
                             }
@@ -493,7 +495,7 @@ public class WdicTableItem {
                                 int idx3 = WdicUtil.indexOf(ref, "/", 1);
                                 if (idx3 != -1) {
                                     gid = ref.substring(1, idx3);
-                                    head = ref.substring(idx3+1);
+                                    head = ref.substring(idx3 + 1);
                                 } else {
                                     head = ref.substring(1);
                                 }
@@ -524,20 +526,20 @@ public class WdicTableItem {
                             }
                         }
                         if (buf.length() > 0) {
-                            x = _drawRawText(g2, buf.toString(), x, y);
+                            xx = _drawRawText(g2, buf.toString(), xx, yy);
                             buf.delete(0, buf.length());
                         }
                         Color origColor = g2.getColor();
                         g2.setColor(Color.BLUE);
-                        int start = x;
-                        x = _drawText(g2, name, x, y);
+                        int start = xx;
+                        xx = _drawText(g2, name, xx, yy);
                         g2.setColor(origColor);
                         i = idx2 + 1;
                         if (StringUtils.isNotBlank(refid)) {
                             // クリック領域
                             FontMetrics fm = g2.getFontMetrics();
                             int h = fm.getAscent() + fm.getDescent();
-                            Rectangle rect = new Rectangle(start, y, x, y+h);
+                            Rectangle rect = new Rectangle(start, yy, xx, yy + h);
                         }
                     } else {
                         // 閉じられていないのでそのまま追加する
@@ -601,25 +603,25 @@ public class WdicTableItem {
                 int idx1 = sep1;
                 int idx2 = -1;
                 while (idx1 != -1) {
-                    idx2 = ref.indexOf('}', idx1+1);
+                    idx2 = ref.indexOf('}', idx1 + 1);
                     if (idx2 == -1) {
                         idx2 = ref.length();
                     }
-                    param.add(ref.substring(idx1+1, idx2));
-                    idx1 = ref.indexOf('{', idx2+1);
+                    param.add(ref.substring(idx1 + 1, idx2));
+                    idx1 = ref.indexOf('{', idx2 + 1);
                 }
             } else {
                 // 引数は:で区切られている
                 name = ref.substring(0, sep2);
                 String[] arg = ref.substring(sep2+1).split(":");
                 int n = arg.length;
-                for (int j=0; j<n; j++) {
+                for (int j = 0; j < n; j++) {
                     param.add(arg[j]);
                 }
             }
 
             if (buf.length() > 0) {
-                x = _drawRawText(g2, buf.toString(), x, y);
+                xx = _drawRawText(g2, buf.toString(), xx, yy);
                 buf.delete(0, buf.length());
             }
             if ("x".equals(name)) {
@@ -635,8 +637,8 @@ public class WdicTableItem {
                 float size = origFont.getSize() - 2;
                 Font font = origFont.deriveFont(size);
                 g2.setFont(font);
-                int sy = y - 2;
-                x = _drawText(g2, param.get(0), x, sy);
+                int sy = yy - 2;
+                xx = _drawText(g2, param.get(0), xx, sy);
                 g2.setFont(origFont);
             } else if ("sub".equals(name)) {
                 FontMetrics fm1 = g2.getFontMetrics();
@@ -645,12 +647,12 @@ public class WdicTableItem {
                 Font font = origFont.deriveFont(size);
                 g2.setFont(font);
                 FontMetrics fm2 = g2.getFontMetrics(font);
-                int btm = y + fm1.getAscent() + fm1.getDescent() + 2;
+                int btm = yy + fm1.getAscent() + fm1.getDescent() + 2;
                 int sy = btm - fm2.getAscent() - fm2.getDescent();
-                x = _drawText(g2, param.get(0), x, sy);
+                xx = _drawText(g2, param.get(0), xx, sy);
                 g2.setFont(origFont);
             } else if ("ruby".equals(name)) {
-                x = _drawText(g2, param.get(0), x, y);
+                xx = _drawText(g2, param.get(0), xx, yy);
                 if (param.size() > 1) {
                     FontMetrics fm1 = g2.getFontMetrics();
                     Font origFont = g2.getFont();
@@ -658,9 +660,9 @@ public class WdicTableItem {
                     Font font = origFont.deriveFont(size);
                     g2.setFont(font);
                     FontMetrics fm2 = g2.getFontMetrics(font);
-                    int btm = y + fm1.getAscent() + fm1.getDescent() + 2;
+                    int btm = yy + fm1.getAscent() + fm1.getDescent() + 2;
                     int sy = btm - fm2.getAscent() - fm2.getDescent();
-                    x = _drawText(g2, "(" + param.get(1) + ")", x, sy);
+                    xx = _drawText(g2, "(" + param.get(1) + ")", xx, sy);
                     g2.setFont(origFont);
                 }
             } else if ("asin".equals(name)) {
@@ -684,39 +686,39 @@ public class WdicTableItem {
                         url = "http://www.amazon.com/exec/obidos/ASIN/";
                         break;
                 }
-                buf.append(url+asin);
+                buf.append(url + asin);
             } else if ("flag".equals(name)) {
                 // ignore
             } else if ("mex".equals(name)) {
                 buf.append("[" + param.get(0) + "]");
             } else if ("oline".equals(name)) {
-                int start = x;
-                x = _drawText(g2, param.get(0), x, y);
-                g2.drawLine(start, y, x, y);
+                int start = xx;
+                xx = _drawText(g2, param.get(0), xx, yy);
+                g2.drawLine(start, yy, xx, yy);
             } else if ("uline".equals(name)) {
-                int start = x;
-                x = _drawText(g2, param.get(0), x, y);
+                int start = xx;
+                xx = _drawText(g2, param.get(0), xx, yy);
                 FontMetrics fm = g2.getFontMetrics();
-                int yy = y + fm.getAscent() + fm.getDescent() - 1;
-                g2.drawLine(start, yy, x, yy);
+                int sy = yy + fm.getAscent() + fm.getDescent() - 1;
+                g2.drawLine(start, sy, xx, sy);
             } else if ("sout".equals(name)) {
-                int start = x;
-                x = _drawText(g2, param.get(0), x, y);
+                int start = xx;
+                xx = _drawText(g2, param.get(0), xx, yy);
                 FontMetrics fm = g2.getFontMetrics();
-                int yy = y + (fm.getAscent() + fm.getDescent()) / 2;
-                g2.drawLine(start, yy, x, yy);
+                int sy = yy + (fm.getAscent() + fm.getDescent()) / 2;
+                g2.drawLine(start, sy, xx, sy);
             } else {
                 if (!"unit".equals(name)
                     && !"date".equals(name) && !"dt".equals(name)) {
                     _logger.error("unknown function name: " + name);
                 }
-                x = _drawText(g2, param.get(0), x, y);
+                xx = _drawText(g2, param.get(0), xx, yy);
             }
         }
         if (buf.length() > 0) {
-            x = _drawRawText(g2, buf.toString(), x, y);
+            xx = _drawRawText(g2, buf.toString(), xx, yy);
         }
-        return x;
+        return xx;
     }
 
     /**
@@ -728,21 +730,23 @@ public class WdicTableItem {
      * @param y 描画開始y座標
      * @return 描画後x座標
      */
-    private int _drawRawText(Graphics2D g2, String str, int x, int y) {
-        str = str.replace((char)0x3099, (char)0x309b);
-        str = str.replace((char)0x309a, (char)0x309c);
+    private int _drawRawText(final Graphics2D g2, final String str, final int x, final int y) {
+        String request = str;
+        int xx = x;
+        request = request.replace((char)0x3099, (char)0x309b);
+        request = request.replace((char)0x309a, (char)0x309c);
         Font origFont = g2.getFont();
-        while (StringUtils.isNotEmpty(str)) {
-            int codePoint = str.codePointAt(0);
+        while (StringUtils.isNotEmpty(request)) {
+            int codePoint = request.codePointAt(0);
             Font font = WdicUtil.getFont(codePoint);
             font = font.deriveFont(origFont.getStyle(),
                                    origFont.getSize2D());
-            String drawStr = str;
+            String drawStr = request;
             int yy = y;
-            int n = font.canDisplayUpTo(str);
+            int n = font.canDisplayUpTo(request);
             if (n == 0 && font.getStyle() != Font.PLAIN) {
                 Font plainFont = font.deriveFont(Font.PLAIN, font.getSize2D());
-                n = plainFont.canDisplayUpTo(str);
+                n = plainFont.canDisplayUpTo(request);
                 if (n != 0) {
                     Character.UnicodeBlock unicodeBlock = Character.UnicodeBlock.of(codePoint);
                     String code = "U+" + HexUtil.toHexString(codePoint, 6);
@@ -776,16 +780,16 @@ public class WdicTableItem {
             }
             if (n == -1) {
                 // すべて表示可能
-                str = null;
+                request = null;
             } else if (n == 0) {
-                str = str.substring(Character.charCount(codePoint));
+                request = request.substring(Character.charCount(codePoint));
                 Character.UnicodeBlock unicodeBlock = Character.UnicodeBlock.of(codePoint);
                 if (Character.UnicodeBlock.KATAKANA_PHONETIC_EXTENSIONS.equals(unicodeBlock)) {
                     // 通常のカタカナを小さくして描画
                     codePoint = WdicUtil.toLargeKatakana(codePoint);
                     font = WdicUtil.getFont(codePoint);
                     font = font.deriveFont(origFont.getStyle(),
-                                           origFont.getSize2D()-2.0f);
+                                           origFont.getSize2D() - 2.0f);
                     FontMetrics fm1 = g2.getFontMetrics(origFont);
                     FontMetrics fm2 = g2.getFontMetrics(font);
                     int btm = y + fm1.getAscent() + fm1.getDescent();
@@ -811,17 +815,17 @@ public class WdicTableItem {
                 }
             } else {
                 // 表示可能な文字を描画
-                drawStr = str.substring(0, n);
-                str = str.substring(n);
+                drawStr = request.substring(0, n);
+                request = request.substring(n);
             }
             g2.setFont(font);
             FontMetrics fm = g2.getFontMetrics(font);
             yy += fm.getAscent();
-            g2.drawString(drawStr, x, yy);
-            x += fm.stringWidth(drawStr);
+            g2.drawString(drawStr, xx, yy);
+            xx += fm.stringWidth(drawStr);
         }
         g2.setFont(origFont);
-        return x;
+        return xx;
     }
 }
 
