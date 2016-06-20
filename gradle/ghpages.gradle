@@ -1,0 +1,36 @@
+githubPages {
+    repoUri = 'https://github.com/eb4j/xml2eb.git'
+    credentials {
+        username = project.githubToken
+        password = ''
+    }
+    targetBranch = 'gh-pages'
+    pages {
+        from 'build/asciidoc/html5'
+        from 'xml2eb/build/docs/javadoc'
+        from 'xml2eb/build/reports/'
+    }
+}
+
+version = '1.99.0-SNAPSHOT'
+asciidoctorj {
+    version = '1.5.4'
+}
+
+asciidoctor {
+    attributes 'build-gradle': file('build.gradle'),
+            'endpoint-url': 'http://eb4j.github.io/xml2eb/',
+            'source-highlighter': 'coderay',
+            'imagesdir': 'images',
+            'toc': 'left',
+            'icons': 'font',
+            'setanchors': 'true',
+            'idprefix': '',
+            'idseparator': '-',
+            'docinfo1': 'true'
+}
+
+publishGhPages.dependsOn ':xml2eb:check'
+publishGhPages.dependsOn ':xml2eb:check'
+publishGhPages.dependsOn asciidoctor
+

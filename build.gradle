@@ -9,11 +9,17 @@ plugins {
     id "co.riiid.gradle" version "0.4.2"
     // bintray
     id "com.jfrog.bintray" version "1.6"
+    // Publish to gh-pages
+    id 'org.ajoberstar.github-pages' version '1.1.0'
+    // AsciiDoc
+    id 'org.asciidoctor.gradle.asciidoctor' version '1.5.1'
+    id 'org.asciidoctor.convert' version '1.5.3'
 }
 
 // Release management
 apply from: "$rootDir/gradle/github.gradle"
 apply from: "$rootDir/gradle/bintray.gradle"
+apply from: "$rootDir/gradle/ghpages.gradle"
 
 // common settings
 subprojects {
