@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="6.16.1">
+<file name="/home/miurahr/projects/eb4j/xml2eb/xml2eb/src/main/java/io/github/eb4j/xml2eb/BlockOutputStream.java">
+</file>
+<file name="/home/miurahr/projects/eb4j/xml2eb/xml2eb/src/main/java/io/github/eb4j/xml2eb/CatalogInfo.java">
+</file>
+<file name="/home/miurahr/projects/eb4j/xml2eb/xml2eb/src/main/java/io/github/eb4j/xml2eb/Index.java">
+</file>
+<file name="/home/miurahr/projects/eb4j/xml2eb/xml2eb/src/main/java/io/github/eb4j/xml2eb/IndexLayer.java">
+</file>
+<file name="/home/miurahr/projects/eb4j/xml2eb/xml2eb/src/main/java/io/github/eb4j/xml2eb/IndexWriter.java">
+</file>
+<file name="/home/miurahr/projects/eb4j/xml2eb/xml2eb/src/main/java/io/github/eb4j/xml2eb/InvalidCharacterException.java">
+</file>
+<file name="/home/miurahr/projects/eb4j/xml2eb/xml2eb/src/main/java/io/github/eb4j/xml2eb/Linker.java">
+</file>
+<file name="/home/miurahr/projects/eb4j/xml2eb/xml2eb/src/main/java/io/github/eb4j/xml2eb/LoggingErrorHandler.java">
+</file>
+<file name="/home/miurahr/projects/eb4j/xml2eb/xml2eb/src/main/java/io/github/eb4j/xml2eb/Position.java">
+</file>
+<file name="/home/miurahr/projects/eb4j/xml2eb/xml2eb/src/main/java/io/github/eb4j/xml2eb/Reference.java">
+</file>
+<file name="/home/miurahr/projects/eb4j/xml2eb/xml2eb/src/main/java/io/github/eb4j/xml2eb/TextOutputStream.java">
+</file>
+<file name="/home/miurahr/projects/eb4j/xml2eb/xml2eb/src/main/java/io/github/eb4j/xml2eb/Word.java">
+</file>
+<file name="/home/miurahr/projects/eb4j/xml2eb/xml2eb/src/main/java/io/github/eb4j/xml2eb/WordSet.java">
+<error line="24" column="5" severity="warning" message="Javadoc コメントがありません。" source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocVariableCheck"/>
+<error line="25" column="5" severity="warning" message="Javadoc コメントがありません。" source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocVariableCheck"/>
+<error line="104" column="70" severity="warning" message="少なくとも1文はあるはずです。" source="com.puppycrawl.tools.checkstyle.checks.blocks.EmptyBlockCheck"/>
+</file>
+<file name="/home/miurahr/projects/eb4j/xml2eb/xml2eb/src/main/java/io/github/eb4j/xml2eb/Xbm.java">
+<error line="61" severity="warning" message="行が 100 文字を超えています。" source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+</file>
+<file name="/home/miurahr/projects/eb4j/xml2eb/xml2eb/src/main/java/io/github/eb4j/xml2eb/Xml2Eb.java">
+<error line="44" column="33" severity="warning" message="名前 &apos;_PROGRAM&apos; はパターン &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos; に一致しなければなりません。" source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="93" column="57" severity="warning" message="&apos;Exception&apos; には @throws タグが必要です。" source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="140" column="8" severity="warning" message="@throws タグの &apos;FactoryConfigurationError&apos; のクラス情報が取得できません。" source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="182" column="5" severity="warning" message="メソッドが 252 行あります（最大 150 行まで）。" source="com.puppycrawl.tools.checkstyle.checks.sizes.MethodLengthCheck"/>
+<error line="212" column="25" severity="warning" message="&apos;,&apos; の後にホワイトスペースがありません。" source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAfterCheck"/>
+<error line="212" column="66" severity="warning" message="&apos;,&apos; の後にホワイトスペースがありません。" source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAfterCheck"/>
+<error line="213" column="25" severity="warning" message="&apos;,&apos; の後にホワイトスペースがありません。" source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAfterCheck"/>
+<error line="213" column="66" severity="warning" message="&apos;,&apos; の後にホワイトスペースがありません。" source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAfterCheck"/>
+<error line="223" column="29" severity="warning" message="&apos;,&apos; の後にホワイトスペースがありません。" source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAfterCheck"/>
+<error line="269" column="40" severity="warning" message="&apos;,&apos; の後にホワイトスペースがありません。" source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAfterCheck"/>
+<error line="271" column="35" severity="warning" message="&apos;,&apos; の後にホワイトスペースがありません。" source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAfterCheck"/>
+<error line="307" column="35" severity="warning" message="&apos;,&apos; の後にホワイトスペースがありません。" source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAfterCheck"/>
+<error line="900" column="55" severity="warning" message="&apos;,&apos; の後にホワイトスペースがありません。" source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAfterCheck"/>
+<error line="900" column="59" severity="warning" message="&apos;,&apos; の後にホワイトスペースがありません。" source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAfterCheck"/>
+<error line="900" column="63" severity="warning" message="&apos;,&apos; の後にホワイトスペースがありません。" source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAfterCheck"/>
+</file>
+<file name="/home/miurahr/projects/eb4j/xml2eb/xml2eb/src/main/java/io/github/eb4j/xml2eb/util/BmpUtil.java">
+</file>
+<file name="/home/miurahr/projects/eb4j/xml2eb/xml2eb/src/main/java/io/github/eb4j/xml2eb/util/FontUtil.java">
+</file>
+<file name="/home/miurahr/projects/eb4j/xml2eb/xml2eb/src/main/java/io/github/eb4j/xml2eb/util/UnicodeUtil.java">
+</file>
+<file name="/home/miurahr/projects/eb4j/xml2eb/xml2eb/src/main/java/io/github/eb4j/xml2eb/util/WaitImageObserver.java">
+</file>
+<file name="/home/miurahr/projects/eb4j/xml2eb/xml2eb/src/main/java/io/github/eb4j/xml2eb/util/WordUtil.java">
+<error line="12" severity="warning" message="クラス WordUtil は final として宣言すべきです。" source="com.puppycrawl.tools.checkstyle.checks.design.FinalClassCheck"/>
+</file>
+<file name="/home/miurahr/projects/eb4j/xml2eb/xml2eb/src/main/java/io/github/eb4j/xml2eb/util/XmlUtil.java">
+<error line="23" severity="warning" message="クラス XmlUtil は final として宣言すべきです。" source="com.puppycrawl.tools.checkstyle.checks.design.FinalClassCheck"/>
+</file>
+</checkstyle>
