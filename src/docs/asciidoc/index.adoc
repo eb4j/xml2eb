@@ -1,0 +1,12 @@
+= XML2EB project page
+:version: 1.99.0-SNAPSHOT
+:project-name: xml2eb
+
+This is a project page for xml2eb.
+
+== Index
+
+* link:http://eb4j.github.io/xml2eb/findbugs/main.html[Findbugs report]
+
+* link:http://eb4j.github.io/xml2eb/checkstyle/main.html[Checkstyle report]
+
