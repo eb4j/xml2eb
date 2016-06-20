@@ -7,7 +7,7 @@ githubPages {
     targetBranch = 'gh-pages'
     pages {
         from 'build/asciidoc/html5'
-        from 'xml2eb/build/docs/javadoc'
+        from 'xml2eb/build/docs/'
         from 'xml2eb/build/reports/'
     }
 }
@@ -31,6 +31,6 @@ asciidoctor {
 }
 
 publishGhPages.dependsOn ':xml2eb:check'
-publishGhPages.dependsOn ':xml2eb:check'
+publishGhPages.dependsOn ':xml2eb:javadoc'
 publishGhPages.dependsOn asciidoctor
 

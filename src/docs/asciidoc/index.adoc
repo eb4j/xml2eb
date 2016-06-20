@@ -6,7 +6,8 @@ This is a project page for xml2eb.
 
 == Index
 
-* link:http://eb4j.github.io/xml2eb/findbugs/main.html[Findbugs report]
+=== link:http://eb4j.github.io/xml2eb/findbugs/main.html[Findbugs report]
 
-* link:http://eb4j.github.io/xml2eb/checkstyle/main.html[Checkstyle report]
+=== link:http://eb4j.github.io/xml2eb/checkstyle/main.html[Checkstyle report]
 
+=== link:http://eb4j.github.io/xml2eb/javadoc/index.html[JavaDoc]
