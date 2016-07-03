@@ -1,13 +1,17 @@
-= XML2EB project page
+= EB4J xml2eb tool
+:doctype:   article
+:docinfo:
+:toc:
+:toclevels: 2
 :version: 1.99.0-SNAPSHOT
 :project-name: xml2eb
 
 This is a project page for xml2eb.
 
-== Index
+include::xml2eb.adoc[]
 
-=== link:http://eb4j.github.io/xml2eb/findbugs/main.html[Findbugs report]
+include::converter.adoc[]
 
-=== link:http://eb4j.github.io/xml2eb/checkstyle/main.html[Checkstyle report]
+include::reports.adoc[]
 
-=== link:http://eb4j.github.io/xml2eb/javadoc/index.html[JavaDoc]
+include::links.adoc[]

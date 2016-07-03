@@ -1,0 +1,9 @@
+== Code references
+:version: 1.99.0-SNAPSHOT
+:project-name: xml2eb
+
+=== link:http://eb4j.github.io/xml2eb/findbugs/main.html[Findbugs report]
+
+=== link:http://eb4j.github.io/xml2eb/checkstyle/main.html[Checkstyle report]
+
+=== link:http://eb4j.github.io/xml2eb/javadoc/index.html[JavaDoc]
