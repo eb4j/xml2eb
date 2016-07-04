@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.4">
-<title>XML2EB project page</title>
+<title>EB4J xml2eb tool</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -511,15 +511,34 @@ table.CodeRay td.code>pre{padding:0}
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>XML2EB project page</h1>
+<h1>EB4J xml2eb tool</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#index">Index</a>
+<li><a href="#書籍作成ツール-xml2eb-について">書籍作成ツール(XML2EB)について</a>
+<ul class="sectlevel2">
+<li><a href="#xml2eb用書籍定義xml">XML2EB用書籍定義XML</a></li>
+</ul>
+</li>
+<li><a href="#converter">CONVERTER</a>
+<ul class="sectlevel2">
+<li><a href="#dictionary-converter-tools">Dictionary converter tools</a></li>
+<li><a href="#通信用語-等-の基礎知識用変換ツール-conv-wdic-について">通信用語(等)の基礎知識用変換ツール(conv-wdic)について</a></li>
+<li><a href="#郵便番号用変換ツール-conv-zipcode-について">郵便番号用変換ツール(conv-zipcode)について</a></li>
+</ul>
+</li>
+<li><a href="#code-references">Code references</a>
 <ul class="sectlevel2">
 <li><a href="#a-href-http-eb4j-github-io-xml2eb-findbugs-main-html-findbugs-report-a"><a href="http://eb4j.github.io/xml2eb/findbugs/main.html">Findbugs report</a></a></li>
 <li><a href="#a-href-http-eb4j-github-io-xml2eb-checkstyle-main-html-checkstyle-report-a"><a href="http://eb4j.github.io/xml2eb/checkstyle/main.html">Checkstyle report</a></a></li>
 <li><a href="#a-href-http-eb4j-github-io-xml2eb-javadoc-index-html-javadoc-a"><a href="http://eb4j.github.io/xml2eb/javadoc/index.html">JavaDoc</a></a></li>
+</ul>
+</li>
+<li><a href="#links">LINKS</a>
+<ul class="sectlevel2">
+<li><a href="#technical-references-技術資料">Technical references 技術資料</a></li>
+<li><a href="#reference-software-参考ソフトウェア">Reference Software 参考ソフトウェア</a></li>
+<li><a href="#standard-organization-標準化団体">Standard organization 標準化団体</a></li>
 </ul>
 </li>
 </ul>
@@ -534,7 +553,534 @@ table.CodeRay td.code>pre{padding:0}
 </div>
 </div>
 <div class="sect1">
-<h2 id="index">Index</h2>
+<h2 id="書籍作成ツール-xml2eb-について">書籍作成ツール(XML2EB)について</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>XML2EB は独自に規定するXML(book.xml)ファイルを読み込んで
+JIS X4081形式の電子書籍を作成するプログラムです。</p>
+</div>
+<div class="paragraph">
+<p>Usage:</p>
+</div>
+<div class="paragraph">
+<p><code>$ bin/xml2eb.sh [book.xmlのパス]</code></p>
+</div>
+<div class="paragraph">
+<p>実行後、book.xmlが存在するディレクトリのbuildディレクトリ以下に
+辞書データが作成されます。</p>
+</div>
+<div class="sect2">
+<h3 id="xml2eb用書籍定義xml">XML2EB用書籍定義XML</h3>
+<div class="sect3">
+<h4 id="書籍">書籍</h4>
+<div class="paragraph">
+<p>書籍はbook要素にて定義します。
+book要素はXMLのルート要素であり、XML文書内に2つ以上記述することはできません。
+この要素内に必要な数だけ副本を記述します。</p>
+</div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;book&gt;</span>
+  <span class="tag">&lt;subbook&gt;</span> ... <span class="tag">&lt;/subbook&gt;</span>
+  <span class="tag">&lt;subbook&gt;</span> ... <span class="tag">&lt;/subbook&gt;</span>
+<span class="tag">&lt;/book&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="副本">副本</h4>
+<div class="paragraph">
+<p>副本はsubbook要素にて定義します。
+この要素内にコンテンツ、画像、音声、外字を記述します。</p>
+</div>
+<div class="dlist">
+<div class="title">subbook要素の属性</div>
+<dl>
+<dt class="hdlist1">dir</dt>
+<dd>
+<p>副本のディレクトリ</p>
+</dd>
+<dt class="hdlist1">title</dt>
+<dd>
+<p>副本のタイトル</p>
+</dd>
+<dt class="hdlist1">type</dt>
+<dd>
+<p>副本の種類</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;subbook</span> <span class="attribute-name">dir</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">hoge</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">title</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ほげほげ事典</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">0x60</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;content&gt;</span> ... <span class="tag">&lt;/content&gt;</span>
+  <span class="tag">&lt;graphic&gt;</span> ... <span class="tag">&lt;/graphic&gt;</span>
+  <span class="tag">&lt;sound&gt;</span> ... <span class="tag">&lt;/sound&gt;</span>
+  <span class="tag">&lt;font&gt;</span> ... <span class="tag">&lt;/font&gt;</span>
+<span class="tag">&lt;/subbook&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="コンテンツ">コンテンツ</h4>
+<div class="paragraph">
+<p>コンテンツはcontent要素にて定義します。
+この要素内にコンテンツ項目、メニュー、著作権を記述します。</p>
+</div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;content&gt;</span>
+  <span class="tag">&lt;item&gt;</span> ... <span class="tag">&lt;/item&gt;</span>
+  <span class="tag">&lt;menu&gt;</span> ... <span class="tag">&lt;/menu&gt;</span>
+  <span class="tag">&lt;copyright&gt;</span> ... <span class="tag">&lt;/copyright&gt;</span>
+<span class="tag">&lt;/content&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="コンテンツ項目">コンテンツ項目</h4>
+<div class="paragraph">
+<p>コンテンツ項目はitem要素にて定義します。
+この要素内に見出し、本文、検索語、キーワードを記述します。</p>
+</div>
+<div class="dlist">
+<div class="title">item要素の属性</div>
+<dl>
+<dt class="hdlist1">id</dt>
+<dd>
+<p>参照用タグ名称</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;item</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ほげほげ</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;head&gt;</span> ... <span class="tag">&lt;/head&gt;</span>
+  <span class="tag">&lt;word&gt;</span> ... <span class="tag">&lt;/word&gt;</span>
+  <span class="tag">&lt;keyword&gt;</span> ... <span class="tag">&lt;/keyword&gt;</span>
+  <span class="tag">&lt;body&gt;</span> ... <span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/item&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="見出し-本文">見出し/本文</h4>
+<div class="paragraph">
+<p>見出しはhead要素にて、本文はbody要素にて定義します。
+要素内には以下の要素を含めることができます。
+また、本文は必ずkey要素から始めなければなりません。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>char</p>
+</li>
+<li>
+<p>b</p>
+</li>
+<li>
+<p>i</p>
+</li>
+<li>
+<p>em</p>
+</li>
+<li>
+<p>sup</p>
+</li>
+<li>
+<p>sub</p>
+</li>
+<li>
+<p>key</p>
+</li>
+<li>
+<p>nobr</p>
+</li>
+<li>
+<p>indent</p>
+</li>
+<li>
+<p>br</p>
+</li>
+<li>
+<p>ref</p>
+</li>
+</ul>
+</div>
+<div class="dlist">
+<div class="title">char要素の属性</div>
+<dl>
+<dt class="hdlist1">name</dt>
+<dd>
+<p>外字名称</p>
+</dd>
+<dt class="hdlist1">type</dt>
+<dd>
+<p>外字の種別 (narrow/wide)</p>
+</dd>
+</dl>
+</div>
+<div class="dlist">
+<div class="title">ref要素の属性(項目参照):</div>
+<dl>
+<dt class="hdlist1">id</dt>
+<dd>
+<p>参照名称</p>
+</dd>
+</dl>
+</div>
+<div class="dlist">
+<div class="title">ref要素の属性(データ参照):</div>
+<dl>
+<dt class="hdlist1">data</dt>
+<dd>
+<p>画像/音声名称</p>
+</dd>
+<dt class="hdlist1">type</dt>
+<dd>
+<p>graphic/sound</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="title">例:</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;head&gt;</span>辞書<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+  <span class="tag">&lt;key&gt;</span>辞書<span class="tag">&lt;/key&gt;</span><span class="tag">&lt;br</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;indent&gt;</span>辞書とは...<span class="tag">&lt;/indent&gt;</span>
+<span class="tag">&lt;/body&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="検索語-キーワード">検索語/キーワード</h4>
+<div class="paragraph">
+<p>検索語はword要素にて、キーワードはkeyword要素にて定義します。
+検索語は前方/後方一致検索で検索する際の検索語になります。
+キーワードは条件検索で検索する際の検索語になります。
+片仮名を含んでいる場合は平仮名に変換したものも自動的に登録されます。
+複数の検索語/キーワードを定義する場合は各要素を複数記述します。</p>
+</div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;word&gt;</span>辞書<span class="tag">&lt;/word&gt;</span>
+<span class="tag">&lt;word&gt;</span>じしょ<span class="tag">&lt;/word&gt;</span>
+<span class="tag">&lt;keyword&gt;</span>英和<span class="tag">&lt;/keyword&gt;</span>
+<span class="tag">&lt;keyword&gt;</span>和英<span class="tag">&lt;/keyword&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="メニュー">メニュー</h4>
+<div class="paragraph">
+<p>メニューはmenu要素にて定義します。
+メニューの各項目はlayer要素を用いて階層化します。
+layer要素内には本文要素と同様の要素を含めることができます。
+なお、最上位階層は先頭に記述する必要があります。</p>
+</div>
+<div class="dlist">
+<div class="title">layer要素の属性:</div>
+<dl>
+<dt class="hdlist1">id</dt>
+<dd>
+<p>参照用タグ名称</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;menu&gt;</span>
+  <span class="tag">&lt;layer</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">top</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;ref</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">first</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>はじめに<span class="tag">&lt;/ref&gt;</span><span class="tag">&lt;br</span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;ref</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">about</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>この辞書について<span class="tag">&lt;/ref&gt;</span><span class="tag">&lt;br</span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;ref</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">symbol</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>表記について<span class="tag">&lt;/ref&gt;</span><span class="tag">&lt;br</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;/layer&gt;</span>
+  <span class="tag">&lt;layer</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">first</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;key&gt;</span>はじめに<span class="tag">&lt;/key&gt;</span><span class="tag">&lt;br</span><span class="tag">/&gt;</span>...
+  <span class="tag">&lt;/layer&gt;</span>
+  <span class="tag">&lt;layer</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">about</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;key&gt;</span>この辞書について<span class="tag">&lt;/key&gt;</span><span class="tag">&lt;br</span><span class="tag">/&gt;</span>...
+  <span class="tag">&lt;/layer&gt;</span>
+  <span class="tag">&lt;layer</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">symbol</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;key&gt;</span>表記について<span class="tag">&lt;key&gt;</span><span class="tag">&lt;br</span><span class="tag">/&gt;</span>...
+  <span class="tag">&lt;/layer&gt;</span>
+<span class="tag">&lt;/menu&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="著作権">著作権</h4>
+<div class="paragraph">
+<p>著作権はcopyright要素にて定義します。</p>
+</div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;copyright&gt;</span>
+  Copyright (c) 2006 xxxx
+<span class="tag">&lt;/copyright&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="画像">画像</h4>
+<div class="paragraph">
+<p>画像はgraphic要素内にdata要素を記述して定義します。</p>
+</div>
+<div class="dlist">
+<div class="title">data要素の属性:</div>
+<dl>
+<dt class="hdlist1">name</dt>
+<dd>
+<p>参照用タグ名称</p>
+</dd>
+<dt class="hdlist1">src</dt>
+<dd>
+<p>画像ファイル (XMLファイルからの相対位置)</p>
+</dd>
+<dt class="hdlist1">format</dt>
+<dd>
+<p>bmp/jpg</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;graphic&gt;</span>
+  <span class="tag">&lt;data</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">g001</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">g001.bmp</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">format</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">bmp</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
+  <span class="tag">&lt;data</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">g002</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">g002.bmp</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">format</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">bmp</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
+  <span class="tag">&lt;data</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">g003</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">g003.bmp</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">format</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">bmp</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
+<span class="tag">&lt;/graphic&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="音声">音声</h4>
+<div class="paragraph">
+<p>音声はsound要素内にdata要素を記述して定義します。</p>
+</div>
+<div class="dlist">
+<div class="title">data要素の属性:</div>
+<dl>
+<dt class="hdlist1">name</dt>
+<dd>
+<p>参照用タグ名称</p>
+</dd>
+<dt class="hdlist1">src</dt>
+<dd>
+<p>音声ファイル (XMLファイルからの相対位置)</p>
+</dd>
+<dt class="hdlist1">format</dt>
+<dd>
+<p>wav/mid</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;sound&gt;</span>
+  <span class="tag">&lt;data</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">s001</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">s001.wav</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">format</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">wav</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
+  <span class="tag">&lt;data</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">s002</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">s002.wav</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">format</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">wav</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
+  <span class="tag">&lt;data</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">s003</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">s003.mid</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">format</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">mid</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
+<span class="tag">&lt;/sound&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="外字">外字</h4>
+<div class="paragraph">
+<p>外字はfont要素内にchar要素を記述して定義します。
+外字のビットマップイメージファイルはchar要素内にdata要素を記述して定義します。</p>
+</div>
+<div class="dlist">
+<div class="title">char要素の属性:</div>
+<dl>
+<dt class="hdlist1">name</dt>
+<dd>
+<p>参照用タグ名称</p>
+</dd>
+<dt class="hdlist1">type</dt>
+<dd>
+<p>外字の種別 (narrow/wide)</p>
+</dd>
+</dl>
+</div>
+<div class="dlist">
+<div class="title">data要素の属性:</div>
+<dl>
+<dt class="hdlist1">size</dt>
+<dd>
+<p>外字サイズ (16/24/30/48)</p>
+</dd>
+<dt class="hdlist1">src</dt>
+<dd>
+<p>XBMファイル (XMLファイルからの相対位置)</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;font&gt;</span>
+  <span class="tag">&lt;char</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">n001</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">narrow</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;data</span> <span class="attribute-name">size</span>=<span class="attribute-value">16</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">n001-16.xbm</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
+    <span class="tag">&lt;data</span> <span class="attribute-name">size</span>=<span class="attribute-value">30</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">n001-30.xbm</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
+  <span class="tag">&lt;/char&gt;</span>
+  <span class="tag">&lt;char</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">n002</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">narrow</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;data</span> <span class="attribute-name">size</span>=<span class="attribute-value">16</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">n002-16.xbm</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
+    <span class="tag">&lt;data</span> <span class="attribute-name">size</span>=<span class="attribute-value">30</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">n002-30.xbm</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
+  <span class="tag">&lt;/char&gt;</span>
+  <span class="tag">&lt;char</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">w001</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">wide</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;data</span> <span class="attribute-name">size</span>=<span class="attribute-value">16</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">w001-16.xbm</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
+    <span class="tag">&lt;data</span> <span class="attribute-name">size</span>=<span class="attribute-value">30</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">w001-30.xbm</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
+  <span class="tag">&lt;/char&gt;</span>
+  <span class="tag">&lt;char</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">w002</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">wide</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;data</span> <span class="attribute-name">size</span>=<span class="attribute-value">16</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">w002-16.xbm</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
+    <span class="tag">&lt;data</span> <span class="attribute-name">size</span>=<span class="attribute-value">30</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">w002-30.xbm</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
+  <span class="tag">&lt;/char&gt;</span>
+<span class="tag">&lt;/font&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="空白要素の扱い">空白要素の扱い</h4>
+<div class="paragraph">
+<p>下記に示すような要素間の空白のみのテキストノードは無視します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;key&gt;</span>...<span class="tag">&lt;/key&gt;</span>
+<span class="tag">&lt;br</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;b&gt;</span>...<span class="tag">&lt;/b&gt;</span>...<span class="tag">&lt;i&gt;</span>...<span class="tag">&lt;/i&gt;</span>
+  <span class="tag">&lt;em&gt;</span>...<span class="tag">&lt;/em&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&lt;/key\&gt;と&lt;br/&gt;の間、&lt;br/&gt;と&lt;b&gt;の間、&lt;b/&gt;と&lt;i&gt;の間、
+&lt;/i&gt;と&lt;em&gt;の間に存在するテキストノードが無視する対象になります。</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="改行の扱い">改行の扱い</h4>
+<div class="paragraph">
+<p>テキスト内に存在する改行はすべて無視します。
+テキスト内に改行を含める場合は br要素を使用します。</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="converter">CONVERTER</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="dictionary-converter-tools">Dictionary converter tools</h3>
+<div class="paragraph">
+<p>There are a couple of tools to convert several dictionary data into XML files that can be used by xml2eb.
+Now there are two tools supporting  following dictionaries:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://www.wdic.org/">通信用語(等)の基礎知識 (EPWING V6 format)</a></p>
+</li>
+<li>
+<p><a href="http://www.post.japanpost.jp/zipcode/download.html">Zip Code data</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="通信用語-等-の基礎知識用変換ツール-conv-wdic-について">通信用語(等)の基礎知識用変換ツール(conv-wdic)について</h3>
+<div class="sect3">
+<h4 id="usage">Usage</h4>
+<div class="paragraph">
+<p><code>$ bin/conv-wdic.sh [Dictionary Data directory]</code></p>
+</div>
+<div class="paragraph">
+<p>After execute the command, the tool generate book.xml in a dictionary directory.
+It is necessary to prepare the dictionary directory as same as follows:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/diag-cab2cbabdb8c99facb1da814c44bc754.png" alt="diag cab2cbabdb8c99facb1da814c44bc754" width="620" height="476">
+</div>
+</div>
+<div class="paragraph">
+<p>Note: It is not necessary to make gaiji and table directory because there are automatically genearted by the converter tool.</p>
+</div>
+<div class="paragraph">
+<p>It is necessary to complete following conditions for plugin data:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Image</dt>
+<dd>
+<p>There exist a bmp file that related to a png file.
+       (A filename should be *.png.bmp)</p>
+</dd>
+<dt class="hdlist1">Sound</dt>
+<dd>
+<p>There exist a wav file that related to a mp3/ogg file.
+       (A filename should be <strong>.mp3.wav/</strong>.ogg.wav)</p>
+</dd>
+<dt class="hdlist1">Text</dt>
+<dd>
+<p>Text file is encoded by UTF-8.</p>
+</dd>
+<dt class="hdlist1">Glyph</dt>
+<dd>
+<p>Glyph image data is an image that related to +\\glyph{code} function in dictionary data.
+The image data should have a name in form of +"code.50px.png.bmp" .
+It is necessary to generate it from dictionary data in advance to running a tool.
+You can find PNG images in  <a href="http://glyphwiki.org/">グリフウィキ(GlyphWiki)</a> site.
+Please convert it to BMP.
+Sample URL of image is "http://glyphwiki.org/glyph/code.50px.png"</p>
+</dd>
+<dt class="hdlist1">GAIJI</dt>
+<dd>
+<p>A Character set in Ebook is limited to JIS X0208 because of JIS X4081 specification.
+It is because it cannot express all characters in Unicode specification..
+So a tool generate GAIJI images for characters which are not supported.
+It is also limited to express table, the tool generate image of table.
+To generate GAIJI and table, you need to specify font for the tool.
+Please edit wdic-fonts.properties file.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="郵便番号用変換ツール-conv-zipcode-について">郵便番号用変換ツール(conv-zipcode)について</h3>
+<div class="sect3">
+<h4 id="usage-2">Usage:</h4>
+<div class="paragraph">
+<p><code>$ bin/conv-zipcode.sh [データディレクトリ]</code></p>
+</div>
+<div class="paragraph">
+<p>After execute the command, the tool generate book.xml in a dictionary directory.
+It is necessary to prepare the dictionary directory as same as follows:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/diag-0a1cf6cd8ca01fa42fc8c814be37a5b0.png" alt="diag 0a1cf6cd8ca01fa42fc8c814be37a5b0" width="270" height="210">
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="code-references">Code references</h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="a-href-http-eb4j-github-io-xml2eb-findbugs-main-html-findbugs-report-a"><a href="http://eb4j.github.io/xml2eb/findbugs/main.html">Findbugs report</a></h3>
@@ -550,10 +1096,60 @@ table.CodeRay td.code>pre{padding:0}
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="links">LINKS</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="technical-references-技術資料">Technical references 技術資料</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://www.nerimadors.or.jp/~jiro/cdrom2/doc/spec">12cmＣＤ(EPWING)と、電子ブック(EB)のデータ構造について</a></p>
+</li>
+<li>
+<p><a href="http://www.sra.co.jp/people/m-kasahr/dict-compress/epwing-compress.html">EPWINGの圧縮形式について</a></p>
+</li>
+<li>
+<p><a href="http://www.sra.co.jp/people/m-kasahr/dict-compress/sebxa-compress.html">S-EBXAの圧縮形式について</a></p>
+</li>
+<li>
+<p><a href="http://www31.ocn.ne.jp/~h_ishida/tech/EPWING_MMDATA.txt">EPWINGのマルチメディアデータについて</a></p>
+</li>
+<li>
+<p><a href="http://www31.ocn.ne.jp/~h_ishida/EBStudio/Tech.html">EBStudioにおけるJIS X4081の実装について</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="reference-software-参考ソフトウェア">Reference Software 参考ソフトウェア</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://www.sra.co.jp/people/m-kasahr/eb/index.html">EBライブラリ</a></p>
+</li>
+<li>
+<p><a href="http://www.sra.co.jp/people/m-kasahr/freepwing/index.html">FreePWING</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="standard-organization-標準化団体">Standard organization 標準化団体</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://www.jisc.go.jp/">日本工業標準調査会</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-06-20 21:39:12 +09:00
+Last updated 2016-07-03 18:23:14 +09:00
 </div>
 </div>
 </body>
