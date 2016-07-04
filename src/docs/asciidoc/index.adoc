@@ -6,6 +6,9 @@
 :version: 1.99.0-SNAPSHOT
 :project-name: xml2eb
 
+IMPORTANT: link:https://github.com/eb4j/xml2eb[View on GitHub]
+ | link:https://eb4j.github.io/[Top project page]
+
 This is a project page for xml2eb.
 
 include::xml2eb.adoc[]
