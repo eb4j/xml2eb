@@ -2,7 +2,8 @@ package io.github.eb4j.xml2eb;
 
 import java.io.File;
 
-import io.github.eb4j.util.HexUtil;
+import io.github.eb4j.xml2eb.util.HexUtil;
+
 
 /**
  * 位置クラス。

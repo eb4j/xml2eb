@@ -32,10 +32,10 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.github.eb4j.util.HexUtil;
 import io.github.eb4j.xml2eb.CatalogInfo;
 import io.github.eb4j.xml2eb.util.BmpUtil;
 import io.github.eb4j.xml2eb.util.FontUtil;
+import io.github.eb4j.xml2eb.util.HexUtil;
 import io.github.eb4j.xml2eb.util.WordUtil;
 import io.github.eb4j.xml2eb.util.XmlUtil;
 
