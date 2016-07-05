@@ -49,7 +49,7 @@ public class WdicGroupList {
         super();
         _logger = LoggerFactory.getLogger(getClass());
         _file = file;
-        _map = new LinkedHashMap<String,WdicGroup>();
+        _map = new LinkedHashMap<>();
         _load();
     }
 

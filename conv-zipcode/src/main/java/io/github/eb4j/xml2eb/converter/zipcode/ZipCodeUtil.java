@@ -14,10 +14,10 @@ import io.github.eb4j.xml2eb.util.FontUtil;
  *
  * @author Hisaya FUKUMOTO
  */
-public class ZipCodeUtil {
+public final class ZipCodeUtil {
 
     /** ログ */
-    private static final Logger _logger = LoggerFactory.getLogger(ZipCodeUtil.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ZipCodeUtil.class);
 
     /** 論理フォント */
     private static final Font[] LOGICAL_FONT = {
@@ -44,7 +44,7 @@ public class ZipCodeUtil {
      * @param codePoint Unicodeコードポイント
      * @return イメージ
      */
-    public static BufferedImage toImage(int codePoint) {
+    public static BufferedImage toImage(final int codePoint) {
         String type = FontUtil.getFontType(codePoint);
         Font font = getFont(codePoint);
         BufferedImage img = null;
@@ -58,14 +58,14 @@ public class ZipCodeUtil {
             // 表示できない文字は'?'を描画
             Character.UnicodeBlock unicodeBlock = Character.UnicodeBlock.of(codePoint);
             String code = "U+" + HexUtil.toHexString(codePoint, 6);
-            _logger.warn("unavailable display font: [" + code + "]"
+            LOGGER.warn("unavailable display font: [" + code + "]"
                          + " " + unicodeBlock.toString());
-            codePoint = '?';
-            font = getFont(codePoint);
+            int newCodePoint = '?';
+            font = getFont(newCodePoint);
             if ("narrow".equals(type)) {
-                img = FontUtil.charToImage(codePoint, 8, 16, font);
+                img = FontUtil.charToImage(newCodePoint, 8, 16, font);
             } else {
-                img = FontUtil.charToImage(codePoint, 16, 16, font);
+                img = FontUtil.charToImage(newCodePoint, 16, 16, font);
             }
         }
         return img;
@@ -77,11 +77,10 @@ public class ZipCodeUtil {
      * @param codePoint Unicodeコードポイント
      * @return フォント
      */
-    private static Font getFont(int codePoint) {
-        int len = LOGICAL_FONT.length;
-        for (int i=0; i<len; i++) {
-            if (LOGICAL_FONT[i].canDisplay(codePoint)) {
-                return LOGICAL_FONT[i];
+    private static Font getFont(final int codePoint) {
+        for (Font alogicalFont : LOGICAL_FONT) {
+            if (alogicalFont.canDisplay(codePoint)) {
+                return alogicalFont;
             }
         }
         return LOGICAL_FONT[0];
@@ -94,7 +93,7 @@ public class ZipCodeUtil {
      * @param ref 参考文字列
      * @return 変換後の文字列
      */
-    public static String toFullwidth(String str, String ref) {
+    public static String toFullwidth(final String str, final String ref) {
         if (str == null) {
             return null;
         }
@@ -110,14 +109,14 @@ public class ZipCodeUtil {
                 buf.append(ch1);
             } else {
                 switch (ch1) {
-                    case 0x002d: { // hyphen-minus
+                    case 0x002d:  // hyphen-minus
                         int[] idx = new int[3];
                         idx[0] = ref.indexOf("\u301c", refIdx);
                         idx[1] = ref.indexOf("\u2212", refIdx);
                         idx[2] = ref.indexOf("\u30fc", refIdx);
                         int x = -1;
                         int n = idx.length;
-                        for (int j=0; j<n; j++) {
+                        for (int j = 0; j < n; j++) {
                             if (idx[j] != -1) {
                                 if (x == -1) {
                                     x = j;
@@ -144,7 +143,6 @@ public class ZipCodeUtil {
                                 break;
                         }
                         break;
-                    }
                     case 0x0028: // left parenthesis
                         ch1 = 0xff08;
                         break;

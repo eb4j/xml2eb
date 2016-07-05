@@ -36,7 +36,7 @@ import io.github.eb4j.xml2eb.util.XmlUtil;
 public class ZipCode2Xml {
 
     /** プロブラム名 */
-    private static final String _PROGRAM = ZipCode2Xml.class.getName();
+    private static final String PROGRAM = ZipCode2Xml.class.getName();
 
     private static final String GAIJI_DIR = "gaiji";
     private static final String BOOK_XML = "book.xml";
@@ -69,11 +69,17 @@ public class ZipCode2Xml {
      *
      * @param args コマンドライン引数
      */
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) {
         if (args.length == 0) {
-            System.out.println("java " + _PROGRAM + " [zipcode-directory]");
+            System.out.println("java " + PROGRAM + " [zipcode-directory]");
         } else {
-            new ZipCode2Xml(args[0]).convert();
+            try {
+                new ZipCode2Xml(args[0]).convert();
+            } catch (ParserConfigurationException e) {
+                System.exit(1);
+            } catch (IOException e) {
+                System.exit(1);
+            }
         }
     }
 

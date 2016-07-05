@@ -194,7 +194,7 @@ public class WdicTableItem {
      *
      * @param color 前景色
      */
-    public void setForeground(Color color) {
+    public void setForeground(final Color color) {
         _foreground = color;
     }
 
