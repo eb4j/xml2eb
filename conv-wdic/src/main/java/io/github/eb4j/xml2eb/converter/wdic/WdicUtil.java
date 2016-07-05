@@ -33,14 +33,14 @@ import io.github.eb4j.xml2eb.util.UnicodeUtil;
 public final class WdicUtil {
 
     /** ログ */
-    private static final Logger _logger = LoggerFactory.getLogger(WdicUtil.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WdicUtil.class);
     /** 文字参照マップ */
-    private static final Map<String, String> _charMap = new HashMap<>();
+    private static final Map<String, String> CHAR_MAP = new HashMap<>();
 
     /** フォントマップ (Unicodeブロック別) */
-    private static final Map<Character.UnicodeBlock, Font[]> _fontBlockMap = new HashMap<>();
+    private static final Map<Character.UnicodeBlock, Font[]> UNICODE_BLOCK_HASH_MAP = new HashMap<>();
     /** フォントマップ (Unicodeコードポイント別) */
-    private static final Map<Integer, Font> _fontCodeMap = new HashMap<>();
+    private static final Map<Integer, Font> FONT_HASH_MAP = new HashMap<>();
 
     /** デフォルトフォント */
     private static Font[] DEFAULT_FONTS = null;
@@ -74,15 +74,15 @@ public final class WdicUtil {
                 for (int i=0; i<n; i++) {
                     try {
                         Font font = Font.createFont(Font.TRUETYPE_FONT, files[i]);
-                        _logger.info("load font: " + font.getName()
+                        LOGGER.info("load font: " + font.getName()
                                      + " (family:" + font.getFamily(Locale.ENGLISH) + ")");
                         fontMap.put(font.getFamily(Locale.ENGLISH), font);
                     } catch (FontFormatException ffe) {
-                        _logger.info(ffe.getMessage());
-                        _logger.info("Can not load font: " + files[i].getAbsolutePath());
+                        LOGGER.info(ffe.getMessage());
+                        LOGGER.info("Can not load font: " + files[i].getAbsolutePath());
                     } catch (IOException ioex) {
-                        _logger.info(ioex.getMessage());
-                        _logger.info("Can not load font: " + files[i].getAbsolutePath());
+                        LOGGER.info(ioex.getMessage());
+                        LOGGER.info("Can not load font: " + files[i].getAbsolutePath());
                     }
                 }
             }
@@ -101,7 +101,7 @@ public final class WdicUtil {
                 fis = new FileInputStream(file);
                 prop.load(fis, "UTF-8");
             } catch (IOException e) {
-                _logger.warn(e.getMessage(), e);
+                LOGGER.warn(e.getMessage(), e);
             } finally {
                 IOUtils.closeQuietly(fis);
             }
@@ -123,7 +123,7 @@ public final class WdicUtil {
                             fontMap.put(family[i], font);
                             fontList.add(font);
                         } else {
-                            _logger.error("unknown font name: " + family[i]);
+                            LOGGER.error("unknown font name: " + family[i]);
                         }
                     } else {
                         fontList.add(font);
@@ -137,14 +137,14 @@ public final class WdicUtil {
                 } else {
                     try {
                         Integer codePoint = Integer.decode(key);
-                        _fontCodeMap.put(codePoint, fonts[0]);
+                        FONT_HASH_MAP.put(codePoint, fonts[0]);
                     } catch (NumberFormatException e1) {
                         try {
                             Character.UnicodeBlock unicodeBlock =
                                 Character.UnicodeBlock.forName(key);
-                            _fontBlockMap.put(unicodeBlock, fonts);
+                            UNICODE_BLOCK_HASH_MAP.put(unicodeBlock, fonts);
                         } catch (IllegalArgumentException e2) {
-                            _logger.error("unknown UnicodeBlock: " + key);
+                            LOGGER.error("unknown UnicodeBlock: " + key);
                         }
                     }
                 }
@@ -164,7 +164,7 @@ public final class WdicUtil {
                 fis = new FileInputStream(file);
                 prop.load(fis, "UTF-8");
             } catch (IOException e) {
-                _logger.warn(e.getMessage(), e);
+                LOGGER.warn(e.getMessage(), e);
             } finally {
                 IOUtils.closeQuietly(fis);
             }
@@ -178,9 +178,9 @@ public final class WdicUtil {
                 try {
                     Integer codePoint = Integer.decode(value);
                     String str = String.valueOf(Character.toChars(codePoint));
-                    _charMap.put(key, str);
+                    CHAR_MAP.put(key, str);
                 } catch (NumberFormatException e1) {
-                    _charMap.put(key, value);
+                    CHAR_MAP.put(key, value);
                 }
             }
         }
@@ -328,7 +328,7 @@ public final class WdicUtil {
 
             int idx = WdicUtil.indexOf(str, ";", i+1);
             if (idx < 0) {
-                _logger.error("unexpected format: " + str);
+                LOGGER.error("unexpected format: " + str);
                 buf.append(ch);
                 continue;
             }
@@ -381,11 +381,11 @@ public final class WdicUtil {
                     codePoint = Integer.parseInt(code, 16);
                     buf.appendCodePoint(codePoint);
                 } catch (NumberFormatException e) {
-                    _logger.error("unknown character code: " + code);
+                    LOGGER.error("unknown character code: " + code);
                 }
             } else {
                 if (!"sup".equals(name) && !"sub".equals(name)) {
-                    _logger.error("unknown function name: " + name);
+                    LOGGER.error("unknown function name: " + name);
                 }
                 buf.append(unescape(param.get(0)));
             }
@@ -400,11 +400,11 @@ public final class WdicUtil {
      * @return 文字
      */
     public static String getCharacter(final String name) {
-        String ch = _charMap.get(name);
+        String ch = CHAR_MAP.get(name);
         if (ch != null) {
             return ch;
         }
-        _logger.error("unknown character reference: " + name);
+        LOGGER.error("unknown character reference: " + name);
         return name;
     }
 
@@ -510,10 +510,10 @@ public final class WdicUtil {
                 // 表示できない文字は'?'を描画
                 String code = "U+" + toHexString(cp);
                 if (unicodeBlock == null) {
-                    _logger.warn("unavailable display font: [" + code + "]"
+                    LOGGER.warn("unavailable display font: [" + code + "]"
                                  + " UNKNOWN_UNICODE_BLOCK");
                 } else {
-                    _logger.warn("unavailable display font: [" + code + "]"
+                    LOGGER.warn("unavailable display font: [" + code + "]"
                                  + " " + unicodeBlock.toString());
                 }
                 cp = '?';
@@ -600,7 +600,7 @@ public final class WdicUtil {
      */
     public static Font getFont(final int codePoint) {
         // コード指定フォント
-        Font font = _fontCodeMap.get(codePoint);
+        Font font = FONT_HASH_MAP.get(codePoint);
         if (font != null && font.canDisplay(codePoint)) {
             return font;
         }
@@ -612,7 +612,7 @@ public final class WdicUtil {
             // Unicodeブロック未定義フォントから検索
             fonts = UNKNOWN_FONTS;
         } else {
-            fonts = _fontBlockMap.get(unicodeBlock);
+            fonts = UNICODE_BLOCK_HASH_MAP.get(unicodeBlock);
         }
         int len = ArrayUtils.getLength(fonts);
         for (int i=0; i<len; i++) {
@@ -623,10 +623,10 @@ public final class WdicUtil {
 
         String code = "U+" + toHexString(codePoint);
         if (unicodeBlock == null) {
-            _logger.info("undefined font: [" + code + "]"
+            LOGGER.info("undefined font: [" + code + "]"
                          + " UNKNOWN_UNICODE_BLOCK");
         } else {
-            _logger.info("undefined font: [" + code + "]"
+            LOGGER.info("undefined font: [" + code + "]"
                          + " " + unicodeBlock.toString());
         }
 

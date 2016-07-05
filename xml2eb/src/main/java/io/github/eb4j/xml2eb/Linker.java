@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
@@ -63,7 +62,7 @@ public class Linker {
         _outfile = file;
         _infile = new File[9];
         _startBlock = new long[9];
-        _fileMap = new HashMap<File, RandomAccessFile>();
+        _fileMap = new HashMap<>();
     }
 
 
@@ -183,13 +182,12 @@ public class Linker {
      */
     private boolean _isIndex(final File file) {
         String name = file.getName();
-        int len = _infile.length;
-        for (int i=0; i<len; i++) {
-            if (_infile[i] != null) {
-                if (file.equals(_infile[i])) {
+        for (File aInfile : _infile) {
+            if (aInfile != null) {
+                if (file.equals(aInfile)) {
                     return false;
                 }
-                String base = _infile[i].getName();
+                String base = aInfile.getName();
                 if (name.startsWith(base)) {
                     return true;
                 }
@@ -213,10 +211,9 @@ public class Linker {
         }
         File[] files = dir.listFiles();
         if (files != null) {
-            int n = files.length;
-            for (int i = 0; i < n; i++) {
-                if (files[i].getName().startsWith(name)) {
-                    list.add(files[i]);
+            for (File file1 : files) {
+                if (file1.getName().startsWith(name)) {
+                    list.add(file1);
                 }
             }
         }
@@ -238,11 +235,10 @@ public class Linker {
                     }
                 } else {
                     File[] files = _getFileList(_infile[i]);
-                    int n = files.length;
-                    for (int j=0; j<n; j++) {
-                        _logger.info("delete file" + files[j].getPath());
-                        if (!files[j].delete()) {
-                            _logger.error("failed to delete file: " + files[j].getPath());
+                    for (File file : files) {
+                        _logger.info("delete file" + file.getPath());
+                        if (!file.delete()) {
+                            _logger.error("failed to delete file: " + file.getPath());
                         }
                     }
                 }
@@ -341,11 +337,9 @@ public class Linker {
         if (_infile[SOUND] != null) {
             _logger.debug("sound start block: 0x" + HexUtil.toHexString(block));
             _startBlock[SOUND] = block;
-            size = _setControlEntry(control, off, _infile[SOUND],
-                                    0xd8, block, 0x00000000);
-            off += 16;
+            _setControlEntry(control, off, _infile[SOUND],
+                    0xd8, block, 0x00000000);
             cnt++;
-            block += size;
         }
         control[0] = (byte)((cnt >>> 8) & 0xff);
         control[1] = (byte)(cnt & 0xff);
@@ -358,12 +352,10 @@ public class Linker {
         _fixSoundReference();
 
         // ストリームを閉じる
-        Iterator<RandomAccessFile> it = _fileMap.values().iterator();
-        while (it.hasNext()) {
-            RandomAccessFile stream = it.next();
+        for (RandomAccessFile stream : _fileMap.values()) {
             try {
                 stream.close();
-            } catch (IOException e) {
+            } catch (IOException ignored) {
             }
         }
         _fileMap.clear();
@@ -378,10 +370,9 @@ public class Linker {
                         new FileOutputStream(_outfile)));
             out.write(control, 0, control.length);
             out.flush();
-            int len = _infile.length;
-            for (int i=0; i<len; i++) {
-                if (_infile[i] != null) {
-                    _link(out, _infile[i]);
+            for (File aInfile : _infile) {
+                if (aInfile != null) {
+                    _link(out, aInfile);
                 }
             }
         } catch (IOException e) {
@@ -423,9 +414,8 @@ public class Linker {
                                   final int id, final long start, final long param) {
         long size = 0;
         int offset = off;
-        int n = file.length;
-        for (int i=0; i<n; i++) {
-            long len = file[i].length();
+        for (File aFile : file) {
+            long len = aFile.length();
             size += ((len + 2047) / 2048);
         }
         b[offset++] = (byte)id;
@@ -441,7 +431,7 @@ public class Linker {
         b[offset++] = (byte)((param >>> 24) & 0xff);
         b[offset++] = (byte)((param >>> 16) & 0xff);
         b[offset++] = (byte)((param >>> 8) & 0xff);
-        b[offset++] = (byte)(param & 0xff);
+        b[offset] = (byte)(param & 0xff);
         return size;
     }
 
@@ -452,9 +442,7 @@ public class Linker {
     private void _fixBodyReference() {
         Map<Position, String> map = _ref.getBodyRef();
         _logger.info("resolve body reference: " + map.size());
-        Iterator<Map.Entry<Position, String>> it = map.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<Position, String> entry = it.next();
+        for (Map.Entry<Position, String> entry : map.entrySet()) {
             Position pos = entry.getKey();
             String tag = entry.getValue();
             if (_ref.hasBodyTag(tag)) {
@@ -473,9 +461,7 @@ public class Linker {
     private void _fixHeadReference() {
         Map<Position, String> map = _ref.getHeadRef();
         _logger.info("resolve head reference: " + map.size());
-        Iterator<Map.Entry<Position, String>> it = map.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<Position, String> entry = it.next();
+        for (Map.Entry<Position, String> entry : map.entrySet()) {
             Position pos = entry.getKey();
             String tag = entry.getValue();
             if (_ref.hasHeadTag(tag)) {
@@ -494,9 +480,7 @@ public class Linker {
     private void _fixIndexReference() {
         Map<Position, String> map = _ref.getIndexRef();
         _logger.info("resolve index reference: " + map.size());
-        Iterator<Map.Entry<Position, String>> it = map.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<Position, String> entry = it.next();
+        for (Map.Entry<Position, String> entry : map.entrySet()) {
             Position pos = entry.getKey();
             String tag = entry.getValue();
             _fixPosition(pos, tag);
@@ -510,9 +494,7 @@ public class Linker {
     private void _fixGraphicReference() {
         Map<Position, String> map = _ref.getGraphicRef();
         _logger.info("resolve graphic reference: " + map.size());
-        Iterator<Map.Entry<Position, String>> it = map.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<Position, String> entry = it.next();
+        for (Map.Entry<Position, String> entry : map.entrySet()) {
             Position pos = entry.getKey();
             String tag = entry.getValue();
             if (_ref.hasGraphicTag(tag)) {
@@ -531,9 +513,7 @@ public class Linker {
     private void _fixSoundReference() {
         Map<Position, String> map = _ref.getSoundRef();
         _logger.info("resolve sound reference:" + map.size());
-        Iterator<Map.Entry<Position, String>> it = map.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<Position, String> entry = it.next();
+        for (Map.Entry<Position, String> entry : map.entrySet()) {
             Position pos = entry.getKey();
             String tag = entry.getValue();
             if (_ref.hasSoundTag(tag)) {

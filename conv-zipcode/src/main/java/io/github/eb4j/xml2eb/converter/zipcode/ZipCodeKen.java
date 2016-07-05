@@ -77,10 +77,8 @@ public class ZipCodeKen {
      * @return 郵便番号をキーとする項目マップ
      */
     public Map<String, List<Item>> getZipcodeMap() {
-        Map<String, List<Item>> map = new TreeMap<String,List<Item>>();
-        int size = _itemList.size();
-        for (int i=0; i<size; i++) {
-            Item item = _itemList.get(i);
+        Map<String, List<Item>> map = new TreeMap<>();
+        for (Item item : _itemList) {
             String key = item.getZipcode();
             List<Item> list = map.get(key);
             if (list == null) {
@@ -98,11 +96,8 @@ public class ZipCodeKen {
      * @return 住所をキーとする項目マップ
      */
     public Map<String, Map<String, List<Item>>> getAddressMap() {
-        Map<String, Map<String, List<Item>>> map =
-            new LinkedHashMap<String,Map<String,List<Item>>>();
-        int size = _itemList.size();
-        for (int i=0; i<size; i++) {
-            Item item = _itemList.get(i);
+        Map<String, Map<String, List<Item>>> map = new LinkedHashMap<>();
+        for (Item item : _itemList) {
             // 都道府県別
             String key1 = item.getPrefecture();
             Map<String, List<Item>> map1 = map.get(key1);

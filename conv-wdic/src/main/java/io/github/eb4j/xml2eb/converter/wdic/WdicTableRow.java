@@ -27,7 +27,7 @@ public class WdicTableRow {
      *
      * @param item 要素
      */
-    public void add(WdicTableItem item) {
+    public void add(final WdicTableItem item) {
         tableItems.add(item);
     }
 
@@ -37,7 +37,7 @@ public class WdicTableRow {
      * @param index 追加位置
      * @param item 要素
      */
-    public void add(int index, WdicTableItem item) {
+    public void add(final int index, final WdicTableItem item) {
         tableItems.add(index, item);
     }
 
@@ -56,7 +56,7 @@ public class WdicTableRow {
      * @param index インデックス
      * @return 要素
      */
-    public WdicTableItem get(int index) {
+    public WdicTableItem get(final int index) {
         return tableItems.get(index);
     }
 }

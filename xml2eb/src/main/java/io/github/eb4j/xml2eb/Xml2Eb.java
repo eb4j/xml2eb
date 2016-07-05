@@ -41,7 +41,7 @@ import io.github.eb4j.util.ByteUtil;
 public class Xml2Eb {
 
     /** プロブラム名 */
-    private static final String _PROGRAM = Xml2Eb.class.getName();
+    private static final String PROGRAM = Xml2Eb.class.getName();
 
     /** 本文ファイル名 */
     private static final String HONMON_FILE = "honmon";
@@ -92,7 +92,7 @@ public class Xml2Eb {
      */
     public static void main(final String[] args) throws Exception {
         if (args.length == 0) {
-            System.out.println("java " + _PROGRAM + " [xml-file]");
+            System.out.println("java " + PROGRAM + " [xml-file]");
         } else {
             new Xml2Eb(args[0]).convert();
         }
@@ -137,7 +137,6 @@ public class Xml2Eb {
     /**
      * 変換します。
      *
-     * @exception FactoryConfigurationError パーサファクトリの実装が使用できないかインスタンス化できない場合
      * @exception ParserConfigurationException DocumentBuilderを生成できない場合
      * @exception SAXException 構文解析エラーが発生した場合
      * @exception IOException 入出力エラーが発生した場合
@@ -209,18 +208,18 @@ public class Xml2Eb {
         // 外字
         NodeList fontList = subbook.getElementsByTagName("font");
         if (fontList.getLength() >= 1) {
-            Map<Integer,List<String>> hmap = new HashMap<Integer,List<String>>();
-            Map<Integer,List<String>> fmap = new HashMap<Integer,List<String>>();
+            Map<Integer, List<String>> hmap = new HashMap<>();
+            Map<Integer, List<String>> fmap = new HashMap<>();
             int hcode = 0xa121;
             int fcode = 0xa121;
             Element fontElem = (Element)fontList.item(0);
             NodeList charList = fontElem.getElementsByTagName("char");
             int len = charList.getLength();
-            for (int i=0; i<len; i++) {
+            for (int i=0; i < len; i++) {
                 Element charElem = (Element)charList.item(i);
                 String name = charElem.getAttribute("name");
                 String wtype = charElem.getAttribute("type");
-                Map<Integer,List<String>> map = null;
+                Map<Integer, List<String>> map;
                 if (ref.hasNarrowChar(name) || ref.hasWideChar(name)) {
                     _logger.warn("character name has already been defined: " + name);
                     continue;
@@ -266,9 +265,9 @@ public class Xml2Eb {
                     list.add(src);
                 }
             }
-            Iterator<Map.Entry<Integer,List<String>>> it = hmap.entrySet().iterator();
+            Iterator<Map.Entry<Integer, List<String>>> it = hmap.entrySet().iterator();
             while (it.hasNext()) {
-                Map.Entry<Integer,List<String>> entry = it.next();
+                Map.Entry<Integer, List<String>> entry = it.next();
                 int size = entry.getKey().intValue();
                 String name = null;
                 int width = 0;
@@ -304,9 +303,9 @@ public class Xml2Eb {
             }
             it = fmap.entrySet().iterator();
             while (it.hasNext()) {
-                Map.Entry<Integer,List<String>> entry = it.next();
+                Map.Entry<Integer, List<String>> entry = it.next();
                 int size = entry.getKey().intValue();
-                String name = null;
+                String name;
                 int width = 0;
                 switch (size) {
                     case 16:
@@ -897,7 +896,7 @@ public class Xml2Eb {
                 int size = buf.length;
                 int off = 0;
                 if ("wav".equals(format[i])) {
-                    byte[] expected = new byte[] {'R','I','F','F'};
+                    byte[] expected = new byte[] {'R', 'I', 'F', 'F'};
                     if (size > 4 && Arrays.equals(expected, Arrays.copyOfRange(buf, 0, 4))) {
                         off = 12;
                         size -= off;

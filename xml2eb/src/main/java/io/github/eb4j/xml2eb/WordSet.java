@@ -51,8 +51,7 @@ public class WordSet extends TreeSet<Word> {
      * @exception UnsupportedEncodingException EUC-JPをサポートしていない場合
      * @exception IOException 無効な単語を登録しようとした場合
      */
-    public void add(final String word, final String tag)
-        throws InvalidCharacterException, UnsupportedEncodingException, IOException {
+    public void add(final String word, final String tag) throws IOException {
         if (StringUtils.isBlank(word)) {
             return;
         }
@@ -142,7 +141,7 @@ public class WordSet extends TreeSet<Word> {
         }
         try {
             _logger.trace("add word: " + new String(buf, "x-JIS0208") + " [" + word + "]");
-        } catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException ignored) {
         }
         Word wd = new Word(buf, tag);
         if (!contains(wd)) {
@@ -161,7 +160,7 @@ public class WordSet extends TreeSet<Word> {
         if (katakana) {
             try {
                 _logger.trace("add word: " + new String(buf, "x-JIS0208") + " [" + word + "]");
-            } catch (UnsupportedEncodingException e) {
+            } catch (UnsupportedEncodingException ignored) {
             }
             wd = new Word(buf, tag);
             if (!contains(wd)) {

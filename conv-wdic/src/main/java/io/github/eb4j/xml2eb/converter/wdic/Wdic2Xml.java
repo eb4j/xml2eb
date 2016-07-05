@@ -84,13 +84,21 @@ public class Wdic2Xml {
     /**
      * メインメソッド。
      *
-     * @param args コマンドライン引数
+     * @param args command line arguments.
+     * @throws IOException when fails to convert or write file.
+     * @throws ParserConfigurationException when fail to parse input file.
      */
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) {
         if (args.length == 0) {
             System.out.println("java " + PROGRAM + " [wdic-directory]");
         } else {
-            new Wdic2Xml(args[0]).convert();
+            try {
+                new Wdic2Xml(args[0]).convert();
+            } catch (ParserConfigurationException e) {
+                System.exit(1);
+            } catch (IOException e) {
+                System.exit(1);
+            }
         }
     }
 
@@ -2108,7 +2116,8 @@ public class Wdic2Xml {
                 //     } else if ("LC".equals(type)) {
                 //         buf.append("[太陰太陽歴]");
                 //     } else {
-                //         logger.error("unknown function parameter: " + itemId + " [" + name + ":" + type + "]");
+                //         logger.error("unknown function parameter: " + itemId +
+                //                       " [" + name + ":" + type + "]");
                 //     }
                 // }
                 _appendText(item, node, buf.toString(), linkBlock);

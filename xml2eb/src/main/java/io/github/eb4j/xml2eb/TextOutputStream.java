@@ -28,23 +28,23 @@ public class TextOutputStream extends BlockOutputStream {
     /** 文字修飾種別 (斜体) */
     public static final int ITALIC = Hook.ITALIC;
 
-    private static final Integer NARROW = Integer.valueOf(0);
-    private static final Integer SUBSCRIPT = Integer.valueOf(1);
-    private static final Integer SUPERSCRIPT = Integer.valueOf(2);
-    private static final Integer NOBR = Integer.valueOf(3);
-    private static final Integer EMPHASIS = Integer.valueOf(4);
-    private static final Integer DECORATION = Integer.valueOf(5);
-    private static final Integer KEYWORD = Integer.valueOf(6);
-    private static final Integer REFERENCE = Integer.valueOf(7);
-    private static final Integer ICGRAPHIC = Integer.valueOf(8);
-    private static final Integer CGRAPHIC = Integer.valueOf(9);
-    private static final Integer SOUND = Integer.valueOf(10);
+    private static final Integer NARROW = 0;
+    private static final Integer SUBSCRIPT = 1;
+    private static final Integer SUPERSCRIPT = 2;
+    private static final Integer NOBR = 3;
+    private static final Integer EMPHASIS = 4;
+    private static final Integer DECORATION = 5;
+    private static final Integer KEYWORD = 6;
+    private static final Integer REFERENCE = 7;
+    private static final Integer ICGRAPHIC = 8;
+    private static final Integer CGRAPHIC = 9;
+    private static final Integer SOUND = 10;
 
     /** ログ */
     private Logger _logger = null;
 
     /** 制御記述子スタック */
-    private Stack<Integer> _stack = new Stack<Integer>();;
+    private Stack<Integer> _stack = new Stack<>();
 
     /** 参照情報 */
     private Reference _ref = null;
@@ -83,10 +83,7 @@ public class TextOutputStream extends BlockOutputStream {
      * @return 現在の制御識別子であればtrue、そうでなければfalse
      */
     private boolean _isModifier(final Integer mod) {
-        if (_stack.empty()) {
-            return false;
-        }
-        return _stack.peek().equals(mod);
+        return !_stack.empty() && _stack.peek().equals(mod);
     }
 
     /**

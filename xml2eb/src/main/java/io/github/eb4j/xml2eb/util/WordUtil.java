@@ -9,7 +9,7 @@ import org.apache.commons.lang.ArrayUtils;
  *
  * @author Hisaya FUKUMOTO
  */
-public class WordUtil {
+public final class WordUtil {
 
     /**
      * コンストラクタ。

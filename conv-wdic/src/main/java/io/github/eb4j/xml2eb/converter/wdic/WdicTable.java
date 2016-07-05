@@ -26,7 +26,7 @@ public class WdicTable {
     /** 辞書ID */
     private String _id = null;
     /** テーブルデータリスト */
-    List<String> _list = new ArrayList<>();
+    private List<String> tableDataList = new ArrayList<>();
 
     /** テーブルイメージ */
     private BufferedImage _img = null;
@@ -53,7 +53,7 @@ public class WdicTable {
      * @param line テーブルデータ
      */
     public void add(final String line) {
-        _list.add(line);
+        tableDataList.add(line);
     }
 
 
@@ -276,9 +276,9 @@ public class WdicTable {
      */
     private List<WdicTableRow> _parse() {
         List<WdicTableRow> rowList = null;
-        if (!_list.isEmpty()) {
+        if (!tableDataList.isEmpty()) {
             try {
-                String str = _list.get(0);
+                String str = tableDataList.get(0);
                 if (str.startsWith("| ")) {
                     rowList = _parseFullSpec();
                 } else {
@@ -287,9 +287,9 @@ public class WdicTable {
             } catch (Exception e) {
                 String sep = System.getProperty("line.separator", "\n");
                 StringBuilder buf = new StringBuilder();
-                int len = _list.size();
+                int len = tableDataList.size();
                 for (int i=0; i<len; i++) {
-                    buf.append(_list.get(i));
+                    buf.append(tableDataList.get(i));
                     buf.append(sep);
                 }
                 _logger.warn("unexpected table format: " + _id + sep + buf.toString(), e);
@@ -308,13 +308,13 @@ public class WdicTable {
      */
     private List<WdicTableRow> _parseFullSpec() {
         List<WdicTableRow> rowList = new ArrayList<WdicTableRow>();
-        int len = _list.size();
+        int len = tableDataList.size();
         int col = -1;
         int hnum = -1;
         int vnum = -1;
         WdicTableRow row = null;
         for (int i=1; i<len; i++) {
-            String line = _list.get(i).trim();
+            String line = tableDataList.get(i).trim();
             if ("|>".equals(line)) {
                 row = new WdicTableRow();
                 rowList.add(row);
@@ -361,12 +361,12 @@ public class WdicTable {
      */
     private List<WdicTableRow> _parseSimple() {
         List<WdicTableRow> rowList = new ArrayList<WdicTableRow>();
-        int len = _list.size();
+        int len = tableDataList.size();
         for (int i=0; i<len; i++) {
             WdicTableRow row = new WdicTableRow();
             rowList.add(row);
 
-            String line = _list.get(i).trim();
+            String line = tableDataList.get(i).trim();
             boolean header = false;
             if (line.startsWith("|= ")) {
                 header = true;

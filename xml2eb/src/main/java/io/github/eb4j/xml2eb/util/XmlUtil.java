@@ -20,7 +20,7 @@ import org.apache.commons.io.IOUtils;
  *
  * @author Hisaya FUKUMOTO
  */
-public class XmlUtil {
+public final class XmlUtil {
 
     /**
      * コンストラクタ。

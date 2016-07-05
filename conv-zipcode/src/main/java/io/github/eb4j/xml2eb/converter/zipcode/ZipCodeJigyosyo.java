@@ -43,7 +43,7 @@ public class ZipCodeJigyosyo {
      *
      * @param file 事業所個別郵便番号ファイル
      */
-    public ZipCodeJigyosyo(File file) {
+    public ZipCodeJigyosyo(final File file) {
         super();
         _logger = LoggerFactory.getLogger(getClass());
         _file = file;
@@ -76,7 +76,7 @@ public class ZipCodeJigyosyo {
      * @param item 項目
      * @return 郵便番号の配列
      */
-    public List<Item> getItemList(Item item) {
+    public List<Item> getItemList(final Item item) {
         List<Item> list = new ArrayList<Item>();
         int len = _itemList.size();
         for (int i=0; i<len; i++) {
@@ -94,11 +94,9 @@ public class ZipCodeJigyosyo {
      *
      * @return 郵便番号をキーとする項目マップ
      */
-    public Map<String,List<Item>> getZipcodeMap() {
-        Map<String,List<Item>> map = new TreeMap<String,List<Item>>();
-        int size = _itemList.size();
-        for (int i=0; i<size; i++) {
-            Item item = _itemList.get(i);
+    public Map<String, List<Item>> getZipcodeMap() {
+        Map<String, List<Item>> map = new TreeMap<>();
+        for (Item item : _itemList) {
             String key = item.getZipcode();
             List<Item> list = map.get(key);
             if (list == null) {
@@ -115,24 +113,21 @@ public class ZipCodeJigyosyo {
      *
      * @return 住所をキーとする項目マップ
      */
-    public Map<String,Map<String,List<Item>>> getAddressMap() {
-        Map<String,Map<String,List<Item>>> map =
-            new LinkedHashMap<String,Map<String,List<Item>>>();
-        int size = _itemList.size();
-        for (int i=0; i<size; i++) {
-            Item item = _itemList.get(i);
+    public Map<String, Map<String, List<Item>>> getAddressMap() {
+        Map<String, Map<String, List<Item>>> map = new LinkedHashMap<>();
+        for (Item item : _itemList) {
             // 都道府県別
             String key1 = item.getPrefecture();
-            Map<String,List<Item>> map1 = map.get(key1);
+            Map<String, List<Item>> map1 = map.get(key1);
             if (map1 == null) {
-                map1 = new LinkedHashMap<String,List<Item>>();
+                map1 = new LinkedHashMap<>();
                 map.put(key1, map1);
             }
             // 市区町村別
             String key2 = item.getCity();
             List<Item> list = map1.get(key2);
             if (list == null) {
-                list = new ArrayList<Item>();
+                list = new ArrayList<>();
                 map1.put(key2, list);
             }
             list.add(item);
@@ -155,7 +150,7 @@ public class ZipCodeJigyosyo {
                         new InputStreamReader(
                             new FileInputStream(_file), cs)));
 
-            String line = null;
+            String line;
             while ((line=lnr.readLine()) != null) {
                 line = UnicodeUtil.sanitizeUnicode(line);
                 StrTokenizer st = StrTokenizer.getCSVInstance(line);
@@ -226,10 +221,11 @@ public class ZipCodeJigyosyo {
          * @param pob 大口事業所の場合は"0"、私書箱の場合は"1"
          * @param index インデックス番号
          */
-        protected Item(String code, String kanaName, String name,
-                       String prefecture, String city, String town, String area,
-                       String zipcode, String postoffice,
-                       String pob, String index) {
+        protected Item(final String code, final String kanaName, final String name,
+                       final String prefecture, final String city, final String town,
+                       final String area,
+                       final String zipcode, final String postoffice,
+                       final String pob, final String index) {
             super();
             _code = code;
             _zipcode = zipcode.substring(0, 3) + "-" + zipcode.substring(3);
