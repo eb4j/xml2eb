@@ -18,7 +18,8 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.github.eb4j.util.HexUtil;
+import io.github.eb4j.xml2eb.util.HexUtil;
+
 
 /**
  * リンカークラス。
