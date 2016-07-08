@@ -3,6 +3,7 @@ package io.github.eb4j.xml2eb.converter.wdic;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -211,9 +212,8 @@ public class Wdic2Xml {
         }
 
         File table = new File(basedir, WDIC_TABLE_DIR);
-        len = tableList.size();
-        for (int i=0; i<len; i++) {
-            String name = tableList.get(i) + ".bmp";
+        for (String name: tableList) {
+            name += ".bmp";
             File bmp = new File(table, name);
             if (!bmp.exists()) {
                 logger.error("file not found: " + bmp.getPath());
@@ -290,18 +290,9 @@ public class Wdic2Xml {
         Element content = _appendElement(subbook, "content");
 
         logger.info("create item node...");
-        Collection<WdicGroup> groups = groupList.getGroups();
-        Iterator<WdicGroup> it = groups.iterator();
-        while (it.hasNext()) {
-            WdicGroup group = it.next();
-            List<Wdic> dics = group.getWdics();
-            int len1 = dics.size();
-            for (int i = 0; i < len1; i++) {
-                Wdic dic = dics.get(i);
-                List<WdicItem> items = dic.getWdicItems();
-                int len2 = items.size();
-                for (int j = 0; j < len2; j++) {
-                    WdicItem item = items.get(j);
+        for (WdicGroup group: groupList.getGroups()) {
+            for (Wdic dic: group.getWdics()) {
+                for (WdicItem item: dic.getWdicItems()) {
                     _makeItemNode(content, item);
                 }
             }
@@ -889,10 +880,7 @@ public class Wdic2Xml {
                     _appendNewLine(bodyElem);
 
                     // プラグインを参照している項目を列挙
-                    Set<WdicItem> set = entry.getValue();
-                    Iterator<WdicItem> setIt = set.iterator();
-                    while (setIt.hasNext()) {
-                        WdicItem item = setIt.next();
+                    for (WdicItem item : entry.getValue()) {
                         _appendRawText(bodyElem, "\u2192 ");
                         String head = item.getHead();
                         String grpId = item.getWdic().getGroupId();
@@ -934,10 +922,7 @@ public class Wdic2Xml {
                     _appendNewLine(bodyElem);
 
                     // プラグインを参照している項目を列挙
-                    Set<WdicItem> set = entry.getValue();
-                    Iterator<WdicItem> setIt = set.iterator();
-                    while (setIt.hasNext()) {
-                        WdicItem item = setIt.next();
+                    for (WdicItem item : entry.getValue()) {
                         _appendRawText(bodyElem, "\u2192 ");
                         String head = item.getHead();
                         String grpId = item.getWdic().getGroupId();
@@ -988,10 +973,7 @@ public class Wdic2Xml {
                 _appendNewLine(bodyElem);
 
                 // プラグインを参照している項目を列挙
-                Set<WdicItem> set = entry.getValue();
-                Iterator<WdicItem> setIt = set.iterator();
-                while (setIt.hasNext()) {
-                    WdicItem item = setIt.next();
+                for (WdicItem item : entry.getValue()) {
                     _appendRawText(bodyElem, "\u2192 ");
                     String head = item.getHead();
                     String grpId = item.getWdic().getGroupId();
@@ -1138,10 +1120,7 @@ public class Wdic2Xml {
         Element indent2Elem = null;
         Element indent3Elem = null;
         Element indentElem = indent1Elem;
-        String[] contents = manual.getContents(sec);
-        int len = contents.length;
-        for (int i=0; i<len; i++) {
-            String str = contents[i];
+        for (String str : manual.getContents(sec)) {
             if (str.length() > 0) {
                 if (str.startsWith("\t")) {
                     if (indent2Elem == null) {
@@ -1197,9 +1176,7 @@ public class Wdic2Xml {
     private void _createBibliographyLayer(final Element menu) {
         Element layerElem = _appendLayer(menu, "MENU:bib");
         Collection<WdicGroup> groups = groupList.getGroups();
-        Iterator<WdicGroup> it = groups.iterator();
-        while (it.hasNext()) {
-            WdicGroup group = it.next();
+        for (WdicGroup group : groups) {
             Element refElem = _appendIdReference(layerElem, "MENU:bib:" + group.getGroupId());
             _appendRawText(refElem, group.getGroupName() + "用語の基礎知識");
             _appendNewLine(layerElem);
@@ -1218,10 +1195,7 @@ public class Wdic2Xml {
         Element keyElem = _appendElement(layerElem, "key");
         _appendRawText(keyElem, group.getGroupName() + "用語の基礎知識");
         Element indentElem = _appendElement(layerElem, "indent");
-        String[] contents = group.getWdicBib().getBibliography();
-        int len = contents.length;
-        for (int i = 0; i < len; i++) {
-            String str = contents[i];
+        for (String str: group.getWdicBib().getBibliography()) {
             if (str.length() > 0) {
                 _appendRawText(indentElem, str);
             }
@@ -1236,10 +1210,7 @@ public class Wdic2Xml {
      */
     private void _createDirectoryLayer(final Element menu) {
         Element layerElem = _appendLayer(menu, "DIR:/");
-        List<String> dirs = dirList.getChildren("/");
-        int len = dirs.size();
-        for (int i = 0; i < len; i++) {
-            String dir = dirs.get(i);
+        for (String dir: dirList.getChildren("/")) {
             _appendRawText(layerElem, "\u21d2 ");
             Element refElem = _appendIdReference(layerElem, "DIR:" + dir);
             _appendRawText(refElem, dirList.getName(dir));
@@ -1325,12 +1296,9 @@ public class Wdic2Xml {
     private void _createGroupLayer(final Element menu) {
         String id = "MENU:group";
         Element layerElem = _appendLayer(menu, id);
-        Collection<WdicGroup> groups = groupList.getGroups();
-        Iterator<WdicGroup> it = groups.iterator();
-        while (it.hasNext()) {
-            WdicGroup group = it.next();
+        for (WdicGroup group : groupList.getGroups()) {
             Element refElem = _appendIdReference(layerElem, id + ":" + group.getGroupId());
-            _appendRawText(refElem, group.getGroupName() + "用語の基礎知識");
+            _appendRawText(refElem, MessageFormat.format("{0}用語の基礎知識", group.getGroupName()));
             _appendNewLine(layerElem);
             _createGroupLayer(menu, group);
         }
@@ -1349,10 +1317,7 @@ public class Wdic2Xml {
         _appendRawText(refElem, "グループ");
         _appendRawText(layerElem, " > " + group.getGroupName());
         _appendNewLine(layerElem);
-        List<Wdic> dics = group.getWdics();
-        int len = dics.size();
-        for (int i = 0; i < len; i++) {
-            Wdic wdic = dics.get(i);
+        for (Wdic wdic : group.getWdics()) {
             String name = wdic.getPartName() + "編";
             refElem = _appendIdReference(layerElem, id + ":" + wdic.getPartId());
             _appendRawText(refElem, name);
@@ -1379,10 +1344,7 @@ public class Wdic2Xml {
         _appendRawText(refElem, wdic.getGroupName());
         _appendRawText(layerElem, " > " + wdic.getPartName() + "編");
         _appendNewLine(layerElem);
-        List<WdicItem> items = wdic.getWdicItems();
-        int len = items.size();
-        for (int i = 0; i < len; i++) {
-            WdicItem item = items.get(i);
+        for (WdicItem item : wdic.getWdicItems()) {
             if (item.isAlias()) {
                 String name = item.getHead();
                 _appendRawText(layerElem, name);
@@ -1425,10 +1387,7 @@ public class Wdic2Xml {
     private void _createPluginLayer(final Element menu) {
         String id = "MENU:plugin";
         Element layerElem = _appendLayer(menu, id);
-        Collection<WdicGroup> groups = groupList.getGroups();
-        Iterator<WdicGroup> it = groups.iterator();
-        while (it.hasNext()) {
-            WdicGroup group = it.next();
+        for (WdicGroup group: groupList.getGroups()) {
             Element refElem = _appendIdReference(layerElem, id + ":" + group.getGroupId());
             _appendRawText(refElem, group.getGroupName() + "用語の基礎知識");
             _appendNewLine(layerElem);

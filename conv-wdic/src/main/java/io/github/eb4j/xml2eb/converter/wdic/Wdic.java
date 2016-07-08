@@ -10,13 +10,11 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,9 +129,7 @@ public class Wdic {
         if (StringUtils.isBlank(word)) {
             return false;
         }
-        int len = _itemList.size();
-        for (int i=0; i<len; i++) {
-            WdicItem item = _itemList.get(i);
+        for (WdicItem item : _itemList) {
             if (word.equals(item.getHead())) {
                 return true;
             }
@@ -151,9 +147,7 @@ public class Wdic {
         if (StringUtils.isBlank(word)) {
             return null;
         }
-        int len = _itemList.size();
-        for (int i=0; i<len; i++) {
-            WdicItem item = _itemList.get(i);
+        for (WdicItem item : _itemList) {
             if (word.equals(item.getHead())) {
                 return item;
             }
@@ -177,9 +171,7 @@ public class Wdic {
      * @param list 項目リスト
      */
     protected void getWdicItem(final String dir, final List<WdicItem> list) {
-        int len = _itemList.size();
-        for (int i=0; i<len; i++) {
-            WdicItem item = _itemList.get(i);
+        for (WdicItem item : _itemList) {
             List<String> dirs = item.getDir();
             if (dirs.contains(dir)) {
                 list.add(item);
@@ -193,9 +185,7 @@ public class Wdic {
      * @param map プラグイン一覧
      */
     protected void getPluginMap(final Map<String, Set<WdicItem>> map) {
-        Iterator<Map.Entry<String, Set<WdicItem>>> it = _pluginMap.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, Set<WdicItem>> item = it.next();
+        for (Map.Entry<String, Set<WdicItem>> item : _pluginMap.entrySet()) {
             String key = item.getKey();
             Set<WdicItem> set = item.getValue();
             Set<WdicItem> pset = map.get(key);
@@ -206,6 +196,31 @@ public class Wdic {
             pset.addAll(set);
         }
     }
+    private String escapeLine1(final LineNumberReader lnr, final String inLine) throws IOException {
+        String line = WdicUtil.sanitize(inLine);
+        StringBuilder tmpLine = new StringBuilder(line);
+        while (line.endsWith("\\")) {
+            int len = tmpLine.length();
+            int cnt = 1;
+            int idx = len - 2;
+            while (idx >= 0) {
+                if (tmpLine.charAt(idx) != '\\') {
+                    break;
+                }
+                cnt++;
+                idx--;
+            }
+            if ((cnt % 2) == 0) {
+                // バックスラッシュはエスケープされている
+                break;
+            }
+            tmpLine.delete(len - 1, len);
+            line = WdicUtil.sanitize(lnr.readLine());
+            line = WdicUtil.deleteTab(line);
+            tmpLine.append(line);
+        }
+        return tmpLine.toString();
+    }
 
     /**
      * 辞書ファイルを読み込みます。
@@ -214,36 +229,13 @@ public class Wdic {
     private void _load() {
         _logger.info("load file: " + _file.getPath());
 
-        LineNumberReader lnr = null;
         Charset cs = Charset.forName(ENCODING);
-        try {
-            lnr = new LineNumberReader(new BufferedReader(new InputStreamReader(new FileInputStream(_file), cs)));
+        try (LineNumberReader lnr = new LineNumberReader(new BufferedReader(new InputStreamReader(
+                    new FileInputStream(_file), cs)))) {
             String line;
             WdicItem item = null;
             while ((line = lnr.readLine()) != null) {
-                line = WdicUtil.sanitize(line);
-                StringBuilder tmpLine = new StringBuilder(line);
-                while (line.endsWith("\\")) {
-                    int len = tmpLine.length();
-                    int cnt = 1;
-                    int idx = len - 2;
-                    while (idx >= 0) {
-                        if (tmpLine.charAt(idx) != '\\') {
-                            break;
-                        }
-                        cnt++;
-                        idx--;
-                    }
-                    if ((cnt % 2) == 0) {
-                        // バックスラッシュはエスケープされている
-                        break;
-                    }
-                    tmpLine.delete(len - 1, len);
-                    line = WdicUtil.sanitize(lnr.readLine());
-                    line = WdicUtil.deleteTab(line);
-                    tmpLine.append(line);
-                }
-                line = tmpLine.toString();
+                line = escapeLine1(lnr, line);
                 if (line.startsWith("%")) {
                     item = null;
                 } else if (line.startsWith("#")) {
@@ -335,49 +327,7 @@ public class Wdic {
                             continue;
                         }
                         item.addBody(line);
-                        // find plugins
-                        int idx1 = WdicUtil.indexOf(block, "[[", 0);
-                        int idx2 = -1;
-                        while (idx1 != -1) {
-                            idx2 = WdicUtil.indexOf(block, "]]", idx1 + 2);
-                            if (idx2 < 0) {
-                                _logger.warn("not found reference end tag: "
-                                             + _file.getName()
-                                             + "[" + lnr.getLineNumber() + "] "
-                                             + "'" + line + "'");
-                                break;
-                            } else if (idx1 + 2 == idx2) {
-                                _logger.warn("not found reference context: "
-                                             + _file.getName()
-                                             + "[" + lnr.getLineNumber() + "] "
-                                             + "'" + line + "'");
-                            } else {
-                                String str = block.substring(idx1 + 2, idx2);
-                                if (str.charAt(0) == '<') {
-                                    // delete caption
-                                    int idx = WdicUtil.indexOf(str, ">", 1);
-                                    if (idx != -1) {
-                                        str = str.substring(idx + 1);
-                                    }
-                                }
-                                if (str.startsWith("//")) {
-                                    int idx = str.indexOf("|");
-                                    if (idx > 0) {
-                                        // delete option
-                                        str = str.substring(0, idx).trim();
-                                    }
-                                    idx = str.lastIndexOf("/");
-                                    String name = str.substring(idx + 1);
-                                    Set<WdicItem> set = _pluginMap.get(name);
-                                    if (set == null) {
-                                        set = new HashSet<>();
-                                        _pluginMap.put(name, set);
-                                    }
-                                    set.add(item);
-                                }
-                            }
-                            idx1 = WdicUtil.indexOf(block, "[[", idx2 + 2);
-                        }
+                        findPlugins(lnr, line, block, item);
                     }
                 } else {
                     item = null;
@@ -386,10 +336,57 @@ public class Wdic {
             _logger.info("loaded " + _itemList.size() + " items");
         } catch (IOException e) {
             _logger.error(e.getMessage(), e);
-        } finally {
-            IOUtils.closeQuietly(lnr);
         }
     }
+
+    private void findPlugins(final LineNumberReader lnr, final String line,
+                             final String block, final WdicItem item) {
+        // find plugins
+        int idx1 = WdicUtil.indexOf(block, "[[", 0);
+        int idx2 = -1;
+        while (idx1 != -1) {
+            idx2 = WdicUtil.indexOf(block, "]]", idx1 + 2);
+            if (idx2 < 0) {
+                _logger.warn("not found reference end tag: "
+                             + _file.getName()
+                             + "[" + lnr.getLineNumber() + "] "
+                             + "'" + line + "'");
+                break;
+            } else if (idx1 + 2 == idx2) {
+                _logger.warn("not found reference context: "
+                             + _file.getName()
+                             + "[" + lnr.getLineNumber() + "] "
+                             + "'" + line + "'");
+            } else {
+                String str = block.substring(idx1 + 2, idx2);
+                if (str.charAt(0) == '<') {
+                    // delete caption
+                    int idx = WdicUtil.indexOf(str, ">", 1);
+                    if (idx != -1) {
+                        str = str.substring(idx + 1);
+                    }
+                }
+                if (str.startsWith("//")) {
+                    int idx = str.indexOf("|");
+                    if (idx > 0) {
+                        // delete option
+                        str = str.substring(0, idx).trim();
+                    }
+                    idx = str.lastIndexOf("/");
+                    String name = str.substring(idx + 1);
+                    Set<WdicItem> set = _pluginMap.get(name);
+                    if (set == null) {
+                        set = new HashSet<>();
+                        _pluginMap.put(name, set);
+                    }
+                    set.add(item);
+                }
+            }
+            idx1 = WdicUtil.indexOf(block, "[[", idx2 + 2);
+        }
+
+    }
 }
+
 
 // end of Wdic.java

@@ -90,11 +90,19 @@ public class Xml2Eb {
      *
      * @param args コマンド行引数
      */
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) {
         if (args.length == 0) {
             System.out.println("java " + PROGRAM + " [xml-file]");
         } else {
-            new Xml2Eb(args[0]).convert();
+            try {
+                new Xml2Eb(args[0]).convert();
+            } catch (ParserConfigurationException e) {
+                System.exit(1);
+            } catch (SAXException e) {
+                System.exit(1);
+            } catch (IOException e) {
+                System.exit(1);
+            }
         }
     }
 

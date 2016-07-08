@@ -92,9 +92,7 @@ public class WdicGroup {
      * @return 単語が含まれる辞書
      */
     public Wdic getWdic(final String word) {
-        int len = _list.size();
-        for (int i=0; i<len; i++) {
-            Wdic dic = _list.get(i);
+        for (Wdic dic : _list) {
             if (dic.exists(word)) {
                 return dic;
             }

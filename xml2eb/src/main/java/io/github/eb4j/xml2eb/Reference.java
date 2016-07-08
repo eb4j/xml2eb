@@ -3,7 +3,6 @@ package io.github.eb4j.xml2eb;
 import java.io.File;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Iterator;
 import javax.sound.sampled.AudioFormat;
 
 /**
@@ -416,14 +415,11 @@ public class Reference {
      * @return 参照位置マップ
      */
     private Map<Position, String> _getRef(final String prefix) {
-        int len = prefix.length();
         Map<Position, String> map = new HashMap<>();
-        Iterator<Map.Entry<Position, String>> it = _refMap.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<Position, String> entry = it.next();
+        for (Map.Entry<Position, String> entry : _refMap.entrySet()) {
             String tag = entry.getValue();
             if (tag.startsWith(prefix)) {
-                tag = tag.substring(len);
+                tag = tag.substring(prefix.length());
                 map.put(entry.getKey(), tag);
             }
         }

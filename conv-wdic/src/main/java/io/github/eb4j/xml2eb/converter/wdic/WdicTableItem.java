@@ -587,8 +587,8 @@ public class WdicTableItem {
             }
 
             // 特殊機能
-            String name = null;
-            ArrayList<String> param = new ArrayList<String>();
+            String name;
+            ArrayList<String> param = new ArrayList<>();
             if (sep1 != -1 && sep2 != -1) {
                 if (sep2 < sep1) {
                     sep1 = -1;

@@ -534,6 +534,8 @@ public class WdicMan {
                 if ("市販".equals(str) || "オンライン流通".equals(str)) {
                     buf.append("\t\u25a0 ");
                 } else if ("敬称略".equals(str)) {
+                    buf.append(str);
+                    continue;
                 } else if (line.startsWith("     ")) {
                     if (buf.length() > 0) {
                         list.add(buf.toString());

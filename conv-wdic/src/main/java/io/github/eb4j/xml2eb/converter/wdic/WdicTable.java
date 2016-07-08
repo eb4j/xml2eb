@@ -75,12 +75,10 @@ public class WdicTable {
      */
     private void _makeImage() {
         List<WdicTableRow> rowList = _parse();
-        int size = rowList.size();
 
         // カラム数の確認
         int cols = -1;
-        for (int i=0; i<size; i++) {
-            WdicTableRow row = rowList.get(i);
+        for (WdicTableRow row : rowList) {
             int n = row.size();
             if (cols == -1) {
                 cols = n;
@@ -102,7 +100,7 @@ public class WdicTable {
 
         // 表示幅と高さ
         int[] width = new int[cols];
-        size = rowList.size();
+        int size = rowList.size();
         int[] height = new int[size];
         // まず単要素の最大幅と最大高さを判定
         for (int i = 0; i < size; i++) {
@@ -222,16 +220,15 @@ public class WdicTable {
                     }
 
                     BufferedImage[] imgs = item.getImage();
-                    int n = imgs.length;
                     int dy = (th - item.getHeight()) / 2;
-                    for (int k=0; k<n; k++) {
+                    for (BufferedImage img : imgs) {
                         int dx = 0;
                         switch (item.getAlign()) {
                             case WdicTableItem.CENTER:
-                                dx = (tw - imgs[k].getWidth()) / 2;
+                                dx = (tw - img.getWidth()) / 2;
                                 break;
                             case WdicTableItem.RIGHT:
-                                dx = tw - imgs[k].getWidth();
+                                dx = tw - img.getWidth();
                                 break;
                             case WdicTableItem.LEFT:
                                 break;
@@ -239,10 +236,10 @@ public class WdicTable {
                                 break;
                         }
                         WaitImageObserver obs = new WaitImageObserver();
-                        if (!g2.drawImage(imgs[k], x+dx, y+dy, obs)) {
+                        if (!g2.drawImage(img, x + dx, y + dy, obs)) {
                             obs.waitFor();
                         }
-                        dy += imgs[k].getHeight();
+                        dy += img.getHeight();
                     }
                 }
                 if (!item.isHBonding()) {
@@ -262,9 +259,8 @@ public class WdicTable {
         g2.dispose();
 
         // リソースの破棄
-        for (int i=0; i<size; i++) {
-            WdicTableRow row = rowList.get(i);
-            for (int j=0; j<cols; j++) {
+        for (WdicTableRow row : rowList) {
+            for (int j = 0; j < cols; j++) {
                 row.get(j).destroy();
             }
         }
@@ -288,16 +284,15 @@ public class WdicTable {
             } catch (Exception e) {
                 String sep = System.getProperty("line.separator", "\n");
                 StringBuilder buf = new StringBuilder();
-                int len = tableDataList.size();
-                for (int i=0; i<len; i++) {
-                    buf.append(tableDataList.get(i));
+                for (String tableData: tableDataList) {
+                    buf.append(tableData);
                     buf.append(sep);
                 }
                 _logger.warn("unexpected table format: " + _id + sep + buf.toString(), e);
             }
         }
         if (rowList == null) {
-            rowList = new ArrayList<WdicTableRow>();
+            rowList = new ArrayList<>();
         }
         return rowList;
     }
@@ -308,14 +303,13 @@ public class WdicTable {
      * @return 行データのリスト
      */
     private List<WdicTableRow> _parseFullSpec() {
-        List<WdicTableRow> rowList = new ArrayList<WdicTableRow>();
-        int len = tableDataList.size();
+        List<WdicTableRow> rowList = new ArrayList<>();
         int col = -1;
         int hnum = -1;
         int vnum = -1;
         WdicTableRow row = new WdicTableRow();
-        for (int i = 1; i < len; i++) {
-            String line = tableDataList.get(i).trim();
+        for (String line: tableDataList) {
+            line = line.trim();
             if ("|>".equals(line)) {
                 row = new WdicTableRow();
                 rowList.add(row);
@@ -361,13 +355,12 @@ public class WdicTable {
      * @return 行データのリスト
      */
     private List<WdicTableRow> _parseSimple() {
-        List<WdicTableRow> rowList = new ArrayList<WdicTableRow>();
-        int len = tableDataList.size();
-        for (int i=0; i<len; i++) {
+        List<WdicTableRow> rowList = new ArrayList<>();
+        for (String aTableDataList : tableDataList) {
             WdicTableRow row = new WdicTableRow();
             rowList.add(row);
 
-            String line = tableDataList.get(i).trim();
+            String line = aTableDataList.trim();
             boolean header = false;
             if (line.startsWith("|= ")) {
                 header = true;
