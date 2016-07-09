@@ -5,7 +5,7 @@
 There are a couple of tools to convert several dictionary data into XML files that can be used by xml2eb.
 Now there are two tools supporting  following dictionaries:
 
-* link:http://www.wdic.org/[通信用語(等)の基礎知識 (EPWING V6 format)]
+* link:http://www.wdic.org/[通信用語(等)の基礎知識 (汎用辞書 V6 format)]
 
 * link:http://www.post.japanpost.jp/zipcode/download.html[Zip Code data]
 
