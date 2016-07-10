@@ -92,29 +92,26 @@ public class Xml2Eb {
      */
     public static void main(final String[] args) {
         if (args.length == 0) {
-            System.out.println("java " + PROGRAM + " [xml-file]");
+            System.err.println("java " + PROGRAM + " [xml-file]");
+        } else if (args.length > 1) {
+            System.err.println("Cannot pass multiple arguments.");
+            System.err.println("java " + PROGRAM + " [xml-file]");
         } else {
             try {
-                new Xml2Eb(args[0]).convert();
-            } catch (ParserConfigurationException e) {
-                System.exit(1);
-            } catch (SAXException e) {
-                System.exit(1);
-            } catch (IOException e) {
+                String filename = args[0];
+                File target = new File(filename);
+                if (!target.isFile()) {
+                    System.err.println("Cannot read the file.");
+                    System.exit(1);
+                }
+                new Xml2Eb(target).convert();
+            } catch (ParserConfigurationException | SAXException | IOException e) {
+                System.err.println("Unrecoverable error happened.");
                 System.exit(1);
             }
         }
     }
 
-
-    /**
-     * コンストラクタ。
-     *
-     * @param path XMLファイルパス
-     */
-    public Xml2Eb(final String path) {
-        this(new File(path));
-    }
 
     /**
      * コンストラクタ。
