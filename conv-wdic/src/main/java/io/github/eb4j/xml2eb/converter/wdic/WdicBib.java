@@ -43,7 +43,7 @@ public class WdicBib {
         super();
         _logger = LoggerFactory.getLogger(getClass());
         _file = file;
-        _bibList = new ArrayList<String>();
+        _bibList = new ArrayList<>();
         _load();
     }
 

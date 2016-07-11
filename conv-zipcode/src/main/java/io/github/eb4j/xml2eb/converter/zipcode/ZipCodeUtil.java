@@ -47,7 +47,7 @@ public final class ZipCodeUtil {
     public static BufferedImage toImage(final int codePoint) {
         String type = FontUtil.getFontType(codePoint);
         Font font = getFont(codePoint);
-        BufferedImage img = null;
+        BufferedImage img;
         if (font.canDisplay(codePoint)) {
             if ("narrow".equals(type)) {
                 img = FontUtil.charToImage(codePoint, 8, 16, font);
@@ -78,9 +78,9 @@ public final class ZipCodeUtil {
      * @return フォント
      */
     private static Font getFont(final int codePoint) {
-        for (Font alogicalFont : LOGICAL_FONT) {
-            if (alogicalFont.canDisplay(codePoint)) {
-                return alogicalFont;
+        for (Font aLogicalFont : LOGICAL_FONT) {
+            if (aLogicalFont.canDisplay(codePoint)) {
+                return aLogicalFont;
             }
         }
         return LOGICAL_FONT[0];
@@ -102,7 +102,7 @@ public final class ZipCodeUtil {
 
         StringBuilder buf = new StringBuilder();
         int len = str.length();
-        for (int i=0; i<len; i++) {
+        for (int i = 0; i < len; i++) {
             char ch1 = str.charAt(i);
             if (Character.isHighSurrogate(ch1)
                 || Character.isLowSurrogate(ch1)) {
@@ -250,10 +250,10 @@ public final class ZipCodeUtil {
                         }
                         break;
                 }
-                if (i+1 == len) {
+                if (i + 1 == len) {
                     buf.append(ch1);
                 } else {
-                    char ch2 = str.charAt(i+1);
+                    char ch2 = str.charAt(i + 1);
                     if (Character.isHighSurrogate(ch2)
                         || Character.isLowSurrogate(ch2)) {
                         buf.append(ch1);

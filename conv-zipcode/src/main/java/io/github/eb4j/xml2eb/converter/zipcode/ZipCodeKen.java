@@ -134,19 +134,19 @@ public class ZipCodeKen {
 
             String line = null;
             Item item = null;
-            while ((line=lnr.readLine()) != null) {
+            while ((line = lnr.readLine()) != null) {
                 line = UnicodeUtil.sanitizeUnicode(line);
                 StrTokenizer st = StrTokenizer.getCSVInstance(line);
                 int n = st.size();
                 if (n != 15) {
                     _logger.error("unexpected token count: "
                                   + _file.getName()
-                                  + "[" +lnr.getLineNumber() + "] " + n);
+                                  + "[" + lnr.getLineNumber() + "] " + n);
                     continue;
                 }
                 String[] tokens = st.getTokenArray();
                 int empty = -1;
-                for (int i=0; i<n; i++) {
+                for (int i = 0; i < n; i++) {
                     if (StringUtils.isBlank(tokens[i])) {
                         empty = i;
                         break;
@@ -155,7 +155,7 @@ public class ZipCodeKen {
                 if (empty != -1) {
                     _logger.warn("empty token found: "
                                  + _file.getName()
-                                 + "[" +lnr.getLineNumber() + "] " + empty);
+                                 + "[" + lnr.getLineNumber() + "] " + empty);
                     continue;
                 }
                 if (item != null && !item.isClosed()) {
@@ -250,12 +250,12 @@ public class ZipCodeKen {
                     _kanaTown = kana;
                 } else {
                     _kanaTown = kana.substring(0, idx1);
-                    int idx2 = kana.indexOf("\uff09", idx1+1);
+                    int idx2 = kana.indexOf("\uff09", idx1 + 1);
                     if (idx2 == -1) {
                         _closed = false;
-                        _kanaArea = kana.substring(idx1+1);
+                        _kanaArea = kana.substring(idx1 + 1);
                     } else {
-                        _kanaArea = kana.substring(idx1+1, idx2);
+                        _kanaArea = kana.substring(idx1 + 1, idx2);
                     }
                 }
 
@@ -264,12 +264,12 @@ public class ZipCodeKen {
                     _town = town;
                 } else {
                     _town = town.substring(0, idx1);
-                    int idx2 = town.indexOf("\uff09", idx1+1);
+                    int idx2 = town.indexOf("\uff09", idx1 + 1);
                     if (idx2 == -1) {
                         _closed = false;
-                        _area = town.substring(idx1+1);
+                        _area = town.substring(idx1 + 1);
                     } else {
-                        _area = town.substring(idx1+1, idx2);
+                        _area = town.substring(idx1 + 1, idx2);
                     }
                 }
             }

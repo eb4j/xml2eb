@@ -197,7 +197,7 @@ public class Wdic2Xml {
 
         File glyph = new File(basedir, WDIC_GLYPH_DIR);
         int len = glyphList.size();
-        for (int i=0; i<len; i++) {
+        for (int i = 0; i < len; i++) {
             String name = glyphList.get(i);
             String bmpName = name + ".50px.png.bmp";
             File bmp = new File(glyph, bmpName);
@@ -205,7 +205,7 @@ public class Wdic2Xml {
                 logger.error("file not found: " + bmp.getPath());
             }
             String path = FilenameUtils.concat(WDIC_GLYPH_DIR, bmpName);
-            _appendData(graphic, "glyph-"+name, path, "bmp");
+            _appendData(graphic, "glyph-" + name, path, "bmp");
         }
 
         File table = new File(basedir, WDIC_TABLE_DIR);
@@ -366,7 +366,7 @@ public class Wdic2Xml {
                         wordAvail = true;
                     }
                     // 元の語形
-                    str = str.substring(idx+2).trim();
+                    str = str.substring(idx + 2).trim();
                 }
                 if (!head.equals(str) && WordUtil.isValidWord(str)) {
                     Element wordElem = _appendElement(itemElem, "word");
@@ -541,7 +541,7 @@ public class Wdic2Xml {
                 if (block.startsWith("))")) {
                     // 整形済み
                     _appendNewLine(indentElem);
-                    for (; i<n; i++) {
+                    for (; i < n; i++) {
                         body = bodyList.get(i);
                         block = WdicUtil.deleteTab(body);
                         if (!block.startsWith("))")) {
@@ -558,7 +558,7 @@ public class Wdic2Xml {
                 } else if (block.startsWith(">>")) {
                     // 引用
                     Element indentElem2 = _appendElement(indentElem, "indent");
-                    for (; i<n; i++) {
+                    for (; i < n; i++) {
                         body = bodyList.get(i);
                         block = WdicUtil.deleteTab(body);
                         if (!block.startsWith(">>")) {
@@ -572,7 +572,7 @@ public class Wdic2Xml {
                     }
                 } else if (block.startsWith(":: ")) {
                     // 定義語 (簡易形式)
-                    for (; i<n; i++) {
+                    for (; i < n; i++) {
                         body = bodyList.get(i);
                         block = WdicUtil.deleteTab(body);
                         if (!block.startsWith(":: ")) {
@@ -581,7 +581,7 @@ public class Wdic2Xml {
                         }
                         int idx = WdicUtil.indexOf(block, "|", 3);
                         String dt = block.substring(3, idx).trim();
-                        String dd = block.substring(idx+1).trim();
+                        String dd = block.substring(idx + 1).trim();
                         _appendText(item, indentElem, "\u30fb " + dt);
                         _appendNewLine(indentElem);
                         Element indentElem2 = _appendElement(indentElem, "indent");
@@ -593,7 +593,7 @@ public class Wdic2Xml {
                     int tab = curIndent;
                     boolean term = false;
                     Element indentElem2 = null;
-                    for (i=i+1; i<n; i++) {
+                    for (i = i + 1; i < n; i++) {
                         body = bodyList.get(i);
                         int t = WdicUtil.getTabCount(body) - ignoreTabs;
                         if (t <= tab) {
@@ -686,7 +686,7 @@ public class Wdic2Xml {
                     tableNum++;
                     WdicTable table = new WdicTable(item);
                     table.add(block);
-                    for (i=i+1; i<n; i++) {
+                    for (i = i + 1; i < n; i++) {
                         body = bodyList.get(i);
                         block = WdicUtil.deleteTab(body);
                         if (!block.startsWith("|| ") && !block.startsWith("|= ")) {
@@ -725,7 +725,7 @@ public class Wdic2Xml {
                 } else if (block.startsWith("= ")) {
                     // 章見出し
                     if (i > 0) {
-                        String prev = WdicUtil.deleteTab(bodyList.get(i-1));
+                        String prev = WdicUtil.deleteTab(bodyList.get(i - 1));
                         if (!prev.startsWith("= ")) {
                             _appendNewLine(indentElem);
                         }
@@ -906,7 +906,7 @@ public class Wdic2Xml {
         logger.debug("  sound plugin");
         ext = new String[]{".mp3", ".ogg", ".mid"};
         len = ext.length;
-        for (int i=0; i<len; i++) {
+        for (int i = 0; i < len; i++) {
             it = pluginMap.entrySet().iterator();
             while (it.hasNext()) {
                 entry = it.next();
@@ -957,7 +957,7 @@ public class Wdic2Xml {
             entry = it.next();
             String name = entry.getKey();
             boolean add = true;
-            for (int i=0; i<len; i++) {
+            for (int i = 0; i < len; i++) {
                 if (name.endsWith(ext[i])) {
                     add = false;
                     break;
@@ -1023,7 +1023,7 @@ public class Wdic2Xml {
         Element copyright = _appendElement(content, "copyright");
         String[] line = manual.getCopyright();
         int len = line.length;
-        for (int i=0; i<len; i++) {
+        for (int i = 0; i < len; i++) {
             _appendRawText(copyright, line[i]);
             _appendNewLine(copyright);
         }
@@ -1098,17 +1098,17 @@ public class Wdic2Xml {
         Element layerElem = _appendLayer(menu, "MENU:manual");
         String[] sec = manual.getSections();
         int len = sec.length;
-        for (int i=0; i<len; i++) {
+        for (int i = 0; i < len; i++) {
             Element refElem = _appendIdReference(layerElem, "MENU:manual:" + sec[i]);
             _appendRawText(refElem, sec[i]);
             _appendNewLine(layerElem);
             String prev = null;
             String next = null;
             if (i > 0) {
-                prev = sec[i-1];
+                prev = sec[i - 1];
             }
-            if (i < (len-1)) {
-                next = sec[i+1];
+            if (i < (len - 1)) {
+                next = sec[i + 1];
             }
             _createManualLayer(menu, sec[i], prev, next);
         }
@@ -1272,7 +1272,7 @@ public class Wdic2Xml {
         List<String> children = dirList.getChildren(dir);
         len = children.size();
         int cnt = len;
-        for (int i=0; i<len; i++) {
+        for (int i = 0; i < len; i++) {
             String child = children.get(i);
             _appendRawText(layerElem, "\u21d2 ");
             if (dirList.hasAlias(child)) {
@@ -1291,7 +1291,7 @@ public class Wdic2Xml {
         List<WdicItem> items = groupList.getWdicItem(dir);
         len = items.size();
         cnt += len;
-        for (int i=0; i<len; i++) {
+        for (int i = 0; i < len; i++) {
             WdicItem item = items.get(i);
             _appendRawText(layerElem, "\u2192 ");
             String head = item.getHead();
@@ -1390,13 +1390,13 @@ public class Wdic2Xml {
                 _appendRawText(layerElem, " \u21d2 ");
                 name = item.getRealName();
                 String refid = WdicUtil.unescape(name);
-                id ="WDIC:" + grpId + ":" + refid;
+                id = "WDIC:" + grpId + ":" + refid;
                 refElem = _appendIdReference(layerElem, id);
                 _appendText(item, refElem, name);
                 _appendNewLine(layerElem);
             } else {
                 String name = item.getHead();
-                id ="WDIC:" + grpId + ":" + name;
+                id = "WDIC:" + grpId + ":" + name;
                 refElem = _appendIdReference(layerElem, id);
                 _appendRawText(refElem, name);
                 List<String> yomiList = item.getYomi();
@@ -1712,7 +1712,7 @@ public class Wdic2Xml {
             if (ch == '\'') {
                 StringBuilder bracket = new StringBuilder("'");
                 int idx1 = i + 1;
-                for (; idx1<len; idx1++) {
+                for (; idx1 < len; idx1++) {
                     if (str.charAt(idx1) != '\'') {
                         break;
                     }
@@ -1736,21 +1736,21 @@ public class Wdic2Xml {
                     continue;
                 }
             } else if (ch == '[') {
-                if (i+1 < len && str.charAt(i+1) == '[') {
+                if (i + 1 < len && str.charAt(i + 1) == '[') {
                     int idx1 = i + 1;
-                    int idx2 = WdicUtil.indexOf(str, "]]", idx1+1);
+                    int idx2 = WdicUtil.indexOf(str, "]]", idx1 + 1);
                     if (idx2 != -1) {
                         // リンク
                         _appendRawText(node, buf.toString());
                         buf.delete(0, buf.length());
-                        String ref = str.substring(idx1+1, idx2);
+                        String ref = str.substring(idx1 + 1, idx2);
                         String name = null;
                         if (ref.startsWith("<")) {
                             // 表示内容
                             int idx3 = WdicUtil.indexOf(ref, ">", 1);
                             if (idx3 != -1) {
                                 name = ref.substring(1, idx3);
-                                ref = ref.substring(idx3+1);
+                                ref = ref.substring(idx3 + 1);
                             }
                         }
                         if (ref.startsWith("http:")
@@ -1783,7 +1783,7 @@ public class Wdic2Xml {
                             idx3 = ref.indexOf("/", 2);
                             if (idx3 != -1) {
                                 gid = ref.substring(2, idx3);
-                                file = ref.substring(idx3+1);
+                                file = ref.substring(idx3 + 1);
                             } else {
                                 gid = grpId;
                                 file = ref.substring(2);
@@ -1820,7 +1820,7 @@ public class Wdic2Xml {
                                 int idx3 = WdicUtil.indexOf(ref, "/", 1);
                                 if (idx3 != -1) {
                                     gid = ref.substring(1, idx3);
-                                    head = ref.substring(idx3+1);
+                                    head = ref.substring(idx3 + 1);
                                 } else {
                                     head = ref.substring(1);
                                 }
@@ -1874,13 +1874,13 @@ public class Wdic2Xml {
                 buf.append(ch);
                 continue;
             }
-            if (i+1 >= len) {
+            if (i + 1 >= len) {
                // バックスラッシュに続く文字がないのでそのまま追加
                 buf.append(ch);
                 continue;
             }
 
-            char ch1 = str.charAt(i+1);
+            char ch1 = str.charAt(i + 1);
             if (ch1 >= 0x21 && ch1 <= 0x7e) {
                 if (!CharUtils.isAsciiAlphanumeric(ch1)) {
                     // 1文字エスケープ (英数字以外の記号)
@@ -1890,13 +1890,13 @@ public class Wdic2Xml {
                 }
             }
 
-            int idx = WdicUtil.indexOf(str, ";", i+1);
+            int idx = WdicUtil.indexOf(str, ";", i + 1);
             if (idx < 0) {
                 logger.error("unexpected format: " + str);
                 buf.append(ch);
                 continue;
             }
-            String ref = str.substring(i+1, idx);
+            String ref = str.substring(i + 1, idx);
             i = idx;
             int sep1 = WdicUtil.indexOf(ref, "{", 0);
             int sep2 = WdicUtil.indexOf(ref, ":", 0);
@@ -1907,8 +1907,8 @@ public class Wdic2Xml {
             }
 
             // 特殊機能
-            String name = null;
-            ArrayList<String> param = new ArrayList<String>();
+            String name;
+            ArrayList<String> param = new ArrayList<>();
             if (sep1 != -1 && sep2 != -1) {
                 if (sep2 < sep1) {
                     sep1 = -1;
@@ -1920,21 +1920,21 @@ public class Wdic2Xml {
                 // 引数は{}で括られている
                 name = ref.substring(0, sep1);
                 int idx1 = sep1;
-                int idx2 = -1;
+                int idx2;
                 while (idx1 != -1) {
-                    idx2 = ref.indexOf('}', idx1+1);
+                    idx2 = ref.indexOf('}', idx1 + 1);
                     if (idx2 == -1) {
                         idx2 = ref.length();
                     }
-                    param.add(ref.substring(idx1+1, idx2));
-                    idx1 = ref.indexOf('{', idx2+1);
+                    param.add(ref.substring(idx1 + 1, idx2));
+                    idx1 = ref.indexOf('{', idx2 + 1);
                 }
             } else {
                 // 引数は:で区切られている
                 name = ref.substring(0, sep2);
-                String[] arg = ref.substring(sep2+1).split(":");
+                String[] arg = ref.substring(sep2 + 1).split(":");
                 int n = arg.length;
-                for (int j=0; j<n; j++) {
+                for (int j = 0; j < n; j++) {
                     param.add(arg[j]);
                 }
             }
@@ -1962,7 +1962,7 @@ public class Wdic2Xml {
                 }
             } else if ("asin".equals(name)) {
                 String asin = param.get(0);
-                String url = null;
+                String url;
                 switch (asin.charAt(0)) {
                     case '4':
                         url = "http://www.amazon.co.jp/exec/obidos/ASIN/";
@@ -1981,7 +1981,7 @@ public class Wdic2Xml {
                         url = "http://www.amazon.com/exec/obidos/ASIN/";
                         break;
                 }
-                buf.append(url+asin);
+                buf.append(url + asin);
             } else if ("flag".equals(name)) {
                 // ignore
             } else if ("mex".equals(name)) {
@@ -1993,14 +1993,14 @@ public class Wdic2Xml {
                 if (!glyphList.contains(glyph)) {
                     glyphList.add(glyph);
                 }
-                Element elem = _appendDataReference(node, "glyph-"+glyph, "inlineGraphic");
+                Element elem = _appendDataReference(node, "glyph-" + glyph, "inlineGraphic");
                 _appendRawText(elem, "[グリフ:" + glyph + "]");
             } else if ("oline".equals(name)) {
                 _appendRawText(node, buf.toString());
                 buf.delete(0, buf.length());
                 String pstr = param.get(0);
                 int n = pstr.length();
-                for (int j=0; j<n; j++) {
+                for (int j = 0; j < n; j++) {
                     int codePoint = pstr.codePointAt(j);
                     String hex = HexUtil.toHexString(codePoint, 6);
                     String fontname = "U" + hex + "-OL";
@@ -2036,7 +2036,7 @@ public class Wdic2Xml {
                 buf.delete(0, buf.length());
                 String pstr = param.get(0);
                 int n = pstr.length();
-                for (int j=0; j<n; j++) {
+                for (int j = 0; j < n; j++) {
                     int codePoint = pstr.codePointAt(j);
                     String hex = HexUtil.toHexString(codePoint, 6);
                     String fontname = "U" + hex + "-UL";
@@ -2072,7 +2072,7 @@ public class Wdic2Xml {
                 buf.delete(0, buf.length());
                 String pstr = param.get(0);
                 int n = pstr.length();
-                for (int j=0; j<n; j++) {
+                for (int j = 0; j < n; j++) {
                     int codePoint = pstr.codePointAt(j);
                     String hex = HexUtil.toHexString(codePoint, 6);
                     String fontname = "U" + hex + "-LT";
@@ -2145,7 +2145,7 @@ public class Wdic2Xml {
             String str = text.getNodeValue();
             int len = str.length();
             int idx = 0;
-            while (idx<len) {
+            while (idx < len) {
                 int codePoint = str.codePointAt(idx);
                 int cnt = Character.charCount(codePoint);
                 if (WordUtil.isValidChar(codePoint)) {
@@ -2157,11 +2157,11 @@ public class Wdic2Xml {
                 if (Character.UnicodeBlock.HEBREW.equals(unicodeBlock)
                     || Character.UnicodeBlock.ARABIC.equals(unicodeBlock)
                     || Character.UnicodeBlock.DEVANAGARI.equals(unicodeBlock)) {
-                    while (end<len) {
+                    while (end < len) {
                         int cp = str.codePointAt(end);
                         if (!unicodeBlock.equals(Character.UnicodeBlock.of(cp))) {
-                            if (cp == ' ' && (end+1) < len) {
-                                cp = str.codePointAt(end+1);
+                            if (cp == ' ' && (end + 1) < len) {
+                                cp = str.codePointAt(end + 1);
                                 if (unicodeBlock.equals(Character.UnicodeBlock.of(cp))) {
                                     end += 1 + Character.charCount(cp);
                                     continue;
@@ -2172,17 +2172,17 @@ public class Wdic2Xml {
                         end += Character.charCount(cp);
                     }
                 }
-                if (end > idx+cnt) {
+                if (end > idx + cnt) {
                     String s = str.substring(idx, end);
                     Node parent = text.getParentNode();
                     text = text.splitText(idx);
-                    text.deleteData(0, end-idx);
+                    text.deleteData(0, end - idx);
                     Element nobr = text.getOwnerDocument().createElement("nobr");
                     parent.insertBefore(nobr, text);
 
                     int n = s.length();
                     StringBuilder buf = new StringBuilder();
-                    for (int i=0; i<n; i++) {
+                    for (int i = 0; i < n; i++) {
                         if (i > 0) {
                             buf.append("_");
                         }
@@ -2215,7 +2215,7 @@ public class Wdic2Xml {
                         byte[][] b = FontUtil.split(img, width);
                         img.flush();
                         n = b.length;
-                        for (int i=0; i<n; i++) {
+                        for (int i = 0; i < n; i++) {
                             File file = new File(dir, name + i + ".xbm");
                             try {
                                 FontUtil.writeXbm(b[i], width, height, file);
@@ -2229,7 +2229,7 @@ public class Wdic2Xml {
                     } else {
                         n = files.length;
                     }
-                    for (int i=0; i<n; i++) {
+                    for (int i = 0; i < n; i++) {
                         String name0 = name + i;
                         if (!gaijiMap.containsKey(name0)) {
                             gaijiMap.put(name0, "narrow");
@@ -2291,7 +2291,7 @@ public class Wdic2Xml {
         if (node.hasChildNodes()) {
             NodeList nlist = node.getChildNodes();
             int len = nlist.getLength();
-            for (int i=0; i<len; i++) {
+            for (int i = 0; i < len; i++) {
                 Node child = nlist.item(i);
                 _checkCharacter(child);
                 int n = nlist.getLength();

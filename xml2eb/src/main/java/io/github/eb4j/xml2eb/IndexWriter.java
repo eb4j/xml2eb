@@ -69,18 +69,18 @@ public class IndexWriter {
         try {
             IndexLayer layer = _layerList.get(0);
             Index lastIndex = layer.getLastIndex();
-            for (int i=1; i<_depth; i++) {
-                layer = _layerList.get(i-1);
+            for (int i = 1; i < _depth; i++) {
+                layer = _layerList.get(i - 1);
                 Index upperIndex = new Index(lastIndex.getWord(), layer.getBlock());
                 _addUpperLayer(i, upperIndex);
             }
             _writeLeafLayer(true);
-            for (int i=1; i<_depth; i++) {
+            for (int i = 1; i < _depth; i++) {
                 _writeUpperLayer(i, true);
             }
         } catch (IOException e) {
         }
-        for (int i=0; i<_depth; i++) {
+        for (int i = 0; i < _depth; i++) {
             OutputStream out = _streamList.get(i);
             try {
                 out.close();
@@ -157,7 +157,7 @@ public class IndexWriter {
             }
             Index lastIndex = layer.getLastIndex();
             Index upperIndex = new Index(lastIndex.getWord(), layer.getBlock());
-            _addUpperLayer(level+1, upperIndex);
+            _addUpperLayer(level + 1, upperIndex);
             layer.clear();
             curLen = layer.getWordLength();
         }
@@ -206,7 +206,7 @@ public class IndexWriter {
 
         long pos = (layer.getBlock() - 1) * 2048;
         int off = 4;
-        for (int i=0; i<size; i++) {
+        for (int i = 0; i < size; i++) {
             Index index = layer.get(i);
             Word word = index.getWord();
             byte[] b = word.getWord();
@@ -215,9 +215,9 @@ public class IndexWriter {
             System.arraycopy(b, 0, buf, off, len);
             off += len;
             String name = word.getReferenceTag();
-            _ref.putBodyRef(layer.getFile(), pos+off, name);
+            _ref.putBodyRef(layer.getFile(), pos + off, name);
             off += 6;
-            _ref.putHeadRef(layer.getFile(), pos+off, name);
+            _ref.putHeadRef(layer.getFile(), pos + off, name);
             off += 6;
         }
         OutputStream out = _streamList.get(0);
@@ -278,14 +278,14 @@ public class IndexWriter {
 
         long pos = (layer.getBlock() - 1) * 2048;
         int off = 4;
-        for (int i=0; i<size; i++) {
+        for (int i = 0; i < size; i++) {
             Index index = layer.get(i);
             Word word = index.getWord();
             byte[] b = word.getWord();
             System.arraycopy(b, 0, buf, off, b.length);
             off += len;
             String name = Long.toString(index.getLowerBlock());
-            _ref.putIndexRef(layer.getFile(), pos+off, name);
+            _ref.putIndexRef(layer.getFile(), pos + off, name);
             off += 4;
         }
         OutputStream out = _streamList.get(level);
@@ -294,7 +294,7 @@ public class IndexWriter {
 
         if (last) {
             // ダミーを削除
-            layer.remove(size-1);
+            layer.remove(size - 1);
         }
     }
 }

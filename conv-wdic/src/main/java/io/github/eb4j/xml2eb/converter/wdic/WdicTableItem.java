@@ -117,10 +117,10 @@ public class WdicTableItem {
                         int idx = WdicUtil.indexOf(str, "#", 1);
                         try {
                             String func = str.substring(1, idx);
-                            str = str.substring(idx+1);
+                            str = str.substring(idx + 1);
                             idx = WdicUtil.indexOf(func, ":", 0);
                             String name = func.substring(idx);
-                            String val = func.substring(idx+1);
+                            String val = func.substring(idx + 1);
                             if ("COLOR".equals(name)) {
                                 // 前景色
                                 int rgb = Integer.parseInt(val, 16);
@@ -259,7 +259,7 @@ public class WdicTableItem {
     public void destroy() {
         if (_imgs != null) {
             int n = _imgs.length;
-            for (int i=0; i<n; i++) {
+            for (int i = 0; i < n; i++) {
                 _imgs[i].flush();
                 _imgs[i] = null;
             }
@@ -293,7 +293,7 @@ public class WdicTableItem {
         }
         int n = _imgs.length;
         int width = 0;
-        for (int i=0; i<n; i++) {
+        for (int i = 0; i < n; i++) {
             int w = _imgs[i].getWidth();
             if (w > width) {
                 width = w;
@@ -313,7 +313,7 @@ public class WdicTableItem {
         }
         int n = _imgs.length;
         int height = 0;
-        for (int i=0; i<n; i++) {
+        for (int i = 0; i < n; i++) {
             height += _imgs[i].getHeight();
         }
         return height;
@@ -342,7 +342,7 @@ public class WdicTableItem {
         int size = font.getSize();
         int height = size + 7;
 
-        for (int i=0; i<n; i++) {
+        for (int i = 0; i < n; i++) {
             int width = content[i].length() * size + 8;
             _imgs[i] = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
             Graphics2D g2 = _imgs[i].createGraphics();
@@ -435,7 +435,7 @@ public class WdicTableItem {
                     continue;
                 }
             } else if (ch == '[') {
-                if (i+1 < len && str.charAt(i+1) == '[') {
+                if (i + 1 < len && str.charAt(i + 1) == '[') {
                     int idx1 = i + 1;
                     int idx2 = WdicUtil.indexOf(str, "]]", idx1 + 1);
                     if (idx2 != -1) {
@@ -554,13 +554,13 @@ public class WdicTableItem {
                 buf.append(ch);
                 continue;
             }
-            if (i+1 >= len) {
+            if (i + 1 >= len) {
                 // バックスラッシュに続く文字がないのでそのまま追加
                 buf.append(ch);
                 continue;
             }
 
-            char ch1 = str.charAt(i+1);
+            char ch1 = str.charAt(i + 1);
             if (ch1 >= 0x21 && ch1 <= 0x7e) {
                 if (!CharUtils.isAsciiAlphanumeric(ch1)) {
                     // 1文字エスケープ (英数字以外の記号)
@@ -570,13 +570,13 @@ public class WdicTableItem {
                 }
             }
 
-            int idx = WdicUtil.indexOf(str, ";", i+1);
+            int idx = WdicUtil.indexOf(str, ";", i + 1);
             if (idx < 0) {
                 _logger.error("unexpected format: " + str);
                 buf.append(ch);
                 continue;
             }
-            String ref = str.substring(i+1, idx);
+            String ref = str.substring(i + 1, idx);
             i = idx;
             int sep1 = WdicUtil.indexOf(ref, "{", 0);
             int sep2 = WdicUtil.indexOf(ref, ":", 0);
@@ -612,7 +612,7 @@ public class WdicTableItem {
             } else {
                 // 引数は:で区切られている
                 name = ref.substring(0, sep2);
-                String[] arg = ref.substring(sep2+1).split(":");
+                String[] arg = ref.substring(sep2 + 1).split(":");
                 int n = arg.length;
                 for (int j = 0; j < n; j++) {
                     param.add(arg[j]);
@@ -810,7 +810,7 @@ public class WdicTableItem {
                     drawStr = String.valueOf(Character.toChars(codePoint));
                     font = WdicUtil.getFont(codePoint);
                     font = font.deriveFont(origFont.getStyle(),
-                                           origFont.getSize2D()-2.0f);
+                                           origFont.getSize2D() - 2.0f);
                 }
             } else {
                 // 表示可能な文字を描画

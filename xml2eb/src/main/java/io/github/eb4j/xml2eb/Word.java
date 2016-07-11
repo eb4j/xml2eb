@@ -69,7 +69,7 @@ public class Word implements Comparable<Word> {
     public int hashCode() {
         int code = 0;
         int n = _word.length;
-        for (int i=0; i<n; i++) {
+        for (int i = 0; i < n; i++) {
             code = code * 31 + _word[n];
         }
         code += _tag.hashCode();
@@ -106,7 +106,7 @@ public class Word implements Comparable<Word> {
         int len2 = b.length;
         int len = Math.min(len1, len2);
         int c1, c2, comp;
-        for (int i=0; i<len; i++) {
+        for (int i = 0; i < len; i++) {
             c1 = _word[i] & 0xff;
             c2 = b[i] & 0xff;
             comp = c1 - c2;

@@ -29,7 +29,7 @@ public final class WordUtil {
     public static boolean isValidWord(final String word) {
         int len = word.length();
         int cnt = 0;
-        for (int i=0; i<len; i++) {
+        for (int i = 0; i < len; i++) {
             int codePoint = word.codePointAt(i);
             if (!isValidChar(codePoint)) {
                 return false;
@@ -71,7 +71,7 @@ public final class WordUtil {
         byte[] b = null;
         try {
             b = str.getBytes("EUC-JP");
-        } catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException ignored) {
         }
         if (ArrayUtils.isEmpty(b)) {
             return false;

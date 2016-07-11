@@ -41,7 +41,7 @@ public final class UnicodeUtil {
         }
         StringBuilder buf = new StringBuilder();
         int len = str.length();
-        for (int i=0; i<len; i++) {
+        for (int i = 0; i < len; i++) {
             char ch = str.charAt(i);
             if (Character.isHighSurrogate(ch)
                 || Character.isLowSurrogate(ch)) {

@@ -167,7 +167,7 @@ public class TextOutputStream extends BlockOutputStream {
         String str = text.replace('\t', ' ');
         str = UnicodeUtil.sanitizeUnicode(str);
         int len = str.length();
-        for (int i=0; i<len; i++) {
+        for (int i = 0; i < len; i++) {
             int codePoint = str.codePointAt(i);
             if (Character.isSupplementaryCodePoint(codePoint)) {
                 // 補助文字
@@ -579,7 +579,7 @@ public class TextOutputStream extends BlockOutputStream {
         byte[] b = new byte[6];
         Arrays.fill(b, (byte)0x00);
         write(b, 0, b.length);
-        _ref.putBodyRef(_file, getSize()-6, name);
+        _ref.putBodyRef(_file, getSize() - 6, name);
         _stack.pop();
     }
 
@@ -611,7 +611,7 @@ public class TextOutputStream extends BlockOutputStream {
         byte[] b = new byte[14];
         Arrays.fill(b, (byte)0x00);
         write(b, 0, b.length);
-        _ref.putGraphicRef(_file, getSize()-6, name);
+        _ref.putGraphicRef(_file, getSize() - 6, name);
         _stack.push(ICGRAPHIC);
     }
 
@@ -661,7 +661,7 @@ public class TextOutputStream extends BlockOutputStream {
         byte[] b = new byte[14];
         Arrays.fill(b, (byte)0x00);
         write(b, 0, b.length);
-        _ref.putGraphicRef(_file, getSize()-6, name);
+        _ref.putGraphicRef(_file, getSize() - 6, name);
         _stack.push(CGRAPHIC);
     }
 
@@ -736,7 +736,7 @@ public class TextOutputStream extends BlockOutputStream {
         byte[] b = new byte[12];
         Arrays.fill(b, (byte)0x00);
         write(b, 0, b.length);
-        _ref.putSoundRef(_file, getSize()-12, name);
+        _ref.putSoundRef(_file, getSize() - 12, name);
         _stack.push(SOUND);
     }
 

@@ -60,7 +60,7 @@ public class Wdic {
         _group = group;
         if (part.endsWith("編")) {
             int len = part.length();
-            _part = part.substring(0, len-1);
+            _part = part.substring(0, len - 1);
         } else {
             _part = part;
         }
@@ -215,17 +215,12 @@ public class Wdic {
         _logger.info("load file: " + _file.getPath());
 
         LineNumberReader lnr = null;
+        Charset cs = Charset.forName(ENCODING);
         try {
-            Charset cs = Charset.forName(ENCODING);
-            lnr =
-                new LineNumberReader(
-                    new BufferedReader(
-                        new InputStreamReader(
-                            new FileInputStream(_file), cs)));
-
-            String line = null;
+            lnr = new LineNumberReader(new BufferedReader(new InputStreamReader(new FileInputStream(_file), cs)));
+            String line;
             WdicItem item = null;
-            while ((line=lnr.readLine()) != null) {
+            while ((line = lnr.readLine()) != null) {
                 line = WdicUtil.sanitize(line);
                 StringBuilder tmpLine = new StringBuilder(line);
                 while (line.endsWith("\\")) {
@@ -239,11 +234,11 @@ public class Wdic {
                         cnt++;
                         idx--;
                     }
-                    if ((cnt%2) == 0) {
+                    if ((cnt % 2) == 0) {
                         // バックスラッシュはエスケープされている
                         break;
                     }
-                    tmpLine.delete(len-1, len);
+                    tmpLine.delete(len - 1, len);
                     line = WdicUtil.sanitize(lnr.readLine());
                     line = WdicUtil.deleteTab(line);
                     tmpLine.append(line);
@@ -288,7 +283,7 @@ public class Wdic {
                             item.addSpell("en", str);
                         } else {
                             String lang = str.substring(0, idx).trim();
-                            String spell = str.substring(idx+1).trim();
+                            String spell = str.substring(idx + 1).trim();
                             item.addSpell(lang, spell);
                         }
                     } else if (block.startsWith("pron:")) {
@@ -296,7 +291,7 @@ public class Wdic {
                         String str = block.substring(idx).trim();
                         idx = str.indexOf(":");
                         String lang = str.substring(0, idx).trim();
-                        String pron = str.substring(idx+1).trim();
+                        String pron = str.substring(idx + 1).trim();
                         item.addPronounce(lang, pron);
                     } else if (block.startsWith("pos:")) {
                         int idx = "pos:".length();
@@ -344,25 +339,25 @@ public class Wdic {
                         int idx1 = WdicUtil.indexOf(block, "[[", 0);
                         int idx2 = -1;
                         while (idx1 != -1) {
-                            idx2 = WdicUtil.indexOf(block, "]]", idx1+2);
+                            idx2 = WdicUtil.indexOf(block, "]]", idx1 + 2);
                             if (idx2 < 0) {
                                 _logger.warn("not found reference end tag: "
                                              + _file.getName()
                                              + "[" + lnr.getLineNumber() + "] "
                                              + "'" + line + "'");
                                 break;
-                            } else if (idx1+2 == idx2) {
+                            } else if (idx1 + 2 == idx2) {
                                 _logger.warn("not found reference context: "
                                              + _file.getName()
                                              + "[" + lnr.getLineNumber() + "] "
                                              + "'" + line + "'");
                             } else {
-                                String str = block.substring(idx1+2, idx2);
+                                String str = block.substring(idx1 + 2, idx2);
                                 if (str.charAt(0) == '<') {
                                     // delete caption
                                     int idx = WdicUtil.indexOf(str, ">", 1);
                                     if (idx != -1) {
-                                        str = str.substring(idx+1);
+                                        str = str.substring(idx + 1);
                                     }
                                 }
                                 if (str.startsWith("//")) {
@@ -372,16 +367,16 @@ public class Wdic {
                                         str = str.substring(0, idx).trim();
                                     }
                                     idx = str.lastIndexOf("/");
-                                    String name = str.substring(idx+1);
+                                    String name = str.substring(idx + 1);
                                     Set<WdicItem> set = _pluginMap.get(name);
                                     if (set == null) {
-                                        set = new HashSet<WdicItem>();
+                                        set = new HashSet<>();
                                         _pluginMap.put(name, set);
                                     }
                                     set.add(item);
                                 }
                             }
-                            idx1 = WdicUtil.indexOf(block, "[[", idx2+2);
+                            idx1 = WdicUtil.indexOf(block, "[[", idx2 + 2);
                         }
                     }
                 } else {
