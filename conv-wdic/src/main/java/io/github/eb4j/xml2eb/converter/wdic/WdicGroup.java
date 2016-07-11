@@ -5,9 +5,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
@@ -104,18 +106,9 @@ public class WdicGroup {
      * 指定された単語の辞書項目を返します。
      *
      * @param word 単語
-     * @return 辞書項目 (指定された単語が存在しない場合はnull)
      */
-    protected WdicItem getWdicItem(final String word) {
-        int len = _list.size();
-        for (int i=0; i<len; i++) {
-            Wdic dic = _list.get(i);
-            WdicItem item = dic.getWdicItem(word);
-            if (item != null) {
-                return item;
-            }
-        }
-        return null;
+    protected Optional<WdicItem> getWdicItem(final String word) {
+        return _list.stream().map(dic -> dic.getWdicItem(word)).findFirst();
     }
 
     /**
@@ -124,9 +117,7 @@ public class WdicGroup {
      * @return 辞書リスト
      */
     public List<Wdic> getWdics() {
-        List<Wdic> list = new ArrayList<Wdic>();
-        list.addAll(_list);
-        return list;
+        return _list.stream().collect(Collectors.toList());
     }
 
     /**
@@ -145,11 +136,7 @@ public class WdicGroup {
      * @param list 項目リスト
      */
     protected void getWdicItem(final String dir, final List<WdicItem> list) {
-        int len = _list.size();
-        for (int i=0; i<len; i++) {
-            Wdic dic = _list.get(i);
-            dic.getWdicItem(dir, list);
-        }
+        _list.stream().forEach(dic -> dic.getWdicItem(dir, list));
     }
 
     /**
@@ -158,11 +145,7 @@ public class WdicGroup {
      * @param map プラグイン一覧
      */
     protected void getPluginMap(final Map<String, Set<WdicItem>> map) {
-        int len = _list.size();
-        for (int i=0; i<len; i++) {
-            Wdic dic = _list.get(i);
-            dic.getPluginMap(map);
-        }
+        _list.stream().forEach(dic -> dic.getPluginMap(map));
     }
 
     /**

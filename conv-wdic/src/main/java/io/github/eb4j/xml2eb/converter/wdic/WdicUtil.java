@@ -8,10 +8,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.collections.ExtendedProperties;
 import org.apache.commons.io.IOUtils;
@@ -614,11 +617,11 @@ public final class WdicUtil {
         } else {
             fonts = UNICODE_BLOCK_HASH_MAP.get(unicodeBlock);
         }
-        int len = ArrayUtils.getLength(fonts);
-        for (int i = 0; i < len; i++) {
-            if (fonts[i].canDisplay(codePoint)) {
-                return fonts[i];
-            }
+        Optional<Font> res = Arrays.stream(fonts)
+                .filter(f -> f.canDisplay(codePoint))
+                .findFirst();
+        if (res.isPresent()) {
+            return res.get();
         }
 
         String code = "U+" + toHexString(codePoint);
@@ -631,14 +634,14 @@ public final class WdicUtil {
         }
 
         // デフォルトフォントから検索
-        len = ArrayUtils.getLength(DEFAULT_FONTS);
-        for (int i = 0; i < len; i++) {
-            if (DEFAULT_FONTS[i].canDisplay(codePoint)) {
-                return DEFAULT_FONTS[i];
-            }
+        res = Arrays.stream(DEFAULT_FONTS)
+                .filter(f -> f.canDisplay(codePoint))
+                .findFirst();
+        if (res.isPresent()) {
+            return res.get();
         }
         // 論理フォントから検索
-        len = LOGICAL_FONTS.length;
+        int len = LOGICAL_FONTS.length;
         for (int i = 0; i < len; i++) {
             if (LOGICAL_FONTS[i].canDisplay(codePoint)) {
                 return LOGICAL_FONTS[i];

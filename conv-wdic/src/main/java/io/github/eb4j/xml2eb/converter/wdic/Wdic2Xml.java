@@ -4,14 +4,16 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.TreeMap;
 import java.util.Set;
 import java.util.Stack;
+import java.util.TreeMap;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
@@ -1444,26 +1446,14 @@ public class Wdic2Xml {
         _appendRawText(layerElem, " > " + group.getGroupName());
         _appendNewLine(layerElem);
 
-        Iterator<Map.Entry<String, Set<WdicItem>>> it = pluginMap.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, Set<WdicItem>> entry = it.next();
-            String name = entry.getKey();
-            Set<WdicItem> items = entry.getValue();
-            Iterator<WdicItem> itemIt = items.iterator();
-            boolean include = false;
-            while (itemIt.hasNext()) {
-                WdicItem item = itemIt.next();
-                if (group.equals(item.getWdic().getGroup())) {
-                    include = true;
-                    break;
-                }
-            }
-            if (include) {
-                refElem = _appendIdReference(layerElem, "PLUGIN:" + name);
-                _appendRawText(refElem, name);
+        pluginMap.entrySet().stream()
+            .filter(entry -> entry.getValue().stream()
+                    .anyMatch(v -> group.equals(v.getWdic().getGroup())))
+            .forEach(entry -> {
+                String name = entry.getKey();
+                _appendRawText(_appendIdReference(layerElem, "PLUGIN:" + name), name);
                 _appendNewLine(layerElem);
-            }
-        }
+            });
     }
 
     /**
@@ -1473,25 +1463,14 @@ public class Wdic2Xml {
      */
     private void _createImageLayer(final Element menu) {
         Element layerElem = _appendLayer(menu, "MENU:image");
-        String[] ext = {".jpg", ".png"};
-        Iterator<Map.Entry<String, Set<WdicItem>>> it = pluginMap.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, Set<WdicItem>> entry = it.next();
-            String name = entry.getKey();
-            int n = ext.length;
-            boolean image = false;
-            for (int i = 0; i < n; i++) {
-                if (name.endsWith(ext[i])) {
-                    image = true;
-                    break;
-                }
-            }
-            if (image) {
-                Element refElem = _appendIdReference(layerElem, "PLUGIN:" + name);
-                _appendRawText(refElem, name);
-                _appendNewLine(layerElem);
-            }
-        }
+        List<String> ext = Arrays.asList(".jpg", ".png");
+        pluginMap.keySet().stream()
+                .filter(v -> ext.stream().anyMatch(s -> s.endsWith(v)))
+                .forEach(name -> {
+                    Element refElem = _appendIdReference(layerElem, "PLUGIN:" + name);
+                    _appendRawText(refElem, name);
+                    _appendNewLine(layerElem);
+                });
     }
 
     /**
@@ -1501,25 +1480,14 @@ public class Wdic2Xml {
      */
     private void _createSoundLayer(final Element menu) {
         Element layerElem = _appendLayer(menu, "MENU:sound");
-        String[] ext = {".mp3", ".ogg", ".mid"};
-        Iterator<Map.Entry<String, Set<WdicItem>>> it = pluginMap.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, Set<WdicItem>> entry = it.next();
-            String name = entry.getKey();
-            int n = ext.length;
-            boolean sound = false;
-            for (int i = 0; i < n; i++) {
-                if (name.endsWith(ext[i])) {
-                    sound = true;
-                    break;
-                }
-            }
-            if (sound) {
-                Element refElem = _appendIdReference(layerElem, "PLUGIN:" + name);
-                _appendRawText(refElem, name);
-                _appendNewLine(layerElem);
-            }
-        }
+        List<String> ext = Arrays.asList(".mp3", ".ogg", ".mid");
+        pluginMap.keySet().stream()
+                .filter(v -> ext.stream().anyMatch(s -> s.endsWith(v)))
+                .forEach(name -> {
+                    Element refElem = _appendIdReference(layerElem, "PLUGIN:" + name);
+                    _appendRawText(refElem, name);
+                    _appendNewLine(layerElem);
+                });
     }
 
     /**
@@ -1529,25 +1497,14 @@ public class Wdic2Xml {
      */
     private void _createTextLayer(final Element menu) {
         Element layerElem = _appendLayer(menu, "MENU:text");
-        String[] ext = {".jpg", ".png", ".mp3", ".ogg", ".mid"};
-        Iterator<Map.Entry<String, Set<WdicItem>>> it = pluginMap.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, Set<WdicItem>> entry = it.next();
-            String name = entry.getKey();
-            int n = ext.length;
-            boolean text = true;
-            for (int i = 0; i < n; i++) {
-                if (name.endsWith(ext[i])) {
-                    text = false;
-                    break;
-                }
-            }
-            if (text) {
-                Element refElem = _appendIdReference(layerElem, "PLUGIN:" + name);
-                _appendRawText(refElem, name);
-                _appendNewLine(layerElem);
-            }
-        }
+        List<String> ext = Arrays.asList(".jpg", ".png", ".mp3", ".ogg", ".mid");
+        pluginMap.keySet().stream()
+                .filter(v -> ext.stream().noneMatch(s -> s.endsWith(v)))
+                .forEach(name -> {
+                    Element refElem = _appendIdReference(layerElem, "PLUGIN:" + name);
+                    _appendRawText(refElem, name);
+                    _appendNewLine(layerElem);
+                });
     }
 
     /**
@@ -1932,11 +1889,7 @@ public class Wdic2Xml {
             } else {
                 // 引数は:で区切られている
                 name = ref.substring(0, sep2);
-                String[] arg = ref.substring(sep2 + 1).split(":");
-                int n = arg.length;
-                for (int j = 0; j < n; j++) {
-                    param.add(arg[j]);
-                }
+                Collections.addAll(param, ref.substring(sep2 + 1).split(":"));
             }
 
             if ("x".equals(name)) {
