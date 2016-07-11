@@ -97,12 +97,10 @@ public class WdicGroupList {
      * @return 項目リスト
      */
     public List<WdicItem> getWdicItem(final String dir) {
-        List<WdicItem> list = new ArrayList<WdicItem>();
-        Iterator<WdicGroup> it = _map.values().iterator();
-        while (it.hasNext()) {
-            WdicGroup group = it.next();
-            group.getWdicItem(dir, list);
-        }
+        List<WdicItem> list = new ArrayList<>();
+        _map.values().stream()
+                .forEach(group -> group.getWdics().stream()
+                        .forEach(dic -> dic.getWdicItem(dir, list)));
         return list;
     }
 
@@ -113,11 +111,7 @@ public class WdicGroupList {
      */
     public Map<String, Set<WdicItem>> getPluginMap() {
         Map<String, Set<WdicItem>> pmap = new TreeMap<>();
-        Iterator<WdicGroup> it = _map.values().iterator();
-        while (it.hasNext()) {
-            WdicGroup grp = it.next();
-            grp.getPluginMap(pmap);
-        }
+        _map.values().stream().forEach(grp -> grp.getPluginMap(pmap));
         return pmap;
     }
 

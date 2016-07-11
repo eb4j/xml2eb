@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -61,18 +60,12 @@ public class WdicDirList {
         } else {
             sparent = parent;
         }
-        ArrayList<String> list = new ArrayList<String>();
+        ArrayList<String> list = new ArrayList<>();
         int len = sparent.length();
-        Iterator<String> it = _map.keySet().iterator();
-        while (it.hasNext()) {
-            String key = it.next();
-            if (key.startsWith(sparent) && !key.equals(sparent)) {
-                String str = key.substring(len);
-                if (!str.contains("/")) {
-                    list.add(key);
-                }
-            }
-        }
+        // Make a list of keys that start with sparent and not same with sparent.
+        // except grand-children which have extra '/'.
+        _map.keySet().stream().filter(key -> (key.length() > len) && key.startsWith(sparent)
+                && (key.lastIndexOf('/') == len - 1)).forEach(key -> list.add(key));
         return list;
     }
 
