@@ -106,7 +106,7 @@ public final class FontUtil {
         int h = fm.getAscent() + fm.getDescent();
         if (w > width || h > h2) {
             int size = derivedFont.getSize() - 1;
-            for (; size>0; size--) {
+            for (; size > 0; size--) {
                 derivedFont = derivedFont.deriveFont((float)size);
                 fm = g2.getFontMetrics(derivedFont);
                 w = fm.charWidth(codePoint);
@@ -156,7 +156,7 @@ public final class FontUtil {
         int h = fm.getAscent() + fm.getDescent();
         if (w > width || h > height) {
             int size = derivedFont.getSize() - 1;
-            for (; size>0; size--) {
+            for (; size > 0; size--) {
                 derivedFont = derivedFont.deriveFont((float)size);
                 fm = g2.getFontMetrics(derivedFont);
                 w = fm.charWidth(codePoint);
@@ -206,7 +206,7 @@ public final class FontUtil {
         int h = fm.getAscent() + fm.getDescent();
         if (h > height) {
             int size = derivedFont.getSize() - 1;
-            for (; size>0; size--) {
+            for (; size > 0; size--) {
                 derivedFont = derivedFont.deriveFont((float)size);
                 fm = g2.getFontMetrics(derivedFont);
                 h = fm.getAscent() + fm.getDescent();
@@ -261,7 +261,7 @@ public final class FontUtil {
         int pad = (width8 * n - w) / 2; // センタリング
         int size = h * width8 / 8;
         byte[][] b = new byte[n][size];
-        for (int i=0; i<n; i++) {
+        for (int i = 0; i < n; i++) {
             Arrays.fill(b[i], (byte)0x00);
         }
         w += pad;
@@ -274,7 +274,7 @@ public final class FontUtil {
             for (int i = 0; i < 8; i++, x++) {
                 int rgb = 0;
                 if (x >= pad && x < w) {
-                    rgb = img.getRGB(x-pad, y);
+                    rgb = img.getRGB(x - pad, y);
                 }
                 bits = (bits << 1);
                 if (rgb != 0) {
@@ -357,13 +357,13 @@ public final class FontUtil {
             line = "static char " + name + "_bits[] = {";
             bw.write(line);
             int len = b.length;
-            for (int i=0; i<len; i++) {
+            for (int i = 0; i < len; i++) {
                 int bits1 = b[i];
                 // 左右逆にする
                 int bits2 = 0;
                 int mask = 0x01;
                 int val = 0x80;
-                for (int j=0; j<8; j++) {
+                for (int j = 0; j < 8; j++) {
                     if ((bits1 & mask) != 0) {
                         bits2 |= val;
                     }
@@ -373,7 +373,7 @@ public final class FontUtil {
                 if (i > 0) {
                     bw.write(", ");
                 }
-                if ((i%8) == 0) {
+                if ((i % 8) == 0) {
                     bw.newLine();
                     bw.write("  ");
                 }

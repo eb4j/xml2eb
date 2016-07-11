@@ -289,7 +289,8 @@ public class ZipCode2Xml {
         Element menu = _appendElement(content, "menu");
         Element layerElem = _appendLayer(menu, "INDEX:top");
         Map<String, Map<String, List<ZipCodeKen.Item>>> map = _ken.getAddressMap();
-        Iterator<Map.Entry<String, Map<String, List<ZipCodeKen.Item>>>> it = map.entrySet().iterator();
+        Iterator<Map.Entry<String, Map<String, List<ZipCodeKen.Item>>>> it = map.entrySet()
+                .iterator();
         while (it.hasNext()) {
             // 都道府県別
             Map.Entry<String, Map<String, List<ZipCodeKen.Item>>> entry = it.next();
@@ -383,7 +384,8 @@ public class ZipCode2Xml {
         Element menu = _appendElement(content, "menu");
         Element layerElem = _appendLayer(menu, "INDEX:top");
         Map<String, Map<String, List<ZipCodeJigyosyo.Item>>> map = _jigyosyo.getAddressMap();
-        Iterator<Map.Entry<String, Map<String, List<ZipCodeJigyosyo.Item>>>> it = map.entrySet().iterator();
+        Iterator<Map.Entry<String, Map<String, List<ZipCodeJigyosyo.Item>>>> it = map.entrySet()
+                .iterator();
         while (it.hasNext()) {
             // 都道府県別
             Map.Entry<String, Map<String, List<ZipCodeJigyosyo.Item>>> entry = it.next();
@@ -401,7 +403,8 @@ public class ZipCode2Xml {
             _appendRawText(layerElem1, " > " + key);
             _appendNewLine(layerElem1);
 
-            Iterator<Map.Entry<String, List<ZipCodeJigyosyo.Item>>> it1 = map1.entrySet().iterator();
+            Iterator<Map.Entry<String, List<ZipCodeJigyosyo.Item>>> it1 = map1.entrySet()
+                    .iterator();
             while (it1.hasNext()) {
                 // 市区町村別
                 Map.Entry<String, List<ZipCodeJigyosyo.Item>> entry1 = it1.next();
@@ -596,7 +599,7 @@ public class ZipCode2Xml {
             String str = text.getNodeValue();
             int len = str.length();
             int idx = 0;
-            while (idx<len) {
+            while (idx < len) {
                 int codePoint = str.codePointAt(idx);
                 int cnt = Character.charCount(codePoint);
                 if (WordUtil.isValidChar(codePoint)) {
@@ -653,7 +656,7 @@ public class ZipCode2Xml {
         if (node.hasChildNodes()) {
             NodeList nlist = node.getChildNodes();
             int len = nlist.getLength();
-            for (int i=0; i<len; i++) {
+            for (int i = 0; i < len; i++) {
                 Node child = nlist.item(i);
                 _checkCharacter(child);
                 int n = nlist.getLength();

@@ -164,7 +164,7 @@ public class Xml2Eb {
         NodeList nlist = book.getElementsByTagName("subbook");
         int len = nlist.getLength();
         CatalogInfo[] info = new CatalogInfo[len];
-        for (int i=0; i<len; i++) {
+        for (int i = 0; i < len; i++) {
             Element subbook = (Element)nlist.item(i);
             info[i] = _convert(subbook);
         }
@@ -215,7 +215,7 @@ public class Xml2Eb {
             Element fontElem = (Element)fontList.item(0);
             NodeList charList = fontElem.getElementsByTagName("char");
             int len = charList.getLength();
-            for (int i=0; i < len; i++) {
+            for (int i = 0; i < len; i++) {
                 Element charElem = (Element)charList.item(i);
                 String name = charElem.getAttribute("name");
                 String wtype = charElem.getAttribute("type");
@@ -244,7 +244,7 @@ public class Xml2Eb {
                 }
                 NodeList dataList = charElem.getElementsByTagName("data");
                 int n = dataList.getLength();
-                for (int j=0; j<n; j++) {
+                for (int j = 0; j < n; j++) {
                     Element dataElem = (Element)dataList.item(j);
                     String size = dataElem.getAttribute("size");
                     String src = dataElem.getAttribute("src");
@@ -351,13 +351,13 @@ public class Xml2Eb {
                 String[] src = new String[n];
                 String[] name = new String[n];
                 String[] format = new String[n];
-                for (int j=0; j<n; j++) {
+                for (int j = 0; j < n; j++) {
                     Element dataElem = (Element)dataList.item(j);
                     src[j] = dataElem.getAttribute("src");
                     name[j] = dataElem.getAttribute("name");
                     format[j] = dataElem.getAttribute("format");
                 }
-                File file = new File(_basedir, prefix+GRAPHIC_FILE);
+                File file = new File(_basedir, prefix + GRAPHIC_FILE);
                 _writeGraphic(file, src, name, format, ref);
                 linker.setGraphicFile(file);
             }
@@ -373,13 +373,13 @@ public class Xml2Eb {
                 String[] src = new String[n];
                 String[] name = new String[n];
                 String[] format = new String[n];
-                for (int j=0; j<n; j++) {
+                for (int j = 0; j < n; j++) {
                     Element dataElem = (Element)dataList.item(j);
                     src[j] = dataElem.getAttribute("src");
                     name[j] = dataElem.getAttribute("name");
                     format[j] = dataElem.getAttribute("format");
                 }
-                File file = new File(_basedir, prefix+SOUND_FILE);
+                File file = new File(_basedir, prefix + SOUND_FILE);
                 _writeSound(file, src, name, format, ref);
                 linker.setSoundFile(file);
             }
@@ -391,36 +391,36 @@ public class Xml2Eb {
             NodeList copyList = contentElem.getElementsByTagName("copyright");
             if (copyList.getLength() >= 1) {
                 Element copyElem = (Element)copyList.item(0);
-                File copyFile = new File(_basedir, prefix+COPYRIGHT_FILE);
+                File copyFile = new File(_basedir, prefix + COPYRIGHT_FILE);
                 _writeCopyright(copyFile, copyElem, ref);
                 linker.setCopyrightFile(copyFile);
             }
             NodeList menuList = contentElem.getElementsByTagName("menu");
             if (menuList.getLength() >= 1) {
                 Element menuElem = (Element)menuList.item(0);
-                File menuFile = new File(_basedir, prefix+MENU_FILE);
+                File menuFile = new File(_basedir, prefix + MENU_FILE);
                 _writeMenu(menuFile, menuElem, ref);
                 linker.setMenuFile(menuFile);
             }
             NodeList itemList = contentElem.getElementsByTagName("item");
             // 見出し
-            File headFile = new File(_basedir, prefix+HEAD_FILE);
+            File headFile = new File(_basedir, prefix + HEAD_FILE);
             _writeHead(headFile, itemList, ref);
             linker.setHeadFile(headFile);
             // 本文
-            File bodyFile = new File(_basedir, prefix+BODY_FILE);
+            File bodyFile = new File(_basedir, prefix + BODY_FILE);
             _writeBody(bodyFile, itemList, ref);
             linker.setBodyFile(bodyFile);
             // インデックス
-            File wordFile = new File(_basedir, prefix+WORD_FILE);
+            File wordFile = new File(_basedir, prefix + WORD_FILE);
             if (_writeWordIndex(wordFile, itemList, WordSet.DIRECTION_WORD, ref)) {
                 linker.setWordFile(wordFile);
             }
-            File endwordFile = new File(_basedir, prefix+ENDWORD_FILE);
+            File endwordFile = new File(_basedir, prefix + ENDWORD_FILE);
             if (_writeWordIndex(endwordFile, itemList, WordSet.DIRECTION_ENDWORD, ref)) {
                 linker.setEndwordFile(endwordFile);
             }
-            File keywordFile = new File(_basedir, prefix+KEYWORD_FILE);
+            File keywordFile = new File(_basedir, prefix + KEYWORD_FILE);
             if (_writeKeywordIndex(keywordFile, itemList, WordSet.DIRECTION_WORD, ref)) {
                 linker.setKeywordFile(keywordFile);
             }
@@ -476,7 +476,7 @@ public class Xml2Eb {
             stream.setReference(ref);
             int len = layerList.getLength();
             _logger.info("layer count: " + len);
-            for (int i=0; i<len; i++) {
+            for (int i = 0; i < len; i++) {
                 Element layerElem = (Element)layerList.item(i);
                 String id = layerElem.getAttribute("id");
                 ref.putBodyTag(id, file, stream.getSize());
@@ -512,14 +512,14 @@ public class Xml2Eb {
             stream.beginContext();
             int len = itemList.getLength();
             _logger.info("item count: " + len);
-            for (int i=0; i<len; i++) {
+            for (int i = 0; i < len; i++) {
                 Element itemElem = (Element)itemList.item(i);
                 String id = itemElem.getAttribute("id");
                 ref.putHeadTag(id, file, stream.getSize());
                 _logger.trace("head: '" + id + "'");
                 NodeList headList = itemElem.getElementsByTagName("head");
                 int n = headList.getLength();
-                for (int j=0; j<n; j++) {
+                for (int j = 0; j < n; j++) {
                     Element headElem = (Element)headList.item(j);
                     _writeNode(stream, headElem, 1, ref);
                     stream.newLine();
@@ -552,14 +552,14 @@ public class Xml2Eb {
             stream.beginContext();
             int len = itemList.getLength();
             _logger.info("item count: " + len);
-            for (int i=0; i<len; i++) {
+            for (int i = 0; i < len; i++) {
                 Element itemElem = (Element)itemList.item(i);
                 String id = itemElem.getAttribute("id");
                 ref.putBodyTag(id, file, stream.getSize());
                 _logger.trace("body: '" + id + "'");
                 NodeList bodyList = itemElem.getElementsByTagName("body");
                 int n = bodyList.getLength();
-                for (int j=0; j<n; j++) {
+                for (int j = 0; j < n; j++) {
                     Element bodyElem = (Element)bodyList.item(j);
                     stream.setIndent(1);
                     _writeNode(stream, bodyElem, 2, ref);
@@ -590,12 +590,12 @@ public class Xml2Eb {
         try {
             WordSet wordSet = new WordSet(direction);
             int len = itemList.getLength();
-            for (int i=0; i<len; i++) {
+            for (int i = 0; i < len; i++) {
                 Element itemElem = (Element)itemList.item(i);
                 String id = itemElem.getAttribute("id");
                 NodeList wordList = itemElem.getElementsByTagName("word");
                 int n = wordList.getLength();
-                for (int j=0; j<n; j++) {
+                for (int j = 0; j < n; j++) {
                     Element wordElem = (Element)wordList.item(j);
                     String str = wordElem.getTextContent();
                     _logger.trace("word: '" + str + "'");
@@ -636,12 +636,12 @@ public class Xml2Eb {
         try {
             WordSet wordSet = new WordSet(direction);
             int len = itemList.getLength();
-            for (int i=0; i<len; i++) {
+            for (int i = 0; i < len; i++) {
                 Element itemElem = (Element)itemList.item(i);
                 String id = itemElem.getAttribute("id");
                 NodeList wordList = itemElem.getElementsByTagName("keyword");
                 int n = wordList.getLength();
-                for (int j=0; j<n; j++) {
+                for (int j = 0; j < n; j++) {
                     Element wordElem = (Element)wordList.item(j);
                     String str = wordElem.getTextContent();
                     _logger.trace("keyword: '" + str + "'");
@@ -689,8 +689,8 @@ public class Xml2Eb {
                 if (e.code == DOMException.DOMSTRING_SIZE_ERR) {
                     // 1文字づつ追加
                     int len = text.getLength();
-                    for (int i=0; i<len; i++) {
-                        String str = text.substringData(i, i+1);
+                    for (int i = 0; i < len; i++) {
+                        String str = text.substringData(i, i + 1);
                         stream.append(str);
                     }
                 } else {
@@ -760,7 +760,7 @@ public class Xml2Eb {
             if (node.hasChildNodes()) {
                 NodeList list = node.getChildNodes();
                 int len = list.getLength();
-                for (int i=0; i<len; i++) {
+                for (int i = 0; i < len; i++) {
                     ind = _writeNode(stream, list.item(i), ind, ref);
                 }
             }
@@ -835,7 +835,7 @@ public class Xml2Eb {
             header[3] = 'a';
             int len = src.length;
             _logger.info("graphic file count: " + len);
-            for (int i=0; i<len; i++) {
+            for (int i = 0; i < len; i++) {
                 File imgfile = new File(_basedir, src[i]);
                 byte[] buf = null;
                 try {
@@ -884,7 +884,7 @@ public class Xml2Eb {
                         new FileOutputStream(file)));
             int len = src.length;
             _logger.info("sound file count: " + len);
-            for (int i=0; i<len; i++) {
+            for (int i = 0; i < len; i++) {
                 File sndfile = new File(_basedir, src[i]);
                 byte[] buf = null;
                 try {
@@ -962,10 +962,10 @@ public class Xml2Eb {
             int size = width / 8 * height;
             int cnt = 1024 / size;
             int page = (len + cnt - 1) / cnt;
-            for (int i=0; i<page; i++) {
+            for (int i = 0; i < page; i++) {
                 Arrays.fill(buf, (byte)0x00);
                 int off = 0;
-                for (int j=0; j<cnt; j++) {
+                for (int j = 0; j < cnt; j++) {
                     int idx = i * cnt + j;
                     if (idx >= len) {
                         break;
@@ -1019,7 +1019,7 @@ public class Xml2Eb {
             stream.write(buf);
 
             buf = new byte[164];
-            for (int i=0; i<len; i++) {
+            for (int i = 0; i < len; i++) {
                 int idx = 0;
                 Arrays.fill(buf, (byte)0x00);
 
@@ -1032,7 +1032,7 @@ public class Xml2Eb {
                 byte[] b = ByteUtil.stringToJISX0208(info[i].getTitle());
                 int n = b.length;
                 if (n > 80) {
-                    _logger.warn("[subbook #" + (i+1) + "] title is too long");
+                    _logger.warn("[subbook #" + (i + 1) + "] title is too long");
                     n = 80;
                 }
                 System.arraycopy(b, 0, buf, idx, n);
@@ -1042,7 +1042,7 @@ public class Xml2Eb {
                 b = info[i].getDirectory().getBytes("ISO-8859-1");
                 n = b.length;
                 if (n > 8) {
-                    _logger.warn("[subbook #" + (i+1) + "] directory name is too long");
+                    _logger.warn("[subbook #" + (i + 1) + "] directory name is too long");
                     n = 8;
                 }
                 System.arraycopy(b, 0, buf, idx, n);
@@ -1050,19 +1050,19 @@ public class Xml2Eb {
                 idx += 4;
 
                 // インデックス番号
-                buf[idx+1] = (byte)0x01;
+                buf[idx + 1] = (byte)0x01;
                 idx += 2;
 
                 // 外字ファイル名
                 idx += 4;
                 String[] font = info[i].getExtFont();
                 int m = font.length;
-                for (int j=0; j<m; j++) {
+                for (int j = 0; j < m; j++) {
                     if (!StringUtils.isBlank(font[j])) {
                         b = font[j].getBytes("ISO-8859-1");
                         n = b.length;
                         if (n > 8) {
-                            _logger.warn("[subbook #" + (i+1) + "] font name is too long");
+                            _logger.warn("[subbook #" + (i + 1) + "] font name is too long");
                             n = 8;
                         }
                         System.arraycopy(b, 0, buf, idx, n);

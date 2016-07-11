@@ -72,12 +72,12 @@ public class Xbm {
         }
         _bitmap = new byte[n];
         Arrays.fill(_bitmap, (byte)0x00);
-        for (int i=0; i<n; i++) {
+        for (int i = 0; i < n; i++) {
             int bit = Integer.decode(bits[i]).intValue();
             // 左右逆にする
             int mask = 0x01;
             int val = 0x80;
-            for (int j=0; j<8; j++) {
+            for (int j = 0; j < 8; j++) {
                 if ((bit & mask) != 0) {
                     _bitmap[i] |= val;
                 }

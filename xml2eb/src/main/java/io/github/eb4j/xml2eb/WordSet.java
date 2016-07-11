@@ -57,9 +57,9 @@ public class WordSet extends TreeSet<Word> {
         }
         String str = UnicodeUtil.sanitizeUnicode(word);
         int len = str.length();
-        byte[] tmp = new byte[len*2];
+        byte[] tmp = new byte[len * 2];
         int idx = 0;
-        for (int i=0; i<len; i++) {
+        for (int i = 0; i < len; i++) {
             int codePoint = str.codePointAt(i);
             if (Character.isSupplementaryCodePoint(codePoint)) {
                 // 補助文字
@@ -150,7 +150,7 @@ public class WordSet extends TreeSet<Word> {
 
         // 片仮名が含まれる場合は、平仮名に変換して追加
         boolean katakana = false;
-        for (int i=0; i<idx; i+=2) {
+        for (int i = 0; i < idx; i += 2) {
             int c = buf[i] & 0xff;
             if (c == 0x25) {
                 buf[i] = (byte)0x24;

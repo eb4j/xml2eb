@@ -166,7 +166,7 @@ public class Linker {
     private long _getPosition(final Position pos) {
         File file = pos.getFile();
         int len = _infile.length;
-        for (int i=0; i<len; i++) {
+        for (int i = 0; i < len; i++) {
             if (file.equals(_infile[i])) {
                 return pos.getPosition(_startBlock[i]);
             }
@@ -227,7 +227,7 @@ public class Linker {
      */
     public void delete() {
         int len = _infile.length;
-        for (int i=0; i<len; i++) {
+        for (int i = 0; i < len; i++) {
             if (_infile[i] != null) {
                 if (_infile[i].exists()) {
                     _logger.info("delete file" + _infile[i].getPath());
@@ -621,7 +621,7 @@ public class Linker {
         long block = 0;
         try {
             int idx = name.lastIndexOf(".");
-            level = Integer.parseInt(name.substring(idx+1));
+            level = Integer.parseInt(name.substring(idx + 1));
             base = name.substring(0, idx);
             block = Integer.parseInt(tag);
         } catch (NumberFormatException e) {
@@ -639,11 +639,11 @@ public class Linker {
         File[] indexFile = _getFileList(new File(dir, base));
         Arrays.sort(indexFile);
         int len = indexFile.length;
-        for (int i=len-1; i>=0; i--) {
+        for (int i = len - 1; i >= 0; i--) {
             try {
                 String str = indexFile[i].getName();
                 int idx = str.lastIndexOf(".");
-                int no = Integer.parseInt(str.substring(idx+1));
+                int no = Integer.parseInt(str.substring(idx + 1));
                 if (no < level) {
                     break;
                 }
@@ -697,7 +697,7 @@ public class Linker {
             File[] files = _getFileList(file);
             Arrays.sort(files);
             int len = files.length;
-            for (int i=len-1; i>=0; i--) {
+            for (int i = len - 1; i >= 0; i--) {
                 _link(out, files[i]);
             }
             return;

@@ -79,7 +79,7 @@ public class ZipCodeJigyosyo {
     public List<Item> getItemList(final Item item) {
         List<Item> list = new ArrayList<Item>();
         int len = _itemList.size();
-        for (int i=0; i<len; i++) {
+        for (int i = 0; i < len; i++) {
             Item item1 = _itemList.get(i);
             if (item.getName().equals(item1.getName())
                 && item.getIndex() != item1.getIndex()) {
@@ -151,14 +151,14 @@ public class ZipCodeJigyosyo {
                             new FileInputStream(_file), cs)));
 
             String line;
-            while ((line=lnr.readLine()) != null) {
+            while ((line = lnr.readLine()) != null) {
                 line = UnicodeUtil.sanitizeUnicode(line);
                 StrTokenizer st = StrTokenizer.getCSVInstance(line);
                 int n = st.size();
                 if (n != 13) {
                     _logger.error("unknown tokens count: "
                                   + _file.getName()
-                                  + "[" +lnr.getLineNumber() + "] " + n);
+                                  + "[" + lnr.getLineNumber() + "] " + n);
                     continue;
                 }
                 String[] tokens = st.getTokenArray();
@@ -245,7 +245,7 @@ public class ZipCodeJigyosyo {
             _area = _area.replace('\uff08', '(');
             _area = _area.replace('\uff09', ')');
             int idx = _area.indexOf('(');
-            if (idx > 0 && _area.charAt(idx-1) != ' ') {
+            if (idx > 0 && _area.charAt(idx - 1) != ' ') {
                 _area = _area.substring(0, idx) + " " + _area.substring(idx);
             }
 

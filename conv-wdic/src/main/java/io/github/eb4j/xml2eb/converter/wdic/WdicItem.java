@@ -234,7 +234,7 @@ public class WdicItem implements Comparable<WdicItem> {
             String str = _body.get(0);
             if (str.startsWith("=> [[")) {
                 int len = str.length();
-                return str.substring(5, len-2);
+                return str.substring(5, len - 2);
             }
         }
         return null;
@@ -291,7 +291,7 @@ public class WdicItem implements Comparable<WdicItem> {
             int len1 = b1.length;
             int len2 = b2.length;
             int len = Math.min(len1, len2);
-            for (int i=0; i<len; i++) {
+            for (int i = 0; i < len; i++) {
                 int ch1 = b1[i] & 0xff;
                 int ch2 = b2[i] & 0xff;
                 int comp = ch1 - ch2;

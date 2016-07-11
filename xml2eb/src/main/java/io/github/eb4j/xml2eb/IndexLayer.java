@@ -104,7 +104,7 @@ public class IndexLayer extends ArrayList<Index> {
      */
     public Index getLastIndex() {
         int len = size();
-        return get(len-1);
+        return get(len - 1);
     }
 
     /**

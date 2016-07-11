@@ -71,7 +71,7 @@ public final class WdicUtil {
             if (ttfdir.exists() && ttfdir.isDirectory()) {
                 File[] files = ttfdir.listFiles();
                 int n = ArrayUtils.getLength(files);
-                for (int i=0; i<n; i++) {
+                for (int i = 0; i < n; i++) {
                     try {
                         Font font = Font.createFont(Font.TRUETYPE_FONT, files[i]);
                         LOGGER.info("load font: " + font.getName()
@@ -115,7 +115,7 @@ public final class WdicUtil {
                     continue;
                 }
                 fontList.clear();
-                for (int i=0; i<n; i++) {
+                for (int i = 0; i < n; i++) {
                     Font font = fontMap.get(family[i]);
                     if (font == null) {
                         font = new Font(family[i], Font.PLAIN, 1);
@@ -205,7 +205,7 @@ public final class WdicUtil {
     public static int getTabCount(final String str) {
         int tab = 0;
         int len = str.length();
-        for (int i=0; i<len; i++) {
+        for (int i = 0; i < len; i++) {
             if (str.charAt(i) != '\t') {
                 break;
             }
@@ -264,7 +264,7 @@ public final class WdicUtil {
             if (idx1 <= off) {
                 return idx1;
             }
-            if (str.charAt(idx1-1) != '\\') {
+            if (str.charAt(idx1 - 1) != '\\') {
                 return idx1;
             } else {
                 int cnt = 1;
@@ -276,7 +276,7 @@ public final class WdicUtil {
                     cnt++;
                     idx2--;
                 }
-                if ((cnt%2) == 0) {
+                if ((cnt % 2) == 0) {
                     // バックスラッシュはエスケープされている
                     return idx1;
                 }
@@ -296,7 +296,7 @@ public final class WdicUtil {
     public static String unescape(final String str) {
         StringBuilder buf = new StringBuilder();
         int len = str.length();
-        for (int i=0; i<len; i++) {
+        for (int i = 0; i < len; i++) {
             int codePoint = str.codePointAt(i);
             if (Character.isSupplementaryCodePoint(codePoint)) {
                 buf.appendCodePoint(codePoint);
@@ -310,13 +310,13 @@ public final class WdicUtil {
                 buf.append(ch);
                 continue;
             }
-            if (i+1 >= len) {
+            if (i + 1 >= len) {
                 // バックスラッシュに続く文字がないのでそのまま追加
                 buf.append(ch);
                 continue;
             }
 
-            char ch1 = str.charAt(i+1);
+            char ch1 = str.charAt(i + 1);
             if (ch1 >= 0x21 && ch1 <= 0x7e) {
                 if (!CharUtils.isAsciiAlphanumeric(ch1)) {
                     // 1文字エスケープ (英数字以外の記号)
@@ -326,13 +326,13 @@ public final class WdicUtil {
                 }
             }
 
-            int idx = WdicUtil.indexOf(str, ";", i+1);
+            int idx = WdicUtil.indexOf(str, ";", i + 1);
             if (idx < 0) {
                 LOGGER.error("unexpected format: " + str);
                 buf.append(ch);
                 continue;
             }
-            String ref = str.substring(i+1, idx);
+            String ref = str.substring(i + 1, idx);
             i = idx;
             int sep1 = WdicUtil.indexOf(ref, "{", 0);
             int sep2 = WdicUtil.indexOf(ref, ":", 0);
@@ -358,12 +358,12 @@ public final class WdicUtil {
                 int idx1 = sep1;
                 int idx2 = -1;
                 while (idx1 != -1) {
-                    idx2 = ref.indexOf('}', idx1+1);
+                    idx2 = ref.indexOf('}', idx1 + 1);
                     if (idx2 == -1) {
                         idx2 = ref.length();
                     }
-                    param.add(ref.substring(idx1+1, idx2));
-                    idx1 = ref.indexOf('{', idx2+1);
+                    param.add(ref.substring(idx1 + 1, idx2));
+                    idx1 = ref.indexOf('{', idx2 + 1);
                 }
             } else {
                 // 引数は:で区切られている
@@ -580,10 +580,10 @@ public final class WdicUtil {
                 g2.drawLine(0, 1, w, 1);
                 break;
             case MIDDLE:
-                g2.drawLine(0, h/2, w, h/2);
+                g2.drawLine(0, h / 2, w, h / 2);
                 break;
             case BOTTOM:
-                g2.drawLine(0, h-2, w, h-2);
+                g2.drawLine(0, h - 2, w, h - 2);
                 break;
             default:
                 break;
@@ -615,7 +615,7 @@ public final class WdicUtil {
             fonts = UNICODE_BLOCK_HASH_MAP.get(unicodeBlock);
         }
         int len = ArrayUtils.getLength(fonts);
-        for (int i=0; i<len; i++) {
+        for (int i = 0; i < len; i++) {
             if (fonts[i].canDisplay(codePoint)) {
                 return fonts[i];
             }
@@ -632,14 +632,14 @@ public final class WdicUtil {
 
         // デフォルトフォントから検索
         len = ArrayUtils.getLength(DEFAULT_FONTS);
-        for (int i=0; i<len; i++) {
+        for (int i = 0; i < len; i++) {
             if (DEFAULT_FONTS[i].canDisplay(codePoint)) {
                 return DEFAULT_FONTS[i];
             }
         }
         // 論理フォントから検索
         len = LOGICAL_FONTS.length;
-        for (int i=0; i<len; i++) {
+        for (int i = 0; i < len; i++) {
             if (LOGICAL_FONTS[i].canDisplay(codePoint)) {
                 return LOGICAL_FONTS[i];
             }

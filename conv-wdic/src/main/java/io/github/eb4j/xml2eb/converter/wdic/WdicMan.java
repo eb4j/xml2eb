@@ -106,7 +106,7 @@ public class WdicMan {
                 while (sec != null) {
                     List<String> list = _map.get(sec);
                     if (list == null) {
-                        list = new ArrayList<String>();
+                        list = new ArrayList<>();
                         _map.put(sec, list);
                     }
                     if ("各辞書の特色".equals(sec)) {
@@ -220,9 +220,9 @@ public class WdicMan {
                            || str.startsWith("(海事)")
                            || str.startsWith("(航空)")) {
                     int size = list.size();
-                    str = list.get(size-1);
+                    str = list.get(size - 1);
                     if (str.length() == 0) {
-                        list.remove(size-1);
+                        list.remove(size - 1);
                     }
                     continue;
                 } else if (line.startsWith("     ")) {
@@ -608,7 +608,7 @@ public class WdicMan {
                 StringBuilder buf = new StringBuilder();
                 buf.append(name);
                 int len = 14 - _getLength(name);
-                for (int i=0; i<len; i++) {
+                for (int i = 0; i < len; i++) {
                     buf.append(" ");
                 }
                 buf.append(val);
@@ -628,7 +628,7 @@ public class WdicMan {
     private int _getLength(final String str) {
         int len = 0;
         int n = str.length();
-        for (int i=0; i<n; i++) {
+        for (int i = 0; i < n; i++) {
             char ch = str.charAt(i);
             if (CharUtils.isAscii(ch)) {
                 len++;

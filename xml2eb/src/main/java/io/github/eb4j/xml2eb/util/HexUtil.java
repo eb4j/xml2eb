@@ -78,7 +78,7 @@ public final class HexUtil {
      * @return 16進数表現の文字列
      */
     public static String toHexString(final byte val, final int length) {
-        return toHexString(Integer.toHexString(val&0xff), length);
+        return toHexString(Integer.toHexString(val & 0xff), length);
     }
 
     /**
@@ -91,7 +91,7 @@ public final class HexUtil {
     public static String toHexString(final String str, final int length) {
         StringBuilder buf = new StringBuilder(str.toUpperCase(Locale.ENGLISH));
         int len = length - str.length();
-        for (int i=0; i<len; i++) {
+        for (int i = 0; i < len; i++) {
             buf.insert(0, '0');
         }
         return buf.toString();

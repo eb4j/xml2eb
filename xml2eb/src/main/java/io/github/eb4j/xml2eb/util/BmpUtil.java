@@ -127,7 +127,7 @@ public final class BmpUtil {
                                      new IndexColorModel(8, size, r, g, b));
             int idx = icm1.getTransparentPixel();
             if (idx != -1) {
-                bg = new Color(r[idx]&0xff, g[idx]&0xff, b[idx]&0xff);
+                bg = new Color(r[idx] & 0xff, g[idx] & 0xff, b[idx] & 0xff);
             }
         } else {
             if (bits == 24) {
