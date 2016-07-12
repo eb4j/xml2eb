@@ -44,15 +44,15 @@ public final class WdicUtil {
     private static final Map<String, String> CHAR_MAP = new HashMap<>();
 
     /** フォントマップ (Unicodeブロック別) */
-    private static final Map<Character.UnicodeBlock, ArrayList<Font>> UNICODE_BLOCK_HASH_MAP
+    private static final Map<Character.UnicodeBlock, List<Font>> UNICODE_BLOCK_HASH_MAP
             = new HashMap<>();
     /** フォントマップ (Unicodeコードポイント別) */
     private static final Map<Integer, Font> FONT_HASH_MAP = new HashMap<>();
 
     /** デフォルトフォント */
-    private static ArrayList<Font> DdefaultFonts = new ArrayList<>();
+    private static List<Font> defaultFonts = new ArrayList<>();
     /** Unicodeブロック未定義フォント */
-    private static ArrayList<Font> unknownFonts = new ArrayList<>();
+    private static List<Font> unknownFonts = new ArrayList<>();
     /** 論理フォント */
     private static final Font[] LOGICAL_FONTS = {
         new Font(Font.SANS_SERIF, Font.PLAIN, 1),
@@ -80,19 +80,22 @@ public final class WdicUtil {
                 ttfdirStr = url.getPath();
             }
         }
-        if (StringUtils.isNotBlank(ttfdirStr)) {
-            File ttfdir = new File(ttfdirStr);
-            if (ttfdir.exists() && ttfdir.isDirectory()) {
-                List<File> files = Arrays.asList(ttfdir.listFiles());
-                for (File aFile: files) {
-                    try {
-                        Font font = Font.createFont(Font.TRUETYPE_FONT, aFile);
-                        LOGGER.info("load font: " + font.getName()
-                                     + " (family:" + font.getFamily(Locale.ENGLISH) + ")");
-                        fontMap.put(font.getFamily(Locale.ENGLISH), font);
-                    } catch (FontFormatException | IOException ffe) {
-                        LOGGER.info(ffe.getMessage());
-                        LOGGER.info("Can not load font: " + aFile.getAbsolutePath());
+        if (StringUtils.isNotBlank(ttfDirStr)) {
+            File ttfDir = new File(ttfDirStr);
+            if (ttfDir.exists() && ttfDir.isDirectory()) {
+                File[] files = ttfDir.listFiles();
+                if (files != null) {
+                    List<File> filesList = Arrays.asList(files);
+                    for (File aFile: filesList) {
+                        try {
+                            Font font = Font.createFont(Font.TRUETYPE_FONT, aFile);
+                            LOGGER.info("load font: " + font.getName()
+                                         + " (family:" + font.getFamily(Locale.ENGLISH) + ")");
+                            fontMap.put(font.getFamily(Locale.ENGLISH), font);
+                        } catch (FontFormatException | IOException ffe) {
+                            LOGGER.info(ffe.getMessage());
+                            LOGGER.info("Can not load font: " + aFile.getAbsolutePath());
+                        }
                     }
                 }
             }
@@ -104,36 +107,27 @@ public final class WdicUtil {
           propFile = url.getPath();
         }
         if (StringUtils.isNotBlank(propFile)) {
-            File file = new File(propFile);
-            FileInputStream fis = null;
             ExtendedProperties prop = new ExtendedProperties();
-            try {
-                fis = new FileInputStream(file);
+            try (FileInputStream fis = new FileInputStream(new File(propFile))) {
                 prop.load(fis, "UTF-8");
             } catch (IOException e) {
                 LOGGER.warn(e.getMessage(), e);
-            } finally {
-                IOUtils.closeQuietly(fis);
             }
             ArrayList<Font> fontList = new ArrayList<>();
             Iterator<?> it = prop.getKeys();
             while (it.hasNext()) {
-                String key = (String) it.next();
-                String[] family = prop.getStringArray(key);
-                int n = ArrayUtils.getLength(family);
-                if (n == 0) {
-                    continue;
-                }
+                String key = (String)it.next();
+                List<String> families = Arrays.asList(prop.getStringArray(key));
                 fontList.clear();
-                for (int i = 0; i < n; i++) {
-                    Font font = fontMap.get(family[i]);
+                for (String family: families) {
+                    Font font = fontMap.get(family);
                     if (font == null) {
-                        font = new Font(family[i], Font.PLAIN, 1);
-                        if (font.getFamily(Locale.ENGLISH).equals(family[i])) {
-                            fontMap.put(family[i], font);
+                        font = new Font(family, Font.PLAIN, 1);
+                        if (font.getFamily(Locale.ENGLISH).equals(family)) {
+                            fontMap.put(family, font);
                             fontList.add(font);
                         } else {
-                            LOGGER.error("unknown font name: " + family[i]);
+                            LOGGER.error("unknown font name: " + family);
                         }
                     } else {
                         fontList.add(font);
@@ -143,7 +137,8 @@ public final class WdicUtil {
                     LOGGER.error("Cannot find any fonts.");
                     LOGGER.error("Please update wdic-fonts.properties.");
                     System.exit(1);
-                } else if ("default".equals(key)) {
+                }
+                if ("default".equals(key)) {
                     defaultFonts = fontList;
                 } else if ("UNKNOWN_UNICODE_BLOCK".equals(key)) {
                     unknownFonts = fontList;
@@ -356,7 +351,7 @@ public final class WdicUtil {
 
             // 特殊機能
             String name = null;
-            ArrayList<String> param = new ArrayList<String>();
+            ArrayList<String> param = new ArrayList<>();
             if (sep1 != -1 && sep2 != -1) {
                 if (sep2 < sep1) {
                     sep1 = -1;
@@ -380,9 +375,8 @@ public final class WdicUtil {
             } else {
                 // 引数は:で区切られている
                 name = ref.substring(0, sep2);
-                String[] arg = ref.substring(sep2 + 1).split(":");
-                for (String anArg : arg) {
-                    param.add(anArg);
+                for (String arg : ref.substring(sep2 + 1).split(":")) {
+                    param.add(arg);
                 }
             }
 
@@ -503,7 +497,7 @@ public final class WdicUtil {
         int cp = codePoint;
         String type = FontUtil.getFontType(cp);
         Font font = getFont(cp);
-        BufferedImage img = null;
+        BufferedImage img;
         if (font.canDisplay(cp)) {
             if ("narrow".equals(type)) {
                 img = FontUtil.charToImage(cp, 8, 16, font);
@@ -619,7 +613,7 @@ public final class WdicUtil {
 
         // ブロック指定フォント
         Character.UnicodeBlock unicodeBlock = Character.UnicodeBlock.of(codePoint);
-        ArrayList<Font> fonts;
+        List<Font> fonts;
         if (unicodeBlock == null) {
             // Unicodeブロック未定義フォントから検索
             LOGGER.info("Use unicode block undefined font.");
@@ -653,10 +647,9 @@ public final class WdicUtil {
             return res.get();
         }
         // 論理フォントから検索
-        int len = LOGICAL_FONTS.length;
-        for (int i = 0; i < len; i++) {
-            if (LOGICAL_FONTS[i].canDisplay(codePoint)) {
-                return LOGICAL_FONTS[i];
+        for (Font LOGICAL_FONT : LOGICAL_FONTS) {
+            if (LOGICAL_FONT.canDisplay(codePoint)) {
+                return LOGICAL_FONT;
             }
         }
         return LOGICAL_FONTS[0];
