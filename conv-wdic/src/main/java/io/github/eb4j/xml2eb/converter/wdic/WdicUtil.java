@@ -21,7 +21,6 @@ import java.util.Optional;
 
 import org.apache.commons.collections.ExtendedProperties;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.CharUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.codec.binary.Hex;
@@ -231,7 +230,11 @@ public final class WdicUtil {
      */
     @SuppressWarnings("CheckStyle")
     public static String deleteTab(final String str) {
-        return (str == null) ? "" : str.substring(getTabCount(str));
+        if (str == null) {
+            return "";
+        } else {
+            return str.substring(getTabCount(str));
+        }
     }
 
     /**
@@ -647,9 +650,9 @@ public final class WdicUtil {
             return res.get();
         }
         // 論理フォントから検索
-        for (Font LOGICAL_FONT : LOGICAL_FONTS) {
-            if (LOGICAL_FONT.canDisplay(codePoint)) {
-                return LOGICAL_FONT;
+        for (Font logicalFont : LOGICAL_FONTS) {
+            if (logicalFont.canDisplay(codePoint)) {
+                return logicalFont;
             }
         }
         return LOGICAL_FONTS[0];
