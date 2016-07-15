@@ -156,7 +156,7 @@ public final class WdicUtil {
 
         propFile = System.getProperty("wdic-chars.properties");
         if (StringUtils.isBlank(propFile)) {
-          URL url = WdicUtil.class.getClassLoader().getResource("ewdic-chars.properties");
+          URL url = WdicUtil.class.getClassLoader().getResource("wdic-chars.properties");
           propFile = url.getPath();
         }
         if (StringUtils.isNotBlank(propFile)) {

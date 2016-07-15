@@ -138,7 +138,13 @@ project(':conv-wdic') {
     }
 
     startScripts{
-        defaultJvmOpts = ['-Xmx2048M']
+        defaultJvmOpts = ['-Xmx2048M',
+                          '-Dwdic-fonts.properties=$APP_HOME/wdic-fonts.properties',
+                          '-Dwdic-chars.properties=$APP_HOME/wdic-chars.properties']
+        // Work around for an issue GRADLE-3084
+        doLast{
+            unixScript.text = unixScript.text.replace('\\', '')
+        }
     }
 
     dependencies {
