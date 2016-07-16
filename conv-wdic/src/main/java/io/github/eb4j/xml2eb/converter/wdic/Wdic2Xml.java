@@ -471,7 +471,7 @@ public class Wdic2Xml {
 
         // 内容
         _appendNewLine(bodyElem);
-        Stack<Element> indentStack = new Stack<Element>();
+        Stack<Element> indentStack = new Stack<>();
         int curIndent = 0;
         int ignoreTabs = 0;
         int section = 0;

@@ -101,7 +101,7 @@ public final class BmpUtil {
      * @return 変換されたイメージ
      */
     private static BufferedImage _convertImage(final BufferedImage img) {
-        BufferedImage img2 = null;
+        BufferedImage img2;
         ColorModel cm1 = img.getColorModel();
         int bits = cm1.getPixelSize();
         LOGGER.debug("image info: " + cm1.getClass().getSimpleName()

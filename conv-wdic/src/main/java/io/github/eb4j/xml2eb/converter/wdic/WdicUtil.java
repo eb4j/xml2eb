@@ -8,16 +8,10 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import org.apache.commons.collections.ExtendedProperties;
 import org.apache.commons.io.IOUtils;
