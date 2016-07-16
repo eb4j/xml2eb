@@ -70,13 +70,13 @@ public final class WdicUtil {
         for (Font logicalFont : LOGICAL_FONTS) {
             fontMap.put(logicalFont.getFamily(Locale.ENGLISH), logicalFont);
         }
-        String ttfdirStr = System.getProperty("ttf.dir");
+        String ttfDirStr = System.getProperty("ttf.dir");
         // For test, load from resources
         // There is NOT exist in production.
-        if (StringUtils.isBlank(ttfdirStr)) {
+        if (StringUtils.isBlank(ttfDirStr)) {
             URL url = WdicUtil.class.getClassLoader().getResource("fonts");
             if (url != null) {
-                ttfdirStr = url.getPath();
+                ttfDirStr = url.getPath();
             }
         }
         if (StringUtils.isNotBlank(ttfDirStr)) {
