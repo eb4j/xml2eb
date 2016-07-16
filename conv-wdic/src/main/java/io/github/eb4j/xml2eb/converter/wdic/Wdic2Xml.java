@@ -719,9 +719,7 @@ public class Wdic2Xml {
                                     logger.error("failed to delete file: " + file.getPath());
                                 }
                             } finally {
-                                if (img != null) {
-                                    img.flush();
-                                }
+                                img.flush();
                             }
                             if (!tableList.contains(name)) {
                                 tableList.add(name);
