@@ -126,11 +126,6 @@ project(':conv-wdic') {
     mainClassName = 'io.github.eb4j.xml2eb.converter.wdic.Wdic2Xml'
     applicationName = 'conv-wdic'
 
-    // Expected options
-    // -Dttf.dir=$TTF_DIR
-    // -Dwdic-fonts.properties=$FONTS_PROPERTIES
-    // -Dwdic-chars.properties=$CHARS_PROPERTIES
-
     run {
         if (project.hasProperty('args')) {
             args project.args.split('\\s+')
@@ -140,7 +135,8 @@ project(':conv-wdic') {
     startScripts{
         defaultJvmOpts = ['-Xmx2048M',
                           '-Dwdic-fonts.properties=$APP_HOME/wdic-fonts.properties',
-                          '-Dwdic-chars.properties=$APP_HOME/wdic-chars.properties']
+                          '-Dwdic-chars.properties=$APP_HOME/wdic-chars.properties',
+                          '-Dttf.dir=$APP_HOME/fonts']
         // Work around for an issue GRADLE-3084
         doLast{
             unixScript.text = unixScript.text.replace('\\', '')
