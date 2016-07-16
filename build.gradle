@@ -90,6 +90,10 @@ project(':xml2eb') {
 
     startScripts{
         defaultJvmOpts = ['-Xmx2048M']
+        // Work around for an issue GRADLE-3084
+        doLast{
+            unixScript.text = unixScript.text.replace('\\', '')
+        }
     }
 
     version = projectVersion
