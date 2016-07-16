@@ -1,17 +1,20 @@
 package io.github.eb4j.xml2eb.converter.wdic;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
@@ -41,14 +44,14 @@ public final class WdicUtil {
     private static final Map<String, String> CHAR_MAP = new HashMap<>();
 
     /** フォントマップ (Unicodeブロック別) */
-    private static final Map<Character.UnicodeBlock, Font[]> UNICODE_BLOCK_HASH_MAP = new HashMap<>();
+    private static final Map<Character.UnicodeBlock, ArrayList<Font>> UNICODE_BLOCK_HASH_MAP = new HashMap<>();
     /** フォントマップ (Unicodeコードポイント別) */
     private static final Map<Integer, Font> FONT_HASH_MAP = new HashMap<>();
 
     /** デフォルトフォント */
-    private static Font[] DEFAULT_FONTS = null;
+    private static ArrayList<Font> DEFAULT_FONTS = new ArrayList<>();
     /** Unicodeブロック未定義フォント */
-    private static Font[] UNKNOWN_FONTS = null;
+    private static ArrayList<Font> UNKNOWN_FONTS = new ArrayList<>();
     /** 論理フォント */
     private static final Font[] LOGICAL_FONTS = {
         new Font(Font.SANS_SERIF, Font.PLAIN, 1),
@@ -69,6 +72,14 @@ public final class WdicUtil {
             fontMap.put(LOGICAL_FONTS[i].getFamily(Locale.ENGLISH), LOGICAL_FONTS[i]);
         }
         String ttfdirStr = System.getProperty("ttf.dir");
+        // For test, load from resources
+        // There is NOT exist in production.
+        if (StringUtils.isBlank(ttfdirStr)) {
+            URL url = WdicUtil.class.getClassLoader().getResource("fonts");
+            if (url != null) {
+                ttfdirStr = url.getPath();
+            }
+        }
         if (StringUtils.isNotBlank(ttfdirStr)) {
             File ttfdir = new File(ttfdirStr);
             if (ttfdir.exists() && ttfdir.isDirectory()) {
@@ -108,10 +119,10 @@ public final class WdicUtil {
             } finally {
                 IOUtils.closeQuietly(fis);
             }
-            ArrayList<Font> fontList = new ArrayList<Font>();
+            ArrayList<Font> fontList = new ArrayList<>();
             Iterator<?> it = prop.getKeys();
             while (it.hasNext()) {
-                String key = (String)it.next();
+                String key = (String) it.next();
                 String[] family = prop.getStringArray(key);
                 int n = ArrayUtils.getLength(family);
                 if (n == 0) {
@@ -132,22 +143,26 @@ public final class WdicUtil {
                         fontList.add(font);
                     }
                 }
-                Font[] fonts = fontList.toArray(new Font[fontList.size()]);
-                if ("default".equals(key)) {
-                    DEFAULT_FONTS = fonts;
-                }else if ("UNKNOWN_UNICODE_BLOCK".equals(key)) {
-                    UNKNOWN_FONTS = fonts;
+                if (fontList.size() == 0) {
+                    LOGGER.error("Cannot find any fonts.");
+                    LOGGER.error("Please update wdic-fonts.properties.");
+                    System.exit(1);
+                } else if ("default".equals(key)) {
+                    DEFAULT_FONTS = fontList;
+                } else if ("UNKNOWN_UNICODE_BLOCK".equals(key)) {
+                    UNKNOWN_FONTS = fontList;
                 } else {
                     try {
                         Integer codePoint = Integer.decode(key);
-                        FONT_HASH_MAP.put(codePoint, fonts[0]);
+                        FONT_HASH_MAP.put(codePoint, fontList.get(0));
                     } catch (NumberFormatException e1) {
                         try {
                             Character.UnicodeBlock unicodeBlock =
                                 Character.UnicodeBlock.forName(key);
-                            UNICODE_BLOCK_HASH_MAP.put(unicodeBlock, fonts);
+                            UNICODE_BLOCK_HASH_MAP.put(unicodeBlock, fontList);
                         } catch (IllegalArgumentException e2) {
                             LOGGER.error("unknown UnicodeBlock: " + key);
+                            System.exit(1);
                         }
                     }
                 }
@@ -602,6 +617,7 @@ public final class WdicUtil {
      * @return フォント
      */
     public static Font getFont(final int codePoint) {
+        Optional<Font> res;
         // コード指定フォント
         Font font = FONT_HASH_MAP.get(codePoint);
         if (font != null && font.canDisplay(codePoint)) {
@@ -610,18 +626,21 @@ public final class WdicUtil {
 
         // ブロック指定フォント
         Character.UnicodeBlock unicodeBlock = Character.UnicodeBlock.of(codePoint);
-        Font[] fonts = null;
+        ArrayList<Font> fonts;
         if (unicodeBlock == null) {
             // Unicodeブロック未定義フォントから検索
+            LOGGER.info("Use unicode block undefined font.");
             fonts = UNKNOWN_FONTS;
         } else {
             fonts = UNICODE_BLOCK_HASH_MAP.get(unicodeBlock);
         }
-        Optional<Font> res = Arrays.stream(fonts)
-                .filter(f -> f.canDisplay(codePoint))
-                .findFirst();
-        if (res.isPresent()) {
-            return res.get();
+        if (fonts != null) {
+            res = fonts.stream()
+                    .filter(f -> f.canDisplay(codePoint))
+                    .findFirst();
+            if (res.isPresent()) {
+                return res.get();
+            }
         }
 
         String code = "U+" + toHexString(codePoint);
@@ -634,7 +653,7 @@ public final class WdicUtil {
         }
 
         // デフォルトフォントから検索
-        res = Arrays.stream(DEFAULT_FONTS)
+        res = DEFAULT_FONTS.stream()
                 .filter(f -> f.canDisplay(codePoint))
                 .findFirst();
         if (res.isPresent()) {

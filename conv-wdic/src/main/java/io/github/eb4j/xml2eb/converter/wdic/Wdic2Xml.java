@@ -582,13 +582,15 @@ public class Wdic2Xml {
                             break;
                         }
                         int idx = WdicUtil.indexOf(block, "|", 3);
-                        String dt = block.substring(3, idx).trim();
-                        String dd = block.substring(idx + 1).trim();
-                        _appendText(item, indentElem, "\u30fb " + dt);
-                        _appendNewLine(indentElem);
-                        Element indentElem2 = _appendElement(indentElem, "indent");
-                        _appendText(item, indentElem2, dd);
-                        _appendNewLine(indentElem2);
+                        if (idx >= 0) { // return minus when not found
+                            String dt = block.substring(3, idx).trim();
+                            String dd = block.substring(idx + 1).trim();
+                            _appendText(item, indentElem, "\u30fb " + dt);
+                            _appendNewLine(indentElem);
+                            Element indentElem2 = _appendElement(indentElem, "indent");
+                            _appendText(item, indentElem2, dd);
+                            _appendNewLine(indentElem2);
+                        }
                     }
                 } else if (block.startsWith(": ")) {
                     // 定義語 (完全形式)
@@ -635,8 +637,10 @@ public class Wdic2Xml {
                                 _appendItemBodyBlock(item, indentElem, block, numMap, "\u30fb ");
                                 _appendNewLine(indentElem);
                             } else {
-                                _appendItemBodyBlock(item, indentElem2, block, numMap, null);
-                                _appendNewLine(indentElem2);
+                                if (indentElem2 != null) {
+                                    _appendItemBodyBlock(item, indentElem2, block, numMap, null);
+                                    _appendNewLine(indentElem2);
+                                }
                             }
                         }
                     }
@@ -1517,9 +1521,11 @@ public class Wdic2Xml {
         if (str != null && str.trim().length() > 0) {
             String tmp = str.replace((char)0x3099, (char)0x309b)
                             .replace((char)0x309a, (char)0x309c);
-            Text text = node.getOwnerDocument().createTextNode(tmp);
-            node.appendChild(text);
-            _checkCharacter(text);
+            if (node != null) {
+                Text text = node.getOwnerDocument().createTextNode(tmp);
+                node.appendChild(text);
+                _checkCharacter(text);
+            }
         }
     }
 
