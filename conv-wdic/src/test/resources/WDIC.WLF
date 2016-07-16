@@ -1,0 +1,8 @@
+#WDIC GROUP LIST FILE
+[GROUP]
+NAME=テストデータ
+CONTENT=テストデータ
+CONTACT=hoge@example.com
+#
+[FILES]
+CTIF.DV6	ダミーデータ編	テストデータ
