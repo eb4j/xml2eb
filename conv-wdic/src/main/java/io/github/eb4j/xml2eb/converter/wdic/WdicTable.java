@@ -281,14 +281,14 @@ public class WdicTable {
                 } else {
                     rowList = _parseSimple();
                 }
-            } catch (Exception e) {
+            } catch (WdicDataCorruptException e) {
                 String sep = System.getProperty("line.separator", "\n");
                 StringBuilder buf = new StringBuilder();
                 for (String tableData: tableDataList) {
                     buf.append(tableData);
                     buf.append(sep);
                 }
-                _logger.warn("unexpected table format: " + _id + sep + buf.toString(), e);
+                _logger.warn("unexpected table format: " + _id + sep + buf.toString(), e.getMessage());
             }
         }
         if (rowList == null) {
@@ -354,7 +354,7 @@ public class WdicTable {
      *
      * @return 行データのリスト
      */
-    private List<WdicTableRow> _parseSimple() {
+    private List<WdicTableRow> _parseSimple() throws WdicDataCorruptException {
         List<WdicTableRow> rowList = new ArrayList<>();
         for (String aTableDataList : tableDataList) {
             WdicTableRow row = new WdicTableRow();
@@ -409,6 +409,9 @@ public class WdicTable {
                         j += cnt;
                     }
                 }
+            }
+            if (n1 != n2) {
+                throw new WdicDataCorruptException("Table data is corrupted.");
             }
             for (int j = 1; j < n1; j++) {
                 WdicTableItem item = row.get(j);

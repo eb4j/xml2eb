@@ -710,25 +710,27 @@ public class Wdic2Xml {
                     File file = new File(dir, name + ".bmp");
                     if (!file.exists()) {
                         BufferedImage img = table.getImage();
-                        try {
-                            BmpUtil.write(img, file);
-                        } catch (IOException e) {
-                            logger.error(e.getMessage(), e);
-                            if (file.exists() && !file.delete()) {
-                                logger.error("failed to delete file: " + file.getPath());
+                        if (img != null) {
+                            try {
+                                BmpUtil.write(img, file);
+                            } catch (IOException e) {
+                                logger.error(e.getMessage(), e);
+                                if (file.exists() && !file.delete()) {
+                                    logger.error("failed to delete file: " + file.getPath());
+                                }
+                            } finally {
+                                if (img != null) {
+                                    img.flush();
+                                }
                             }
-                        } finally {
-                            if (img != null) {
-                                img.flush();
+                            if (!tableList.contains(name)) {
+                                tableList.add(name);
                             }
+                            Element elem = _appendDataReference(indentElem, file.getName(), "graphic");
+                            _appendRawText(elem, "[表]");
+                            _appendNewLine(indentElem);
                         }
                     }
-                    if (!tableList.contains(name)) {
-                        tableList.add(name);
-                    }
-                    Element elem = _appendDataReference(indentElem, file.getName(), "graphic");
-                    _appendRawText(elem, "[表]");
-                    _appendNewLine(indentElem);
                 } else if (block.startsWith("= ")) {
                     // 章見出し
                     if (i > 0) {
