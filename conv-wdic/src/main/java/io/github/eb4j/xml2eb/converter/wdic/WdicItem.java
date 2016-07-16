@@ -162,9 +162,8 @@ public class WdicItem implements Comparable<WdicItem> {
     public void addSpeech(final String speech) {
         if (StringUtils.isNotBlank(speech)) {
             String[] pos = speech.split(",");
-            int n = pos.length;
-            for (int i=0; i<n; i++) {
-                _speech.add(pos[i].trim());
+            for (String po : pos) {
+                _speech.add(po.trim());
             }
         }
     }

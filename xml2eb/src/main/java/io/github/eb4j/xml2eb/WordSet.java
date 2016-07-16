@@ -21,7 +21,13 @@ import io.github.eb4j.xml2eb.util.UnicodeUtil;
 public class WordSet extends TreeSet<Word> {
     private static final long serialVersionUID = 20160001L;
 
+    /**
+     * Direction ordinal word.
+     */
     public static final int DIRECTION_WORD = 0;
+    /**
+     * Direction end word.
+     */
     public static final int DIRECTION_ENDWORD = 1;
 
     /** ログ */
@@ -31,7 +37,7 @@ public class WordSet extends TreeSet<Word> {
 
 
     /**
-     * コンストラクタ。
+     * Construct with direction.
      *
      * @param direction 単語の解析方向
      */
@@ -102,6 +108,7 @@ public class WordSet extends TreeSet<Word> {
                                    && (c2 == 0xa1 || c2 == 0xc7 || c2 == 0xdd
                                        || c2 == 0xa6 || c2 == 0xbe)) {
                             // '　', '’', '−', '・', '‐'は削除
+                            continue;
                         } else {
                             c1 = c1 & 0x7f;
                             c2 = c2 & 0x7f;

@@ -14,7 +14,7 @@ import io.github.eb4j.xml2eb.util.FontUtil;
  *
  * @author Hisaya FUKUMOTO
  */
-public final class ZipCodeUtil {
+final class ZipCodeUtil {
 
     /** ログ */
     private static final Logger LOGGER = LoggerFactory.getLogger(ZipCodeUtil.class);
@@ -44,7 +44,7 @@ public final class ZipCodeUtil {
      * @param codePoint Unicodeコードポイント
      * @return イメージ
      */
-    public static BufferedImage toImage(final int codePoint) {
+    static BufferedImage toImage(final int codePoint) {
         String type = FontUtil.getFontType(codePoint);
         Font font = getFont(codePoint);
         BufferedImage img;
@@ -93,7 +93,7 @@ public final class ZipCodeUtil {
      * @param ref 参考文字列
      * @return 変換後の文字列
      */
-    public static String toFullwidth(final String str, final String ref) {
+    static String toFullwidth(final String str, final String ref) {
         if (str == null) {
             return null;
         }
@@ -108,147 +108,41 @@ public final class ZipCodeUtil {
                 || Character.isLowSurrogate(ch1)) {
                 buf.append(ch1);
             } else {
-                switch (ch1) {
-                    case 0x002d:  // hyphen-minus
-                        int[] idx = new int[3];
-                        idx[0] = ref.indexOf("\u301c", refIdx);
-                        idx[1] = ref.indexOf("\u2212", refIdx);
-                        idx[2] = ref.indexOf("\u30fc", refIdx);
-                        int x = -1;
-                        int n = idx.length;
-                        for (int j = 0; j < n; j++) {
-                            if (idx[j] != -1) {
-                                if (x == -1) {
-                                    x = j;
-                                } else if (idx[j] < idx[x]) {
-                                    x = j;
-                                }
+                if (ch1 == 0x002d) {  // hyphen-minus
+                    int[] idx = new int[3];
+                    idx[0] = ref.indexOf("\u301c", refIdx);
+                    idx[1] = ref.indexOf("\u2212", refIdx);
+                    idx[2] = ref.indexOf("\u30fc", refIdx);
+                    int x = -1;
+                    int n = idx.length;
+                    for (int j = 0; j < n; j++) {
+                        if (idx[j] != -1) {
+                            if (x == -1) {
+                                x = j;
+                            } else if (idx[j] < idx[x]) {
+                                x = j;
                             }
                         }
-                        switch (x) {
-                            case 0:
-                                ch1 = 0x301c;
-                                refIdx = idx[x] + 1;
-                                break;
-                            case 1:
-                                ch1 = 0x2212;
-                                refIdx = idx[x] + 1;
-                                break;
-                            case 2:
-                                ch1 = 0x30fc;
-                                refIdx = idx[x] + 1;
-                                break;
-                            default:
-                                refIdx = ref.length();
-                                break;
-                        }
-                        break;
-                    case 0x0028: // left parenthesis
-                        ch1 = 0xff08;
-                        break;
-                    case 0x0029: // right perenthesis
-                        ch1 = 0xff09;
-                        break;
-                    case 0xff64: // halfwidth ideographic comma
-                        ch1 = 0x3001;
-                        break;
-                    case 0xff67: // small a
-                    case 0xff68:
-                    case 0xff69:
-                    case 0xff6a:
-                    case 0xff6b:
-                        ch1 = (char)(0x30a1 + (ch1 - 0xff67) * 2);
-                        break;
-                    case 0xff6c: // small ya
-                    case 0xff6d:
-                    case 0xff6e:
-                        ch1 = (char)(0x30e3 + (ch1 - 0xff6c) * 2);
-                        break;
-                    case 0xff6f: // small tu
-                        ch1 = 0x30c3;
-                        break;
-                    case 0xff71: // a
-                    case 0xff72:
-                    case 0xff73:
-                    case 0xff74:
-                    case 0xff75:
-                        ch1 = (char)(0x30a2 + (ch1 - 0xff71) * 2);
-                        break;
-                    case 0xff76: // ka
-                    case 0xff77:
-                    case 0xff78:
-                    case 0xff79:
-                    case 0xff7a:
-                    case 0xff7b: // sa
-                    case 0xff7c:
-                    case 0xff7d:
-                    case 0xff7e:
-                    case 0xff7f:
-                    case 0xff80: // ta
-                    case 0xff81:
-                        ch1 = (char)(0x30ab + (ch1 - 0xff76) * 2);
-                        break;
-                    case 0xff82: // tu
-                    case 0xff83:
-                    case 0xff84:
-                        ch1 = (char)(0x30c4 + (ch1 - 0xff82) * 2);
-                        break;
-                    case 0xff85: // na
-                    case 0xff86:
-                    case 0xff87:
-                    case 0xff88:
-                    case 0xff89:
-                        ch1 = (char)(0x30ca + ch1 - 0xff85);
-                        break;
-                    case 0xff8a: // ha
-                    case 0xff8b:
-                    case 0xff8c:
-                    case 0xff8d:
-                    case 0xff8e:
-                        ch1 = (char)(0x30cf + (ch1 - 0xff8a) * 3);
-                        break;
-                    case 0xff8f: // ma
-                    case 0xff90:
-                    case 0xff91:
-                    case 0xff92:
-                    case 0xff93:
-                        ch1 = (char)(0x30de + ch1 - 0xff8f);
-                        break;
-                    case 0xff94: // ya
-                    case 0xff95:
-                    case 0xff96:
-                        ch1 = (char)(0x30e4 + (ch1 - 0xff94) * 2);
-                        break;
-                    case 0xff97: // ra
-                    case 0xff98:
-                    case 0xff99:
-                    case 0xff9a:
-                    case 0xff9b:
-                        ch1 = (char)(0x30e9 + ch1 - 0xff97);
-                        break;
-                    case 0xff9c: // wa
-                        ch1 = 0x30ef;
-                        break;
-                    case 0xff66: // wo
-                        ch1 = 0x30f2;
-                        break;
-                    case 0xff9d: // n
-                        ch1 = 0x30f3;
-                        break;
-                    case 0xff70: // prolonged sound mark
-                        ch1 = 0x30fc;
-                        break;
-                    case 0xff9e: // voiced sound mark
-                        ch1 = 0x309b;
-                        break;
-                    case 0xff9f: // semi-voiced sound mark
-                        ch1 = 0x309c;
-                        break;
-                    default:
-                        if (ch1 >= 0x0021 && ch1 <= 0x007e) {
-                            ch1 += 0xfee0;
-                        }
-                        break;
+                    }
+                    switch (x) {
+                        case 0:
+                            ch1 = 0x301c;
+                            refIdx = idx[x] + 1;
+                            break;
+                        case 1:
+                            ch1 = 0x2212;
+                            refIdx = idx[x] + 1;
+                            break;
+                        case 2:
+                            ch1 = 0x30fc;
+                            refIdx = idx[x] + 1;
+                            break;
+                        default:
+                            refIdx = ref.length();
+                            break;
+                    }
+                } else { // other chars
+                    ch1 = convertCh1(ch1);
                 }
                 if (i + 1 == len) {
                     buf.append(ch1);
@@ -323,6 +217,119 @@ public final class ZipCodeUtil {
         }
         return buf.toString();
     }
+
+    private static char convertCh1(final char ch) {
+        char ch1 = ch;
+        switch (ch1) {
+           case 0x0028: // left parenthesis
+                ch1 = 0xff08;
+                break;
+            case 0x0029: // right perenthesis
+                ch1 = 0xff09;
+                break;
+            case 0xff64: // halfwidth ideographic comma
+                ch1 = 0x3001;
+                break;
+            case 0xff67: // small a
+            case 0xff68:
+            case 0xff69:
+            case 0xff6a:
+            case 0xff6b:
+                ch1 = (char)(0x30a1 + (ch1 - 0xff67) * 2);
+                break;
+            case 0xff6c: // small ya
+            case 0xff6d:
+            case 0xff6e:
+                ch1 = (char)(0x30e3 + (ch1 - 0xff6c) * 2);
+                break;
+            case 0xff6f: // small tu
+                ch1 = 0x30c3;
+                break;
+            case 0xff71: // a
+            case 0xff72:
+            case 0xff73:
+            case 0xff74:
+            case 0xff75:
+                ch1 = (char)(0x30a2 + (ch1 - 0xff71) * 2);
+                break;
+            case 0xff76: // ka
+            case 0xff77:
+            case 0xff78:
+            case 0xff79:
+            case 0xff7a:
+            case 0xff7b: // sa
+            case 0xff7c:
+            case 0xff7d:
+            case 0xff7e:
+            case 0xff7f:
+            case 0xff80: // ta
+            case 0xff81:
+                ch1 = (char)(0x30ab + (ch1 - 0xff76) * 2);
+                break;
+            case 0xff82: // tu
+            case 0xff83:
+            case 0xff84:
+                ch1 = (char)(0x30c4 + (ch1 - 0xff82) * 2);
+                break;
+            case 0xff85: // na
+            case 0xff86:
+            case 0xff87:
+            case 0xff88:
+            case 0xff89:
+                ch1 = (char)(0x30ca + ch1 - 0xff85);
+                break;
+            case 0xff8a: // ha
+            case 0xff8b:
+            case 0xff8c:
+            case 0xff8d:
+            case 0xff8e:
+                ch1 = (char)(0x30cf + (ch1 - 0xff8a) * 3);
+                break;
+            case 0xff8f: // ma
+            case 0xff90:
+            case 0xff91:
+            case 0xff92:
+            case 0xff93:
+                ch1 = (char)(0x30de + ch1 - 0xff8f);
+                break;
+            case 0xff94: // ya
+            case 0xff95:
+            case 0xff96:
+                ch1 = (char)(0x30e4 + (ch1 - 0xff94) * 2);
+                break;
+            case 0xff97: // ra
+            case 0xff98:
+            case 0xff99:
+            case 0xff9a:
+            case 0xff9b:
+                ch1 = (char)(0x30e9 + ch1 - 0xff97);
+                break;
+            case 0xff9c: // wa
+                ch1 = 0x30ef;
+                break;
+            case 0xff66: // wo
+                ch1 = 0x30f2;
+                break;
+            case 0xff9d: // n
+                ch1 = 0x30f3;
+                break;
+            case 0xff70: // prolonged sound mark
+                ch1 = 0x30fc;
+                break;
+            case 0xff9e: // voiced sound mark
+                ch1 = 0x309b;
+                break;
+            case 0xff9f: // semi-voiced sound mark
+                ch1 = 0x309c;
+                break;
+            default:
+                if (ch1 >= 0x0021 && ch1 <= 0x007e) {
+                    ch1 += 0xfee0;
+                }
+        }
+        return ch1;
+    }
 }
 
 // end of ZipCodeUtil.java
+

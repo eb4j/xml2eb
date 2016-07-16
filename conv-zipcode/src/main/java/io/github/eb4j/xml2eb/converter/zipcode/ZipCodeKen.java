@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.LinkedHashMap;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.text.StrTokenizer;
 import org.slf4j.Logger;
@@ -27,7 +26,7 @@ import io.github.eb4j.xml2eb.util.UnicodeUtil;
  *
  * @author Hisaya FUKUMOTO
  */
-public class ZipCodeKen {
+class ZipCodeKen {
 
     private static final String ENCODING = "MS932";
 
@@ -44,21 +43,11 @@ public class ZipCodeKen {
      *
      * @param file 全国一括郵便番号ファイル
      */
-    public ZipCodeKen(final File file) {
+    ZipCodeKen(final File file) {
         super();
         _logger = LoggerFactory.getLogger(getClass());
         _file = file;
         _load();
-    }
-
-
-    /**
-     * 項目リストを返します。
-     *
-     * @return 項目リスト
-     */
-    public List<Item> getItemList() {
-        return _itemList;
     }
 
     /**
@@ -66,7 +55,7 @@ public class ZipCodeKen {
      *
      * @return 最終更新日
      */
-    public Date getDate() {
+    Date getDate() {
         long time = _file.lastModified();
         return new Date(time);
     }
@@ -76,7 +65,7 @@ public class ZipCodeKen {
      *
      * @return 郵便番号をキーとする項目マップ
      */
-    public Map<String, List<Item>> getZipcodeMap() {
+    Map<String, List<Item>> getZipcodeMap() {
         Map<String, List<Item>> map = new TreeMap<>();
         for (Item item : _itemList) {
             String key = item.getZipcode();
@@ -95,7 +84,7 @@ public class ZipCodeKen {
      *
      * @return 住所をキーとする項目マップ
      */
-    public Map<String, Map<String, List<Item>>> getAddressMap() {
+    Map<String, Map<String, List<Item>>> getAddressMap() {
         Map<String, Map<String, List<Item>>> map = new LinkedHashMap<>();
         for (Item item : _itemList) {
             // 都道府県別
@@ -123,16 +112,10 @@ public class ZipCodeKen {
      */
     private void _load() {
         _logger.info("load file: " + _file.getPath());
-        LineNumberReader lnr = null;
-        try {
-            Charset cs = Charset.forName(ENCODING);
-            lnr =
-                new LineNumberReader(
-                    new BufferedReader(
-                        new InputStreamReader(
-                            new FileInputStream(_file), cs)));
-
-            String line = null;
+        Charset cs = Charset.forName(ENCODING);
+        try (LineNumberReader lnr = new LineNumberReader(new BufferedReader(new InputStreamReader(
+                            new FileInputStream(_file), cs)))) {
+            String line;
             Item item = null;
             while ((line = lnr.readLine()) != null) {
                 line = UnicodeUtil.sanitizeUnicode(line);
@@ -170,8 +153,6 @@ public class ZipCodeKen {
             _logger.info("loaded " + _itemList.size() + " items");
         } catch (IOException e) {
             _logger.error(e.getMessage(), e);
-        } finally {
-            IOUtils.closeQuietly(lnr);
         }
     }
 
@@ -219,9 +200,9 @@ public class ZipCodeKen {
          * @param city 市区町村名
          * @param town 町域名
          */
-        protected Item(final String code, final String zipcode,
-                       final String kanaPrefecture, final String kanaCity, final String kanaTown,
-                       final String prefecture, final String city, final String town) {
+        Item(final String code, final String zipcode,
+             final String kanaPrefecture, final String kanaCity, final String kanaTown,
+             final String prefecture, final String city, final String town) {
             super();
             _code = code;
             _zipcode = zipcode.substring(0, 3) + "-" + zipcode.substring(3);
@@ -290,7 +271,7 @@ public class ZipCodeKen {
          *
          * @return 郵便番号
          */
-        public String getZipcode() {
+        String getZipcode() {
             return _zipcode;
         }
 
@@ -299,7 +280,7 @@ public class ZipCodeKen {
          *
          * @return 都道府県名
          */
-        public String getKanaPrefecture() {
+        String getKanaPrefecture() {
             return _kanaPrefecture;
         }
 
@@ -308,7 +289,7 @@ public class ZipCodeKen {
          *
          * @return 市区町村名
          */
-        public String getKanaCity() {
+        String getKanaCity() {
             return _kanaCity;
         }
 
@@ -317,7 +298,7 @@ public class ZipCodeKen {
          *
          * @return 町域名
          */
-        public String getKanaTown() {
+        String getKanaTown() {
             return _kanaTown;
         }
 
@@ -326,7 +307,7 @@ public class ZipCodeKen {
          *
          * @return 小字名、丁目、番地等
          */
-        public String getKanaArea() {
+        String getKanaArea() {
             return _kanaArea;
         }
 
@@ -335,7 +316,7 @@ public class ZipCodeKen {
          *
          * @return 都道府県名
          */
-        public String getPrefecture() {
+        String getPrefecture() {
             return _prefecture;
         }
 
@@ -344,7 +325,7 @@ public class ZipCodeKen {
          *
          * @return 市区町村名
          */
-        public String getCity() {
+        String getCity() {
             return _city;
         }
 
@@ -353,7 +334,7 @@ public class ZipCodeKen {
          *
          * @return 町域名
          */
-        public String getTown() {
+        String getTown() {
             return _town;
         }
 
@@ -362,7 +343,7 @@ public class ZipCodeKen {
          *
          * @return 小字名、丁目、番地等
          */
-        public String getArea() {
+        String getArea() {
             return _area;
         }
 
@@ -371,7 +352,7 @@ public class ZipCodeKen {
          *
          * @return 記載がない場合はtrue、そうでない場合はfalse
          */
-        public boolean isException() {
+        boolean isException() {
             return _exception;
         }
 
@@ -380,7 +361,7 @@ public class ZipCodeKen {
          *
          * @return 完結している場合はtrue、そうでない場合はfalse
          */
-        protected boolean isClosed() {
+        boolean isClosed() {
             return _closed;
         }
 
@@ -390,7 +371,7 @@ public class ZipCodeKen {
          * @param kanaStr 小字名、丁目、番地等 (カタカナ表記)
          * @param str 小字名、丁目、番地等
          */
-        protected void appendArea(final String kanaStr, final String str) {
+        void appendArea(final String kanaStr, final String str) {
             String kana = ZipCodeUtil.toFullwidth(kanaStr, str);
             int idx = kana.indexOf("\uff09");
             if (idx == -1) {

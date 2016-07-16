@@ -59,7 +59,8 @@ public class Xbm {
         }
         _height = Integer.decode(m.group(1)).intValue();
         p = Pattern.compile(
-                "^static\\s+[a-z]*\\s*char\\s+\\S+_bits\\[\\]\\s+=\\s+\\{\\s*([0-9][0-9a-fA-FxX,\\s]+[0-9a-fA-F])\\s*\\}\\s*;",
+                "^static\\s+[a-z]*\\s*char\\s+\\S+_bits\\[\\]\\s+="
+                        + "\\s+\\{\\s*([0-9][0-9a-fA-FxX,\\s]+[0-9a-fA-F])\\s*\\}\\s*;",
                 flag);
         m = p.matcher(str);
         if (!m.find()) {

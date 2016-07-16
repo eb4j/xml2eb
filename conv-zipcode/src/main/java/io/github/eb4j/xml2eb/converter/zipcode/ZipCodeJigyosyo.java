@@ -26,7 +26,7 @@ import io.github.eb4j.xml2eb.util.UnicodeUtil;
  *
  * @author Hisaya FUKUMOTO
  */
-public class ZipCodeJigyosyo {
+class ZipCodeJigyosyo {
 
     private static final String ENCODING = "MS932";
 
@@ -43,7 +43,7 @@ public class ZipCodeJigyosyo {
      *
      * @param file 事業所個別郵便番号ファイル
      */
-    public ZipCodeJigyosyo(final File file) {
+    ZipCodeJigyosyo(final File file) {
         super();
         _logger = LoggerFactory.getLogger(getClass());
         _file = file;
@@ -56,18 +56,9 @@ public class ZipCodeJigyosyo {
      *
      * @return 最終更新日
      */
-    public Date getDate() {
+    Date getDate() {
         long time = _file.lastModified();
         return new Date(time);
-    }
-
-    /**
-     * 項目リストを返します。
-     *
-     * @return 項目リスト
-     */
-    public List<Item> getItemList() {
-        return _itemList;
     }
 
     /**
@@ -76,7 +67,7 @@ public class ZipCodeJigyosyo {
      * @param item 項目
      * @return 郵便番号の配列
      */
-    public List<Item> getItemList(final Item item) {
+    List<Item> getItemList(final Item item) {
         List<Item> list = new ArrayList<Item>();
         int len = _itemList.size();
         for (int i = 0; i < len; i++) {
@@ -113,7 +104,7 @@ public class ZipCodeJigyosyo {
      *
      * @return 住所をキーとする項目マップ
      */
-    public Map<String, Map<String, List<Item>>> getAddressMap() {
+    Map<String, Map<String, List<Item>>> getAddressMap() {
         Map<String, Map<String, List<Item>>> map = new LinkedHashMap<>();
         for (Item item : _itemList) {
             // 都道府県別
@@ -221,11 +212,11 @@ public class ZipCodeJigyosyo {
          * @param pob 大口事業所の場合は"0"、私書箱の場合は"1"
          * @param index インデックス番号
          */
-        protected Item(final String code, final String kanaName, final String name,
-                       final String prefecture, final String city, final String town,
-                       final String area,
-                       final String zipcode, final String postoffice,
-                       final String pob, final String index) {
+        Item(final String code, final String kanaName, final String name,
+             final String prefecture, final String city, final String town,
+             final String area,
+             final String zipcode, final String postoffice,
+             final String pob, final String index) {
             super();
             _code = code;
             _zipcode = zipcode.substring(0, 3) + "-" + zipcode.substring(3);
@@ -275,7 +266,7 @@ public class ZipCodeJigyosyo {
          *
          * @return 郵便番号
          */
-        public String getZipcode() {
+        String getZipcode() {
             return _zipcode;
         }
 
@@ -284,7 +275,7 @@ public class ZipCodeJigyosyo {
          *
          * @return 大口事業所等名
          */
-        public String getKanaName() {
+        String getKanaName() {
             return _kanaName;
         }
 
@@ -293,7 +284,7 @@ public class ZipCodeJigyosyo {
          *
          * @return 大口事業所等名
          */
-        public String getName() {
+        String getName() {
             return _name;
         }
 
@@ -302,7 +293,7 @@ public class ZipCodeJigyosyo {
          *
          * @return 都道府県名
          */
-        public String getPrefecture() {
+        String getPrefecture() {
             return _prefecture;
         }
 
@@ -311,7 +302,7 @@ public class ZipCodeJigyosyo {
          *
          * @return 市区町村名
          */
-        public String getCity() {
+        String getCity() {
             return _city;
         }
 
@@ -320,7 +311,7 @@ public class ZipCodeJigyosyo {
          *
          * @return 町域名
          */
-        public String getTown() {
+        String getTown() {
             return _town;
         }
 
@@ -329,7 +320,7 @@ public class ZipCodeJigyosyo {
          *
          * @return 小字名、丁目、番地等
          */
-        public String getArea() {
+        String getArea() {
             return _area;
         }
 
@@ -338,17 +329,8 @@ public class ZipCodeJigyosyo {
          *
          * @return 取扱郵便局名
          */
-        public String getPostOffice() {
+        String getPostOffice() {
             return _postoffice;
-        }
-
-        /**
-         * 私書箱かどうかを返します。
-         *
-         * @return 私書箱の場合はtrue、そうでない場合はfalse
-         */
-        public boolean isPostOfficeBox() {
-            return _pob;
         }
 
         /**
@@ -356,7 +338,7 @@ public class ZipCodeJigyosyo {
          *
          * @return イデックス番号
          */
-        public int getIndex() {
+        int getIndex() {
             return _index;
         }
     }

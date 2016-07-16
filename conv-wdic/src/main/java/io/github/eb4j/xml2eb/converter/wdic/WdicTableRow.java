@@ -11,7 +11,7 @@ import java.util.List;
 public class WdicTableRow {
 
     /** 要素リスト */
-    private List<WdicTableItem> tableItems = new ArrayList<WdicTableItem>();
+    private List<WdicTableItem> tableItems = new ArrayList<>();
 
 
     /**
