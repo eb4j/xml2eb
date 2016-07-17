@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Wdic graphic node generation class.
  * Created by miurahr on 16/07/17.
  */
 public class WdicGraphicNode {
@@ -37,6 +38,11 @@ public class WdicGraphicNode {
     private List<String> tableList = new ArrayList<>();
 
 
+    /**
+     * Wdic Graphic node generation class.
+     * @param wdicNode parent object.
+     * @param basedir project base directory.
+     */
     public WdicGraphicNode(final WdicNode wdicNode, final File basedir) {
         this.wdicNode = wdicNode;
         plugin = new File(basedir, WDIC_PLUGIN_DIR);
@@ -69,7 +75,7 @@ public class WdicGraphicNode {
                     logger.error("file not found: " + jpg.getPath());
                 }
                 String path = FilenameUtils.concat(WDIC_PLUGIN_DIR, name);
-                wdicNode._appendData(graphic, name, path, "jpg");
+                wdicNode.appendData(graphic, name, path, "jpg");
             } else if (name.endsWith(".png")) {
                 String bmpName = name + ".bmp";
                 File bmp = new File(plugin, bmpName);
@@ -77,7 +83,7 @@ public class WdicGraphicNode {
                     logger.error("file not found: " + bmp.getPath());
                 }
                 String path = FilenameUtils.concat(WDIC_PLUGIN_DIR, bmpName);
-                wdicNode._appendData(graphic, name, path, "bmp");
+                wdicNode.appendData(graphic, name, path, "bmp");
             }
         }
 
@@ -88,7 +94,7 @@ public class WdicGraphicNode {
                 logger.error("file not found: " + bmp.getPath());
             }
             String path = FilenameUtils.concat(WDIC_GLYPH_DIR, bmpName);
-            wdicNode._appendData(graphic, "glyph-" + name, path, "bmp");
+            wdicNode.appendData(graphic, "glyph-" + name, path, "bmp");
         }
 
         for (String name : tableList) {
@@ -98,7 +104,7 @@ public class WdicGraphicNode {
                 logger.error("file not found: " + bmp.getPath());
             }
             String path = FilenameUtils.concat(WDIC_TABLE_DIR, name);
-            wdicNode._appendData(graphic, name, path, "bmp");
+            wdicNode.appendData(graphic, name, path, "bmp");
         }
     }
 }

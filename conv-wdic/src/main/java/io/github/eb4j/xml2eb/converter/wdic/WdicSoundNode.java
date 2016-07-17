@@ -22,7 +22,7 @@ class WdicSoundNode {
     private WdicNode wdicNode;
     private File plugin;
 
-    WdicSoundNode(WdicNode wdicNode, File basedir) {
+    WdicSoundNode(final WdicNode wdicNode, final File basedir) {
         this.wdicNode = wdicNode;
         plugin = new File(basedir, WDIC_PLUGIN_DIR);
     }
@@ -42,14 +42,14 @@ class WdicSoundNode {
                     logger.error("file not found: " + wav.getPath());
                 }
                 String path = FilenameUtils.concat(WDIC_PLUGIN_DIR, wavName);
-                wdicNode._appendData(sound, name, path, "wav");
+                wdicNode.appendData(sound, name, path, "wav");
             } else if (name.endsWith(".mid")) {
                 File midi = new File(plugin, name);
                 if (!midi.exists()) {
                     logger.error("file not found: " + midi.getPath());
                 }
                 String path = FilenameUtils.concat(WDIC_PLUGIN_DIR, name);
-                wdicNode._appendData(sound, name, path, "mid");
+                wdicNode.appendData(sound, name, path, "mid");
             }
         }
     }

@@ -33,7 +33,7 @@ class WdicGaijiNode {
     private File gaijidir;
     private Map<String, String> gaijiMap;
 
-    WdicGaijiNode(File gaijidir, Map<String, String> gaijiMap) {
+    WdicGaijiNode(final File gaijidir, final Map<String, String> gaijiMap) {
         this.gaijidir = gaijidir;
         this.gaijiMap = gaijiMap;
     }
@@ -62,6 +62,9 @@ class WdicGaijiNode {
         }
     }
 
+    /**
+     * Indicate logic type for gaiji style.
+     */
     private enum GaijiStyle { underLine, overLine, lineThrough }
 
     void addOverLineGaijiFont(final Node node, final String pstr) {

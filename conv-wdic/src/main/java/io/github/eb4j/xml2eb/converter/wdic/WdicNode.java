@@ -26,8 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.github.eb4j.xml2eb.util.BmpUtil;
-import io.github.eb4j.xml2eb.util.FontUtil;
-import io.github.eb4j.xml2eb.util.HexUtil;
 import io.github.eb4j.xml2eb.util.WordUtil;
 
 
@@ -76,7 +74,11 @@ public class WdicNode {
     private WdicGaijiNode wdicGaijiNode;
 
 
-    public WdicNode(File basedir) {
+    /**
+     * Node handler main class.
+     * @param basedir project base directory.
+     */
+    public WdicNode(final File basedir) {
         this.basedir = basedir;
         File file = new File(basedir, "FILE.GL");
         this.groupList = new WdicGroupList(file);
@@ -155,7 +157,7 @@ public class WdicNode {
      * @param id ID属性値
      * @return 追加されたレイヤ要素
      */
-    Element _appendLayer(final Node node, final String id) {
+    Element appendLayer(final Node node, final String id) {
         Element elem = appendElement(node, "layer");
         elem.setAttribute("id", id);
         return elem;
@@ -178,11 +180,11 @@ public class WdicNode {
         logger.debug("  [" + grpId + ":" + partId + "] " + head);
         Element itemElem = _appendItem(content, "WDIC:" + grpId + ":" + head);
         Element headElem = appendElement(itemElem, "head");
-        _appendRawText(headElem, head + " 【" + grpName + "：" + partName + "】");
+        appendRawText(headElem, head + " 【" + grpName + "：" + partName + "】");
         boolean wordAvail = false;
         if (WordUtil.isValidWord(head)) {
             Element wordElem = appendElement(itemElem, "word");
-            _appendRawText(wordElem, head);
+            appendRawText(wordElem, head);
             wordAvail = true;
         }
 
@@ -194,7 +196,7 @@ public class WdicNode {
             String word = WdicUtil.unescape(yomi);
             if (!"???".equals(yomi) && !head.equals(word) && WordUtil.isValidWord(word)) {
                 Element wordElem = appendElement(itemElem, "word");
-                _appendRawText(wordElem, word);
+                appendRawText(wordElem, word);
                 wordAvail = true;
             }
         }
@@ -209,7 +211,7 @@ public class WdicNode {
                     String ss = str.substring(0, idx).trim();
                     if (!head.equals(ss) && WordUtil.isValidWord(ss)) {
                         Element wordElem = appendElement(itemElem, "word");
-                        _appendRawText(wordElem, ss);
+                        appendRawText(wordElem, ss);
                         wordAvail = true;
                     }
                     // 元の語形
@@ -217,7 +219,7 @@ public class WdicNode {
                 }
                 if (!head.equals(str) && WordUtil.isValidWord(str)) {
                     Element wordElem = appendElement(itemElem, "word");
-                    _appendRawText(wordElem, str);
+                    appendRawText(wordElem, str);
                     wordAvail = true;
                 }
             }
@@ -230,23 +232,23 @@ public class WdicNode {
         // 本文の登録
         Element bodyElem = appendElement(itemElem, "body");
         Element keyElem = appendElement(bodyElem, "key");
-        _appendRawText(keyElem, head);
-        _appendRawText(bodyElem, " 【");
-        Element refElem = _appendIdReference(bodyElem, "MENU:group:" + grpId);
-        _appendRawText(refElem, grpName);
-        _appendRawText(bodyElem, "：");
-        refElem = _appendIdReference(bodyElem, "MENU:group:" + grpId + ":" + partId);
-        _appendRawText(refElem, partName + "編");
-        _appendRawText(bodyElem, "】");
-        _appendNewLine(bodyElem);
+        appendRawText(keyElem, head);
+        appendRawText(bodyElem, " 【");
+        Element refElem = appendIdReference(bodyElem, "MENU:group:" + grpId);
+        appendRawText(refElem, grpName);
+        appendRawText(bodyElem, "：");
+        refElem = appendIdReference(bodyElem, "MENU:group:" + grpId + ":" + partId);
+        appendRawText(refElem, partName + "編");
+        appendRawText(bodyElem, "】");
+        appendNewLine(bodyElem);
 
         // 分類
         List<String> dirs = item.getDir();
         n = dirs.size();
         for (int i = 0; i < n; i++) {
-            refElem = _appendIdReference(bodyElem, "DIR:/");
-            _appendRawText(refElem, "分類");
-            _appendRawText(bodyElem, "：");
+            refElem = appendIdReference(bodyElem, "DIR:/");
+            appendRawText(refElem, "分類");
+            appendRawText(bodyElem, "：");
             String str = dirs.get(i);
             if (str.startsWith("/")) {
                 str = str.substring(1);
@@ -256,13 +258,13 @@ public class WdicNode {
             int m = ss.length;
             for (int j = 0; j < m; j++) {
                 if (j != 0) {
-                    _appendRawText(bodyElem, " > ");
+                    appendRawText(bodyElem, " > ");
                 }
                 key += "/" + ss[j];
-                refElem = _appendIdReference(bodyElem, "DIR:" + key);
-                _appendRawText(refElem, dirList.getName(key));
+                refElem = appendIdReference(bodyElem, "DIR:" + key);
+                appendRawText(refElem, dirList.getName(key));
             }
-            _appendNewLine(bodyElem);
+            appendNewLine(bodyElem);
         }
 
         // 読み
@@ -270,8 +272,8 @@ public class WdicNode {
             n = yomiList.size();
             for (int i = 0; i < n; i++) {
                 String str = "読み：" + yomiList.get(i);
-                _appendText(item, bodyElem, str);
-                _appendNewLine(bodyElem);
+                appendText(item, bodyElem, str);
+                appendNewLine(bodyElem);
             }
         }
 
@@ -281,8 +283,8 @@ public class WdicNode {
             while (spellIt.hasNext()) {
                 Map.Entry<String, String> entry = spellIt.next();
                 String str = "外語：[" + entry.getKey() + "] " + entry.getValue();
-                _appendText(item, bodyElem, str);
-                _appendNewLine(bodyElem);
+                appendText(item, bodyElem, str);
+                appendNewLine(bodyElem);
             }
         }
 
@@ -293,8 +295,8 @@ public class WdicNode {
             while (pronIt.hasNext()) {
                 Map.Entry<String, String> entry = pronIt.next();
                 String str = "発音：[" + entry.getKey() + "] " + entry.getValue();
-                _appendRawText(bodyElem, str);
-                _appendNewLine(bodyElem);
+                appendRawText(bodyElem, str);
+                appendNewLine(bodyElem);
             }
         }
 
@@ -310,12 +312,12 @@ public class WdicNode {
                 }
                 buf.append(s);
             }
-            _appendRawText(bodyElem, buf.toString());
-            _appendNewLine(bodyElem);
+            appendRawText(bodyElem, buf.toString());
+            appendNewLine(bodyElem);
         }
 
         // 内容
-        _appendNewLine(bodyElem);
+        appendNewLine(bodyElem);
         Stack<Element> indentStack = new Stack<>();
         int curIndent = 0;
         int ignoreTabs = 0;
@@ -334,7 +336,7 @@ public class WdicNode {
                 while (!indentStack.isEmpty()) {
                     indentElem = indentStack.pop();
                 }
-                _appendNewLine(indentElem);
+                appendNewLine(indentElem);
                 linkBlock = true;
                 curIndent = 0;
                 // リンク部では常に1段インデントを無視する ("//LINK"部のタブ分)
@@ -382,13 +384,13 @@ public class WdicNode {
 
             if (linkBlock) {
                 // リンク部
-                _appendItemLinkBlock(item, indentElem, block);
-                _appendNewLine(indentElem);
+                appendItemLinkBlock(item, indentElem, block);
+                appendNewLine(indentElem);
             } else {
                 // 本文部
                 if (block.startsWith("))")) {
                     // 整形済み
-                    _appendNewLine(indentElem);
+                    appendNewLine(indentElem);
                     for (; i < n; i++) {
                         body = bodyList.get(i);
                         block = WdicUtil.deleteTab(body);
@@ -398,11 +400,11 @@ public class WdicNode {
                         }
                         if (block.startsWith(")) ")) {
                             Element nobr = appendElement(indentElem, "nobr");
-                            _appendText(item, nobr, block.substring(3));
+                            appendText(item, nobr, block.substring(3));
                         }
-                        _appendNewLine(indentElem);
+                        appendNewLine(indentElem);
                     }
-                    _appendNewLine(indentElem);
+                    appendNewLine(indentElem);
                 } else if (block.startsWith(">>")) {
                     // 引用
                     Element indentElem2 = appendElement(indentElem, "indent");
@@ -414,9 +416,9 @@ public class WdicNode {
                             break;
                         }
                         if (block.startsWith(">> ")) {
-                            _appendText(item, indentElem2, block.substring(3));
+                            appendText(item, indentElem2, block.substring(3));
                         }
-                        _appendNewLine(indentElem2);
+                        appendNewLine(indentElem2);
                     }
                 } else if (block.startsWith(":: ")) {
                     // 定義語 (簡易形式)
@@ -431,11 +433,11 @@ public class WdicNode {
                         if (idx >= 0) { // return minus when not found
                             String dt = block.substring(3, idx).trim();
                             String dd = block.substring(idx + 1).trim();
-                            _appendText(item, indentElem, "\u30fb " + dt);
-                            _appendNewLine(indentElem);
+                            appendText(item, indentElem, "\u30fb " + dt);
+                            appendNewLine(indentElem);
                             Element indentElem2 = appendElement(indentElem, "indent");
-                            _appendText(item, indentElem2, dd);
-                            _appendNewLine(indentElem2);
+                            appendText(item, indentElem2, dd);
+                            appendNewLine(indentElem2);
                         }
                     }
                 } else if (block.startsWith(": ")) {
@@ -465,8 +467,8 @@ public class WdicNode {
                             term = true;
                             String dt = block.substring(2).trim();
                             if (StringUtils.isNotBlank(dt)) {
-                                _appendText(item, indentElem, "\u30fb " + dt);
-                                _appendNewLine(indentElem);
+                                appendText(item, indentElem, "\u30fb " + dt);
+                                appendNewLine(indentElem);
                             }
                         } else if (block.startsWith(":<")) {
                             if (indentElem2 == null) {
@@ -475,17 +477,17 @@ public class WdicNode {
                             term = false;
                             String dd = block.substring(2).trim();
                             if (StringUtils.isNotBlank(dd)) {
-                                _appendText(item, indentElem2, dd);
-                                _appendNewLine(indentElem2);
+                                appendText(item, indentElem2, dd);
+                                appendNewLine(indentElem2);
                             }
                         } else {
                             if (term) {
-                                _appendItemBodyBlock(item, indentElem, block, numMap, "\u30fb ");
-                                _appendNewLine(indentElem);
+                                appendItemBodyBlock(item, indentElem, block, numMap, "\u30fb ");
+                                appendNewLine(indentElem);
                             } else {
                                 if (indentElem2 != null) {
-                                    _appendItemBodyBlock(item, indentElem2, block, numMap, null);
-                                    _appendNewLine(indentElem2);
+                                    appendItemBodyBlock(item, indentElem2, block, numMap, null);
+                                    appendNewLine(indentElem2);
                                 }
                             }
                         }
@@ -529,8 +531,8 @@ public class WdicNode {
                     }
                     wdicGraphicNode.addTableItem(name);
                     Element elem = _appendDataReference(indentElem, file.getName(), "graphic");
-                    _appendRawText(elem, "[表]");
-                    _appendNewLine(indentElem);
+                    appendRawText(elem, "[表]");
+                    appendNewLine(indentElem);
                 } else if (block.startsWith("|| ") || block.startsWith("|= ")) {
                     // 表 (簡易形式)
                     tableNum++;
@@ -565,9 +567,10 @@ public class WdicNode {
                                 img.flush();
                             }
                             wdicGraphicNode.addTableItem(name);
-                            Element elem = _appendDataReference(indentElem, file.getName(), "graphic");
-                            _appendRawText(elem, "[表]");
-                            _appendNewLine(indentElem);
+                            Element elem = _appendDataReference(indentElem, file.getName(),
+                                    "graphic");
+                            appendRawText(elem, "[表]");
+                            appendNewLine(indentElem);
                         }
                     }
                 } else if (block.startsWith("= ")) {
@@ -575,7 +578,7 @@ public class WdicNode {
                     if (i > 0) {
                         String prev = WdicUtil.deleteTab(bodyList.get(i - 1));
                         if (!prev.startsWith("= ")) {
-                            _appendNewLine(indentElem);
+                            appendNewLine(indentElem);
                         }
                     }
                     // U+25A0: Black Square
@@ -598,12 +601,12 @@ public class WdicNode {
                     for (int j = 0; j < white; j++) {
                         buf.append('\u25a1');
                     }
-                    _appendText(item, indentElem, buf.toString());
-                    _appendNewLine(indentElem);
+                    appendText(item, indentElem, buf.toString());
+                    appendNewLine(indentElem);
                 } else {
                     // その他
-                    _appendItemBodyBlock(item, indentElem, block, numMap, null);
-                    _appendNewLine(indentElem);
+                    appendItemBodyBlock(item, indentElem, block, numMap, null);
+                    appendNewLine(indentElem);
                 }
             }
         }
@@ -618,8 +621,8 @@ public class WdicNode {
      * @param numMap インデント数と箇条書き数とのマップ
      * @param prefix プレフィックス
      */
-    void _appendItemBodyBlock(final WdicItem item, final Element elem, final String block,
-                              final Map<Integer, Integer> numMap, final String prefix) {
+    void appendItemBodyBlock(final WdicItem item, final Element elem, final String block,
+                             final Map<Integer, Integer> numMap, final String prefix) {
         String target = block;
         if (target.startsWith("* ")) {
             // 文章
@@ -667,7 +670,7 @@ public class WdicNode {
         if (prefix != null) {
             target = prefix + target;
         }
-        _appendText(item, elem, target);
+        appendText(item, elem, target);
     }
 
     /**
@@ -677,11 +680,11 @@ public class WdicNode {
      * @param elem  追加対象の要素
      * @param block 追加する内容
      */
-    void _appendItemLinkBlock(final WdicItem item, final Element elem, final String block) {
+    void appendItemLinkBlock(final WdicItem item, final Element elem, final String block) {
         String target = block;
         if (target.startsWith("= ")) {
             // グループ見出し
-            _appendNewLine(elem);
+            appendNewLine(elem);
             // U+25BC: Black Down-Pointing Triangle
             target = "\u25bc " + target.substring(2);
         } else if (target.startsWith("- ")) {
@@ -693,7 +696,7 @@ public class WdicNode {
             // U+21D4: Left Right Double Arrow
             target = "\u21d4 " + target.substring(3);
         }
-        _appendText(item, elem, target, true);
+        appendText(item, elem, target, true);
     }
 
     /**
@@ -704,7 +707,6 @@ public class WdicNode {
     void makeItemNode(final Element content) {
         Iterator<Map.Entry<String, Set<WdicItem>>> it;
         Map.Entry<String, Set<WdicItem>> entry;
-
         // 画像グラグイン
         logger.debug("  graphic plugin");
         String[] ext = {".jpg", ".png"};
@@ -717,36 +719,34 @@ public class WdicNode {
                 if (name.endsWith(ext[i])) {
                     Element itemElem = _appendItem(content, "PLUGIN:" + name);
                     Element headElem = appendElement(itemElem, "head");
-                    _appendRawText(headElem, name + " 【プラグイン】");
+                    appendRawText(headElem, name + " 【プラグイン】");
                     // ファイル名をキーワードとして登録
                     Element keywordElem = appendElement(itemElem, "keyword");
-                    _appendRawText(keywordElem, name);
-
+                    appendRawText(keywordElem, name);
                     Element bodyElem = appendElement(itemElem, "body");
                     Element keyElem = appendElement(bodyElem, "key");
-                    _appendRawText(keyElem, name);
-                    _appendNewLine(bodyElem);
+                    appendRawText(keyElem, name);
+                    appendNewLine(bodyElem);
                     Element refElem = _appendDataReference(bodyElem, name, "graphic");
-                    _appendRawText(refElem, "[図版]");
-                    _appendNewLine(bodyElem);
+                    appendRawText(refElem, "[図版]");
+                    appendNewLine(bodyElem);
 
                     // プラグインを参照している項目を列挙
                     for (WdicItem item : entry.getValue()) {
-                        _appendRawText(bodyElem, "\u2192 ");
+                        appendRawText(bodyElem, "\u2192 ");
                         String head = item.getHead();
                         String grpId = item.getWdic().getGroupId();
                         String id = "WDIC:" + grpId + ":" + head;
-                        refElem = _appendIdReference(bodyElem, id);
+                        refElem = appendIdReference(bodyElem, id);
                         String gname = item.getWdic().getGroupName();
                         String part = item.getWdic().getPartName();
                         String title = head + " 《" + gname + "：" + part + "》";
-                        _appendRawText(refElem, title);
-                        _appendNewLine(bodyElem);
+                        appendRawText(refElem, title);
+                        appendNewLine(bodyElem);
                     }
                 }
             }
         }
-
         // 音声プラグイン
         logger.debug("  sound plugin");
         ext = new String[]{".mp3", ".ogg", ".mid"};
@@ -759,31 +759,30 @@ public class WdicNode {
                 if (name.endsWith(ext[i])) {
                     Element itemElem = _appendItem(content, "PLUGIN:" + name);
                     Element headElem = appendElement(itemElem, "head");
-                    _appendRawText(headElem, name + " 【プラグイン】");
+                    appendRawText(headElem, name + " 【プラグイン】");
                     // ファイル名をキーワードとして登録
                     Element keywordElem = appendElement(itemElem, "keyword");
-                    _appendRawText(keywordElem, name);
+                    appendRawText(keywordElem, name);
 
                     Element bodyElem = appendElement(itemElem, "body");
                     Element keyElem = appendElement(bodyElem, "key");
-                    _appendRawText(keyElem, name);
-                    _appendNewLine(bodyElem);
+                    appendRawText(keyElem, name);
+                    appendNewLine(bodyElem);
                     Element refElem = _appendDataReference(bodyElem, name, "sound");
-                    _appendRawText(refElem, "[音声]");
-                    _appendNewLine(bodyElem);
-
+                    appendRawText(refElem, "[音声]");
+                    appendNewLine(bodyElem);
                     // プラグインを参照している項目を列挙
                     for (WdicItem item : entry.getValue()) {
-                        _appendRawText(bodyElem, "\u2192 ");
+                        appendRawText(bodyElem, "\u2192 ");
                         String head = item.getHead();
                         String grpId = item.getWdic().getGroupId();
                         String id = "WDIC:" + grpId + ":" + head;
-                        refElem = _appendIdReference(bodyElem, id);
+                        refElem = appendIdReference(bodyElem, id);
                         String gname = item.getWdic().getGroupName();
                         String part = item.getWdic().getPartName();
                         String title = head + " 《" + gname + "：" + part + "》";
-                        _appendRawText(refElem, title);
-                        _appendNewLine(bodyElem);
+                        appendRawText(refElem, title);
+                        appendNewLine(bodyElem);
                     }
                 }
             }
@@ -813,28 +812,28 @@ public class WdicNode {
                 }
                 Element itemElem = _appendItem(content, "PLUGIN:" + name);
                 Element headElem = appendElement(itemElem, "head");
-                _appendRawText(headElem, name + " 【プラグイン】");
+                appendRawText(headElem, name + " 【プラグイン】");
                 // ファイル名をキーワードとして登録
                 Element keywordElem = appendElement(itemElem, "keyword");
-                _appendRawText(keywordElem, name);
+                appendRawText(keywordElem, name);
 
                 Element bodyElem = appendElement(itemElem, "body");
                 Element keyElem = appendElement(bodyElem, "key");
-                _appendRawText(keyElem, name);
-                _appendNewLine(bodyElem);
+                appendRawText(keyElem, name);
+                appendNewLine(bodyElem);
 
                 // プラグインを参照している項目を列挙
                 for (WdicItem item : entry.getValue()) {
-                    _appendRawText(bodyElem, "\u2192 ");
+                    appendRawText(bodyElem, "\u2192 ");
                     String head = item.getHead();
                     String grpId = item.getWdic().getGroupId();
                     String id = "WDIC:" + grpId + ":" + head;
-                    Element refElem = _appendIdReference(bodyElem, id);
+                    Element refElem = appendIdReference(bodyElem, id);
                     String gname = item.getWdic().getGroupName();
                     String part = item.getWdic().getPartName();
                     String title = head + " 《" + gname + "：" + part + "》";
-                    _appendRawText(refElem, title);
-                    _appendNewLine(bodyElem);
+                    appendRawText(refElem, title);
+                    appendNewLine(bodyElem);
                 }
 
                 // プラグインの内容
@@ -843,8 +842,8 @@ public class WdicNode {
                     LineIterator lineIt = FileUtils.lineIterator(file, ENCODING);
                     while (lineIt.hasNext()) {
                         String line = WdicUtil.sanitize(lineIt.nextLine());
-                        _appendRawText(indentElem, line);
-                        _appendNewLine(indentElem);
+                        appendRawText(indentElem, line);
+                        appendNewLine(indentElem);
                     }
                 } catch (IOException e) {
                     logger.error(e.getMessage(), e);
@@ -863,8 +862,8 @@ public class WdicNode {
         String[] line = manual.getCopyright();
         int len = line.length;
         for (int i = 0; i < len; i++) {
-            _appendRawText(copyright, line[i]);
-            _appendNewLine(copyright);
+            appendRawText(copyright, line[i]);
+            appendNewLine(copyright);
         }
     }
 
@@ -874,7 +873,7 @@ public class WdicNode {
      * @param node テキストを追加するノード
      * @param str  文字列
      */
-    void _appendRawText(final Node node, final String str) {
+    void appendRawText(final Node node, final String str) {
         if (str != null && str.trim().length() > 0) {
             String tmp = str.replace((char) 0x3099, (char) 0x309b)
                     .replace((char) 0x309a, (char) 0x309c);
@@ -904,7 +903,7 @@ public class WdicNode {
      * @param node 改行を追加するノード
      * @return 追加された改行要素
      */
-    Element _appendNewLine(final Node node) {
+    Element appendNewLine(final Node node) {
         return appendElement(node, "br");
     }
 
@@ -928,7 +927,7 @@ public class WdicNode {
      * @param id   ID属性値
      * @return 追加された参照要素
      */
-    Element _appendIdReference(final Node node, final String id) {
+    Element appendIdReference(final Node node, final String id) {
         Element elem = appendElement(node, "ref");
         elem.setAttribute("id", id);
         return elem;
@@ -958,8 +957,8 @@ public class WdicNode {
      * @param format format属性値
      * @return 追加されたデータ要素
      */
-    Element _appendData(final Node node, final String name, final String src,
-                        final String format) {
+    Element appendData(final Node node, final String name, final String src,
+                       final String format) {
         Element elem = appendElement(node, "data");
         elem.setAttribute("name", name);
         elem.setAttribute("src", src);
@@ -974,8 +973,8 @@ public class WdicNode {
      * @param node テキストを追加するノード
      * @param str  文字列
      */
-    void _appendText(final WdicItem item, final Node node, final String str) {
-        _appendText(item, node, str, false);
+    void appendText(final WdicItem item, final Node node, final String str) {
+        appendText(item, node, str, false);
     }
 
     /**
@@ -986,8 +985,8 @@ public class WdicNode {
      * @param str       文字列
      * @param linkBlock リンク部の場合はtrue
      */
-    void _appendText(final WdicItem item, final Node node, final String str,
-                     final boolean linkBlock) {
+    void appendText(final WdicItem item, final Node node, final String str,
+                    final boolean linkBlock) {
         String grpId = item.getWdic().getGroupId();
         String partId = item.getWdic().getPartId();
         String itemId = grpId + ":" + partId + ":" + item.getHead();
@@ -1015,10 +1014,10 @@ public class WdicNode {
                     int idx2 = WdicUtil.indexOf(str, bracket.toString(), idx1);
                     if (idx2 != -1) {
                         // 強調
-                        _appendRawText(node, buf.toString());
+                        appendRawText(node, buf.toString());
                         buf.delete(0, buf.length());
                         Element elem = appendElement(node, "em");
-                        _appendText(item, elem, str.substring(idx1, idx2), linkBlock);
+                        appendText(item, elem, str.substring(idx1, idx2), linkBlock);
                         i = idx2 + bracket.length() - 1;
                     } else {
                         // 閉じられていないのでそのまま追加する
@@ -1033,7 +1032,7 @@ public class WdicNode {
                     int idx2 = WdicUtil.indexOf(str, "]]", idx1 + 1);
                     if (idx2 != -1) {
                         // リンク
-                        _appendRawText(node, buf.toString());
+                        appendRawText(node, buf.toString());
                         buf.delete(0, buf.length());
                         String ref = str.substring(idx1 + 1, idx2);
                         String name = null;
@@ -1062,7 +1061,7 @@ public class WdicNode {
                                     ref = name + "<" + ref + ">";
                                 }
                             }
-                            _appendText(item, node, ref, linkBlock);
+                            appendText(item, node, ref, linkBlock);
                         } else if (ref.startsWith("//")) {
                             // プラグイン
                             int idx3 = ref.indexOf("|");
@@ -1087,7 +1086,7 @@ public class WdicNode {
                                     || file.endsWith(".mid")) {
                                 refElem = _appendDataReference(node, file, "sound");
                             } else {
-                                refElem = _appendIdReference(node, "PLUGIN:" + file);
+                                refElem = appendIdReference(node, "PLUGIN:" + file);
                             }
                             if (StringUtils.isBlank(name)) {
                                 name = file;
@@ -1099,7 +1098,7 @@ public class WdicNode {
                                     name = name + " 《" + gname + "》";
                                 }
                             }
-                            _appendRawText(refElem, name);
+                            appendRawText(refElem, name);
                         } else {
                             if (ref.startsWith("x-wdic:")) {
                                 // x-wdic:/グループ名/単語
@@ -1134,21 +1133,21 @@ public class WdicNode {
                                 Wdic wdic = group.getWdic(refid);
                                 if (wdic != null) {
                                     String id = "WDIC:" + gid + ":" + refid;
-                                    Element refElem = _appendIdReference(node, id);
+                                    Element refElem = appendIdReference(node, id);
                                     if (linkBlock) {
                                         name = name + " 《" + gname + "：" + wdic.getPartName() + "》";
                                     }
-                                    _appendText(item, refElem, name, linkBlock);
+                                    appendText(item, refElem, name, linkBlock);
                                 } else {
                                     logger.error("undefined word: " + gid + "/" + refid);
                                     if (linkBlock) {
                                         name = name + " 《" + gname + "》";
                                     }
-                                    _appendText(item, node, name, linkBlock);
+                                    appendText(item, node, name, linkBlock);
                                 }
                             } else {
                                 logger.error("undefined group: " + gid);
-                                _appendText(item, node, name, linkBlock);
+                                appendText(item, node, name, linkBlock);
                             }
                         }
                         i = idx2 + 1;
@@ -1236,17 +1235,17 @@ public class WdicNode {
                     logger.error("unknown character code: " + code);
                 }
             } else if ("sup".equals(name) || "sub".equals(name)) {
-                _appendRawText(node, buf.toString());
+                appendRawText(node, buf.toString());
                 buf.delete(0, buf.length());
                 Element elem = appendElement(node, name);
-                _appendText(item, elem, param.get(0), linkBlock);
+                appendText(item, elem, param.get(0), linkBlock);
             } else if ("ruby".equals(name)) {
-                _appendRawText(node, buf.toString());
+                appendRawText(node, buf.toString());
                 buf.delete(0, buf.length());
-                _appendText(item, node, param.get(0), linkBlock);
+                appendText(item, node, param.get(0), linkBlock);
                 if (param.size() > 1) {
                     Element elem = appendElement(node, "sub");
-                    _appendText(item, elem, "(" + param.get(1) + ")", linkBlock);
+                    appendText(item, elem, "(" + param.get(1) + ")", linkBlock);
                 }
             } else if ("asin".equals(name)) {
                 String asin = param.get(0);
@@ -1275,43 +1274,43 @@ public class WdicNode {
             } else if ("mex".equals(name)) {
                 buf.append("[" + param.get(0) + "]");
             } else if ("glyph".equals(name)) {
-                _appendRawText(node, buf.toString());
+                appendRawText(node, buf.toString());
                 buf.delete(0, buf.length());
                 String glyph = param.get(0);
                 wdicGraphicNode.addGlyphItem(glyph);
                 Element elem = _appendDataReference(node, "glyph-" + glyph, "inlineGraphic");
-                _appendRawText(elem, "[グリフ:" + glyph + "]");
+                appendRawText(elem, "[グリフ:" + glyph + "]");
             } else if ("oline".equals(name)) {
-                _appendRawText(node, buf.toString());
+                appendRawText(node, buf.toString());
                 buf.delete(0, buf.length());
                 String pstr = param.get(0);
                 wdicGaijiNode.addOverLineGaijiFont(node, pstr);
            } else if ("uline".equals(name)) {
-                _appendRawText(node, buf.toString());
+                appendRawText(node, buf.toString());
                 buf.delete(0, buf.length());
                 String pstr = param.get(0);
                 wdicGaijiNode.addUnderLineGaijiFont(node, pstr);
             } else if ("sout".equals(name)) {
-                _appendRawText(node, buf.toString());
+                appendRawText(node, buf.toString());
                 buf.delete(0, buf.length());
                 String pstr = param.get(0);
                 wdicGaijiNode.addLineThroughGaijiFont(node, pstr);
             } else if ("date".equals(name) || "dt".equals(name)) {
-                _appendRawText(node, buf.toString());
+                appendRawText(node, buf.toString());
                 buf.delete(0, buf.length());
                 buf.append(param.get(0));
-                _appendText(item, node, buf.toString(), linkBlock);
+                appendText(item, node, buf.toString(), linkBlock);
                 buf.delete(0, buf.length());
             } else {
                 if (!"unit".equals(name)) {
                     logger.error("unknown function name: " + itemId + " [" + name + "]");
                 }
-                _appendRawText(node, buf.toString());
+                appendRawText(node, buf.toString());
                 buf.delete(0, buf.length());
-                _appendText(item, node, param.get(0), linkBlock);
+                appendText(item, node, param.get(0), linkBlock);
             }
         }
-        _appendRawText(node, buf.toString());
+        appendRawText(node, buf.toString());
     }
 
 }

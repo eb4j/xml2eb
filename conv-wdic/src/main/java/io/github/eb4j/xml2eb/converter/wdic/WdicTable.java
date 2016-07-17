@@ -288,7 +288,8 @@ public class WdicTable {
                     buf.append(tableData);
                     buf.append(sep);
                 }
-                _logger.warn("unexpected table format: " + _id + sep + buf.toString(), e.getMessage());
+                _logger.warn("unexpected table format: " + _id + sep + buf.toString(),
+                        e.getMessage());
             }
         }
         if (rowList == null) {
